@@ -1,0 +1,26 @@
+export interface IWallet {
+    add(value: number): number;
+    remove(value: number): number;
+    getBalance(): number;
+}
+
+export class Wallet implements IWallet {
+
+    protected balance: number;
+
+    add(value: number): number {
+        return this.balance;
+    }
+
+    getBalance(): number {
+        return this.balance;
+    }
+
+    remove(value: number): number {
+        return this.balance;
+    }
+
+    constructor(initValue:number = 0) {
+        this.balance = initValue;
+    }
+}
