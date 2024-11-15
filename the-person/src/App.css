@@ -1,42 +1,42 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
-
 :root {
-  --background-color:#03151a;
-  --color:whitesmoke ;
-  --gap:9px;
+    --background-color: #03151a;
+    --color: whitesmoke;
+    --gap: 9px;
+    --gap-2: calc(9px * 2);
+    --gap-3: calc(9px * 4);
+    --gap-4: calc(9px * 8);
+    --gap-5: calc(9px * 16);
 }
 
 #root {
-  /* display: none; */
-  
+    /* display: none; */
 }
 
 .App {
-  width: 100vw;
-  height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
 
 body {
-  background-color: var(--background-color);
-  color:var(--color);
-  padding:calc(var(--gap) * (2 * 4));
-  
+    background-color: var(--background-color);
+    color: var(--color);
+    padding: var(--gap-3);
 }
 
 .pre--1 {
-  display: block;
-  width:100%;
-  height: 100%;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-
 .width-max {
-  width: 100%;
+    width: 100%;
 }
 
 .bdr {
-  border: 1px solid whitesmoke;
+    border: 1px solid whitesmoke;
 }

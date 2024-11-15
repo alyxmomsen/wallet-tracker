@@ -1,14 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Main from './ui/main';
+import React from 'react'
+import logo from './logo.svg'
+import './App.css'
+import Main from './ui/Main'
 
 function App() {
-  return (
-    <div className="App">
-      <Main />
-    </div>
-  );
+    return (
+        <div className="App">
+            <Main />
+        </div>
+    )
 }
 
-export default App;
+export default App
