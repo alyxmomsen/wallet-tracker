@@ -1,9 +1,6 @@
-import {
-    IPerson,
-    MainPerson,
-    Passive,
-    EveryDayPassiveExecutorBehavior,
-} from './Person'
+import { IPerson, MainPerson } from './Person'
+import { IPlanner, RequirementPlanner } from './Planner'
+import { IRequirement } from './Requirement'
 
 export interface IFacade {
     addPerson(person: IPerson): number
@@ -14,6 +11,12 @@ export class Facade implements IFacade {
     private lastId: number
     private persons: IPerson[]
     private personsRegisty: Map<number, IPerson>
+
+    private requirementPlanner: IPlanner<IRequirement>
+
+    addRequirementSchedule(requirement: IRequirement) {
+        this.requirementPlanner.addTask(requirement)
+    }
 
     addPerson(person: IPerson): number {
         const newID = this.lastId + 1
@@ -29,6 +32,7 @@ export class Facade implements IFacade {
     }
 
     constructor() {
+        this.requirementPlanner = new RequirementPlanner()
         this.lastId = 0
         this.persons = []
         this.personsRegisty = new Map<number, IPerson>()
@@ -37,11 +41,9 @@ export class Facade implements IFacade {
         this.addPerson(new MainPerson('Enemy Dann'))
         this.addPerson(new MainPerson('Enemy Alex'))
 
-        player.addPassive(
-            new Passive(700, new EveryDayPassiveExecutorBehavior(0, 1))
-        )
+        // player.addRequirement(new Requirement('shelter'))
 
-        player.update()
+        // player.update()
         //   player.update();
         //   player.update();
         //   player.update();

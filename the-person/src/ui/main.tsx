@@ -28,7 +28,7 @@ const Main = () => {
                 <button
                     onClick={() => {
                         gameFacade.getPersons().forEach((elem) => {
-                            elem.update()
+                            // elem.update()
                         })
                         setState((current) => current + 1)
                     }}
