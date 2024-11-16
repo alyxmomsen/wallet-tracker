@@ -1,12 +1,11 @@
-import React from 'react'
-import logo from './logo.svg'
+
 import './App.css'
-import Main from './ui/Main'
+import MainComponent from './ui/MainComponent'
 
 function App() {
     return (
         <div className="App">
-            <Main />
+            <MainComponent />
         </div>
     )
 }

@@ -13,7 +13,7 @@ export const mainContext = createContext<TMainContext>({
     facade: gameFacade,
 })
 
-const Main = () => {
+const MainComponent = () => {
     const [, setState] = useState(0)
 
     useEffect(() => {
@@ -48,4 +48,4 @@ const Main = () => {
     )
 }
 
-export default Main
+export default MainComponent

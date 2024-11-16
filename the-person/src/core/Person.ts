@@ -13,6 +13,9 @@ export abstract class Person implements IPerson {
     protected name: string
     protected wallet: IWallet
     protected requirements: IRequirement[]
+    // protected hungerLevel: number;
+    // protected tiredLevel: number;
+    // protected sleepLevel: number;
 
     getWalletBalance(): number {
         return this.wallet.getBalance()
