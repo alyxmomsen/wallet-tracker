@@ -16,10 +16,12 @@ export const mainContext = createContext<TMainContext>({
 const Main = () => {
     const [, setState] = useState(0)
 
-    useEffect(() => {}, [])
+    useEffect(() => {
+        console.log(gameFacade);
+    }, [])
 
     useEffect(() => {
-        console.log('updated')
+        console.log(gameFacade)
     })
 
     return (
@@ -27,9 +29,7 @@ const Main = () => {
             <div className="pre--1 bdr">
                 <button
                     onClick={() => {
-                        gameFacade.getPersons().forEach((elem) => {
-                            // elem.update()
-                        })
+                        gameFacade.update()
                         setState((current) => current + 1)
                     }}
                 >
