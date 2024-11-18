@@ -1,7 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useMemo, useState } from 'react'
 
 import './../App.css'
 import { Facade, IFacade } from '../core/Facade'
+import { RequirementsObserver } from '../core/Observer'
+import { IRequirement } from '../core/Requirement'
 // import { Facade, IFacade } from "../core/facade";
 
 export type TMainContext = {
@@ -15,9 +17,37 @@ export const mainContext = createContext<TMainContext>({
 
 const MainComponent = () => {
     const [, setState] = useState(0)
+    const [actualRequirements, setActualRequirements] = useState<
+        IRequirement[]
+    >([])
+
+    const result = useMemo(() => {}, [])
 
     useEffect(() => {
-        console.log(gameFacade);
+        const observer = new RequirementsObserver()
+
+        gameFacade.getPersons().forEach((person) => {
+            observer.addCallback(() => {
+                // setActualRequirements(
+                //     person.getActualRequirements()
+                // );
+            })
+        })
+
+        const update = () => {
+            observer.update()
+
+            console.log('update..')
+            window.requestAnimationFrame(update)
+        }
+
+        // window.requestAnimationFrame(update)
+
+        update()
+
+        observer.update()
+
+        console.log(gameFacade)
     }, [])
 
     useEffect(() => {
@@ -43,6 +73,9 @@ const MainComponent = () => {
                         </div>
                     )
                 })}
+                {actualRequirements.map((elem) => (
+                    <div>requirement</div>
+                ))}
             </div>
         </mainContext.Provider>
     )

@@ -6,6 +6,7 @@ export interface IPerson {
     // update(): void
     getWalletBalance(): number
     addRequirement(requirement: IRequirement): IRequirement | null
+    getActualRequirements(): IRequirement[]
 }
 
 export abstract class Person implements IPerson {
@@ -17,24 +18,21 @@ export abstract class Person implements IPerson {
     // protected tiredLevel: number;
     // protected sleepLevel: number;
 
+    addRequirement(requirement: IRequirement): IRequirement | null {
+        this.requirements.push(requirement)
+        return null
+    }
+
     getWalletBalance(): number {
         return this.wallet.getBalance()
     }
 
-    addRequirement(requirement: IRequirement): IRequirement | null {
-        const lengthBefore = this.requirements.length
-        const lengthAfter = this.requirements.push(requirement)
+    update() {}
 
-        if (lengthAfter > lengthBefore) {
-            return requirement
-        }
-
-        return null
-    }
-
-    update() {
-        for (const requirement of this.requirements) {
-        }
+    getActualRequirements(): IRequirement[] {
+        return this.requirements.filter((el) => {
+            return el.checkIfActual()
+        })
     }
 
     constructor(wallet: IWallet, name: string) {

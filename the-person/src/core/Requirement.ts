@@ -6,6 +6,7 @@ export interface IRequirement {
     decrementLevel(vlaue: number): number
     satisfy(): boolean
     go(person: IPerson): void
+    checkIfActual(): boolean
 }
 
 export class Requirement implements IRequirement {
@@ -13,6 +14,12 @@ export class Requirement implements IRequirement {
     private level: number
     private isSatisfied: boolean
     private behavior: IRequirementBehavior
+    private dateToStart: Date
+    // private value: number;
+
+    checkIfActual(): boolean {
+        return true
+    }
 
     go(person: IPerson): void {
         this.behavior.execute(person)
@@ -34,10 +41,16 @@ export class Requirement implements IRequirement {
         return this.level
     }
 
-    constructor(title: string, behavior: IRequirementBehavior) {
+    constructor(
+        title: string,
+        behavior: IRequirementBehavior,
+        dateToStart: Date
+    ) {
         this.title = title
         this.level = 0
         this.isSatisfied = false
         this.behavior = behavior
+        this.dateToStart = dateToStart
+        // this.value = 0;
     }
 }

@@ -17,6 +17,8 @@ export class Facade implements IFacade {
     private personsRegisty: Map<number, IPerson>
     private requirementPlanner: IPlanner<IRequirement, IPerson>
 
+    private requirements: IRequirement[]
+
     addRequirementSchedule(task: ITask<IRequirement, IPerson>) {
         this.requirementPlanner.addTask(task)
     }
@@ -35,10 +37,12 @@ export class Facade implements IFacade {
     }
 
     update() {
-        this.requirementPlanner.check();
+        this.requirementPlanner.check()
     }
 
     constructor() {
+        this.requirements = []
+
         this.lastId = 0
         this.persons = []
         this.personsRegisty = new Map<number, IPerson>()
@@ -48,29 +52,41 @@ export class Facade implements IFacade {
         this.addPerson(new MainPerson('Enemy Dann'))
         this.addPerson(new MainPerson('Enemy Alex'))
 
+        player.addRequirement(
+            new Requirement(
+                'satisfy the hunger',
+                new RequirementBehavior(),
+                new Date(`${11}-${18}-${2024} ${16}:${35}`)
+            )
+        )
+
         this.addRequirementSchedule(
             new RequirementTask(
                 new Date(),
-                new Requirement('satisfy the hunger', new RequirementBehavior())
+                new Requirement(
+                    'satisfy the hunger',
+                    new RequirementBehavior(),
+                    new Date(`${11}-${18}-${2024} ${16}:${35}`)
+                )
             )
         )
-        this.addRequirementSchedule(
-            new RequirementTask(
-                new Date(),
-                new Requirement('satisfy the discomfort', new RequirementBehavior())
-            )
-        )
-        this.addRequirementSchedule(
-            new RequirementTask(
-                new Date(),
-                new Requirement('satisfy the ...', new RequirementBehavior())
-            )
-        )
-        this.addRequirementSchedule(
-            new RequirementTask(
-                new Date(),
-                new Requirement('satisfy the bad mood', new RequirementBehavior())
-            )
-        )
+        // this.addRequirementSchedule(
+        //     new RequirementTask(
+        //         new Date(),
+        //         new Requirement('satisfy the discomfort', new RequirementBehavior())
+        //     )
+        // )
+        // this.addRequirementSchedule(
+        //     new RequirementTask(
+        //         new Date(),
+        //         new Requirement('satisfy the ...', new RequirementBehavior())
+        //     )
+        // )
+        // this.addRequirementSchedule(
+        //     new RequirementTask(
+        //         new Date(),
+        //         new Requirement('satisfy the bad mood', new RequirementBehavior())
+        //     )
+        // )
     }
 }
