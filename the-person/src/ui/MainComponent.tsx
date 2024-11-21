@@ -93,14 +93,12 @@ const MainComponent = () => {
                                 {person.getActualRequirements().map((req) => {
                                     return (
                                         <Requirement
-                                                    date={req.getFormatedStringDate()}
-                                                    title={req.getTitle()}
+                                            date={req.getFormatedStringDate()}
+                                            title={req.getTitle()}
                                             description={req.getBehaviorDescription()}
                                             person={person}
                                             requirement={req}
-                                                />
-                                            
-                                        
+                                        />
                                     )
                                 })}
                             </div>

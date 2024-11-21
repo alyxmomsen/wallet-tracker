@@ -4,7 +4,7 @@ import { IPerson } from './Person'
 export interface IRequirement {
     incrementLevel(value: number): number
     decrementLevel(vlaue: number): number
-    satisfy(person:IPerson): boolean
+    satisfy(person: IPerson): boolean
     go(person: IPerson): void
     checkIfActual(): boolean
     getTitle(): string
@@ -51,16 +51,15 @@ export class Requirement implements IRequirement {
     }
 
     checkIfActual(): boolean {
-        return !this.isSatisfied;
+        return !this.isSatisfied
     }
 
     go(person: IPerson): void {
         this.command.execute(person)
     }
 
-    satisfy(person:IPerson): boolean {
-
-        this.command.execute(person);
+    satisfy(person: IPerson): boolean {
+        this.command.execute(person)
 
         this.isSatisfied = true
         return this.isSatisfied

@@ -9,19 +9,17 @@ const Requirement = ({
     description,
     person,
     requirement,
-    
 }: {
     date: string
     title: string
-        description: string
-        person: IPerson
-    requirement:IRequirement
-    }) => {
-    
-    const ctx = useContext(mainContext);
-    
+    description: string
+    person: IPerson
+    requirement: IRequirement
+}) => {
+    const ctx = useContext(mainContext)
+
     return (
-        <div className='bdr pdg flex-item clickable'>
+        <div className="bdr pdg flex-item clickable">
             <h3>requires:</h3>
             <h4>{date}</h4>
             <div>
@@ -29,10 +27,9 @@ const Requirement = ({
                 <p>{description}</p>
                 <button
                     onClick={() => {
+                        requirement.satisfy(person)
 
-                        requirement.satisfy(person);
-
-                        ctx.update();
+                        ctx.update()
                     }}
                 >
                     execute
