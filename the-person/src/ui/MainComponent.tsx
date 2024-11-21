@@ -88,7 +88,7 @@ const MainComponent = () => {
                 {persons.map((person) => {
                     if (person.getActualRequirements().length) {
                         return (
-                            <div className="bdr pdg flex-box">
+                            <div className="bdr pdg flex-box flex-dir-col">
                                 {person.getName()}
                                 {person.getActualRequirements().map((req) => {
                                     return (

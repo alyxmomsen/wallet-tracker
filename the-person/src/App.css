@@ -33,6 +33,10 @@ body {
     flex-wrap: wrap;
 }
 
+.flex-dir-col {
+    flex-direction: column;
+}
+
 .flex-item {
     width: max-content;
 }
@@ -58,4 +62,9 @@ body {
 
 .clickable {
     cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.clickable:hover {
+    background-color: rgb(99, 132, 193);
 }

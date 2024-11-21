@@ -63,6 +63,6 @@ export abstract class Person implements IPerson {
 
 export class MainPerson extends Person {
     constructor(name: string) {
-        super(new Wallet(20_000), name)
+        super(new Wallet(11_561 + 600), name)
     }
 }

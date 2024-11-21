@@ -7,33 +7,56 @@ import { DecrementMoneyRequirementCommand } from '../core/RequirementBehavior'
 const AddRequirement = ({ person }: { person: IPerson }) => {
     const ctx = useContext(mainContext)
 
-    const [d, setD] = useState<string>('')
+    const [dateString, setDateString] = useState<string>('')
+    const [payValue, setPayValue] = useState(0)
+    const [descr, setDescr] = useState<string>('')
+    const [requirementTitle, setRequirementTitle] = useState<string>('')
 
     return (
         <div>
             <div>
                 <input
                     onChange={(e) => {
-                        setD(e.currentTarget.value)
+                        setDateString(e.currentTarget.value)
                     }}
-                    value={d}
+                    value={dateString}
                     type="datetime-local"
                 />
-                {d !== '' && (
+                <input
+                    onChange={(e) =>
+                        setPayValue(Number.parseFloat(e.currentTarget.value))
+                    }
+                    type="number"
+                    value={payValue}
+                />
+                <input
+                    onChange={(e) => setRequirementTitle(e.currentTarget.value)}
+                    type="text"
+                    value={requirementTitle}
+                />
+                <textarea
+                    value={descr}
+                    onChange={(e) => {
+                        setDescr(e.currentTarget.value)
+                    }}
+                />
+                {dateString !== '' && (
                     <button
                         onClick={() => {
                             person.addRequirement(
                                 new Requirement(
-                                    'hello world',
-                                    new DecrementMoneyRequirementCommand(199),
-                                    new Date(d)
+                                    descr,
+                                    new DecrementMoneyRequirementCommand(
+                                        payValue
+                                    ),
+                                    new Date(dateString)
                                 )
                             )
 
                             ctx.update()
                         }}
                     >
-                        add {d}
+                        add {dateString}
                     </button>
                 )}
             </div>
