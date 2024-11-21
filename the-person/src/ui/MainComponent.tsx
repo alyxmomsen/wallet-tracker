@@ -5,6 +5,8 @@ import { Facade, IFacade } from '../core/Facade'
 import { Observer, RequirementsObserver } from '../core/Observer'
 import { IRequirement } from '../core/Requirement'
 import { IPerson } from '../core/Person'
+import Requirement from './Requirement'
+import AddRequirement from './AddRequirement'
 
 export type TMainContext = {
     facade: IFacade
@@ -19,15 +21,15 @@ const MainComponent = () => {
     const [, setState] = useState(0)
 
     const [persons, setPersons] = useState<IPerson[]>(gameFacade.getPersons())
+    const [isAddRequirementsFormOpen, setIsAddRequirementsFormOpen] =
+        useState(false)
 
     useEffect(() => {
         const observer = new RequirementsObserver()
         const requirements: IRequirement[] = []
 
         persons.forEach((person) => {
-            // observer.addCallback(() => {
-            //
-            // })
+            observer.addCallback(() => {})
             // const personActualRequirements = person.getActualRequirements();
             // setActualRequirements([...actualRequirements , personActualRequirements]);
         })
@@ -38,7 +40,7 @@ const MainComponent = () => {
 
         const update = () => {
             persons.forEach((elem) => {})
-
+            observer.update()
             window.requestAnimationFrame(update)
         }
 
@@ -48,6 +50,16 @@ const MainComponent = () => {
     return (
         <mainContext.Provider value={{ facade: gameFacade }}>
             <div className="pre--1 bdr pdg">
+                <button
+                    onClick={() => {
+                        setIsAddRequirementsFormOpen(true)
+                    }}
+                >
+                    add requirement
+                </button>
+                {isAddRequirementsFormOpen && persons.length && (
+                    <AddRequirement person={persons[0]} />
+                )}
                 <button
                     onClick={() => {
                         gameFacade.update()
@@ -71,23 +83,11 @@ const MainComponent = () => {
                                 {person.getActualRequirements().map((req) => {
                                     return (
                                         <div className="bdr pdg">
-                                            <h3>requires:</h3>
-                                            <h4>
-                                                {req.getFormatedStringDate()}
-                                            </h4>
-                                            <div>
-                                                <p>{req.getTitle()}</p>
-                                                <p>
-                                                    {req.getBehaviorDescription()}
-                                                </p>
-                                                <button
-                                                    onClick={() => {
-                                                        // req.go(person)
-                                                    }}
-                                                >
-                                                    execute
-                                                </button>
-                                            </div>
+                                            <Requirement
+                                                date={req.getFormatedStringDate()}
+                                                title={req.getTitle()}
+                                                description={req.getBehaviorDescription()}
+                                            />
                                         </div>
                                     )
                                 })}
