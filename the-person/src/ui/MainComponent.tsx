@@ -10,11 +10,13 @@ import AddRequirement from './AddRequirement'
 
 export type TMainContext = {
     facade: IFacade
+    update:() => void,
 }
 
 const gameFacade = new Facade()
 export const mainContext = createContext<TMainContext>({
     facade: gameFacade,
+    update:() => {}
 })
 
 const MainComponent = () => {
@@ -29,7 +31,9 @@ const MainComponent = () => {
         const requirements: IRequirement[] = []
 
         persons.forEach((person) => {
-            observer.addCallback(() => {})
+            observer.addCallback(() => {
+                setState(current => current + 1);
+            })
             // const personActualRequirements = person.getActualRequirements();
             // setActualRequirements([...actualRequirements , personActualRequirements]);
         })
@@ -48,7 +52,7 @@ const MainComponent = () => {
     }, [])
 
     return (
-        <mainContext.Provider value={{ facade: gameFacade }}>
+        <mainContext.Provider value={{ facade: gameFacade , update:() => setState(current => current + 1) }}>
             <div className="pre--1 bdr pdg">
                 <button
                     onClick={() => {
@@ -79,15 +83,22 @@ const MainComponent = () => {
                 {persons.map((person) => {
                     if (person.getActualRequirements().length) {
                         return (
-                            <div className="bdr pdg">
+                            <div className="bdr pdg flex-box">
+                                {
+                                                person.getName()
+                                            }
                                 {person.getActualRequirements().map((req) => {
                                     return (
-                                        <div className="bdr pdg">
-                                            <Requirement
+                                        <div onClick={() => {alert()}} className="bdr pdg flex-item clickable">
+                                            
+                                            <div>{
+                                                req.getFormatedStringDate()
+                                            }</div>
+                                            {false && <Requirement
                                                 date={req.getFormatedStringDate()}
                                                 title={req.getTitle()}
                                                 description={req.getBehaviorDescription()}
-                                            />
+                                            />}
                                         </div>
                                     )
                                 })}

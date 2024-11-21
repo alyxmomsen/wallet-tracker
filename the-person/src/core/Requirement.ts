@@ -22,18 +22,18 @@ export class Requirement implements IRequirement {
 
     getFormatedStringDate(): string {
         const monthes = [
-            'jan',
-            'pheb',
-            'marth',
-            'april',
+            'jan_war',
+            'phebral',
+            'm_ART',
+            'App_Real',
             'may',
             'jun',
             'jule',
             'aw_ghost',
-            'septum_beer',
+            'septum_Beer',
             'ecto_beer',
-            'nova_beer',
-            'decemal_beer',
+            'novam_Beer',
+            'decem_beer',
         ]
 
         return `

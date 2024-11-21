@@ -29,6 +29,8 @@ const AddRequirement = ({ person }: { person: IPerson }) => {
                                     new Date(d)
                                 )
                             )
+
+                            ctx.update();
                         }}
                     >
                         add {d}

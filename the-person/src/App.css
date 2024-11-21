@@ -27,6 +27,16 @@ body {
     padding: var(--gap-3);
 }
 
+.flex-box {
+    display: flex;
+    gap:var(--gap);
+    flex-wrap: wrap;
+}
+
+.flex-item {
+    width: max-content;
+}
+
 .pre--1 {
     display: block;
     width: 100%;
@@ -44,4 +54,8 @@ body {
 
 .pdg {
     padding: var(--gap);
+}
+
+.clickable {
+    cursor: pointer;
 }

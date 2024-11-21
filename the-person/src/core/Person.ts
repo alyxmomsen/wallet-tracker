@@ -8,6 +8,7 @@ export interface IPerson {
     addRequirement(requirement: IRequirement): IRequirement | null
     getActualRequirements(): IRequirement[]
     decrementWallet(value: number): void
+    getName():string
 }
 
 export abstract class Person implements IPerson {
@@ -18,6 +19,10 @@ export abstract class Person implements IPerson {
     // protected hungerLevel: number;
     // protected tiredLevel: number;
     // protected sleepLevel: number;
+
+    getName(): string {
+        return this.name;
+    }
 
     decrementWallet(value: number): void {
         this.wallet.remove(value)
@@ -40,8 +45,8 @@ export abstract class Person implements IPerson {
     }
 
     getActualRequirements(): IRequirement[] {
-        return this.requirements.filter((el) => {
-            return el.checkIfActual()
+        return this.requirements.filter((requirement) => {
+            return requirement.checkIfActual()
         })
     }
 
