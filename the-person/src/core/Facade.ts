@@ -1,7 +1,7 @@
-import { IPerson, MainPerson } from './Person'
+import { IPerson, MainPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
-import { RequirementBehavior } from './RequirementBehavior'
+import { DecrementMoneyRequirementBehavior } from './RequirementBehavior'
 import { ITask, RequirementTask } from './Task'
 
 export interface IFacade {
@@ -42,50 +42,41 @@ export class Facade implements IFacade {
 
     constructor() {
         this.requirements = []
-
         this.lastId = 0
         this.persons = []
         this.personsRegisty = new Map<number, IPerson>()
         const player = new MainPerson('Arch Player')
+        const enemy = new MainPerson('Enemy Danny Elfman')
         this.requirementPlanner = new RequirementPlanner(player)
         this.addPerson(player)
-        this.addPerson(new MainPerson('Enemy Dann'))
-        this.addPerson(new MainPerson('Enemy Alex'))
+        this.addPerson(enemy)
+        // this.addPerson(new MainPerson('Enemy Dann'))
+        // this.addPerson(new MainPerson('Enemy Alex'))
 
         player.addRequirement(
             new Requirement(
                 'satisfy the hunger',
-                new RequirementBehavior(),
-                new Date(`${11}-${18}-${2024} ${16}:${35}`)
+                new DecrementMoneyRequirementBehavior(500),
+                new Date(`${11}-${18}-${2024} ${20}:${10}`)
             )
         )
 
-        this.addRequirementSchedule(
-            new RequirementTask(
-                new Date(),
-                new Requirement(
-                    'satisfy the hunger',
-                    new RequirementBehavior(),
-                    new Date(`${11}-${18}-${2024} ${16}:${35}`)
-                )
+        player.addRequirement(
+            new Requirement(
+                'pay for hostel',
+                new DecrementMoneyRequirementBehavior(699),
+                new Date(`${11}-${18}-${2024} ${20}:${12}`)
             )
         )
+
         // this.addRequirementSchedule(
         //     new RequirementTask(
         //         new Date(),
-        //         new Requirement('satisfy the discomfort', new RequirementBehavior())
-        //     )
-        // )
-        // this.addRequirementSchedule(
-        //     new RequirementTask(
-        //         new Date(),
-        //         new Requirement('satisfy the ...', new RequirementBehavior())
-        //     )
-        // )
-        // this.addRequirementSchedule(
-        //     new RequirementTask(
-        //         new Date(),
-        //         new Requirement('satisfy the bad mood', new RequirementBehavior())
+        //         new Requirement(
+        //             'satisfy the hunger',
+        //             new DecrementMoneyRequirementBehavior(),
+        //             new Date(`${11}-${18}-${2024} ${16}:${35}`)
+        //         )
         //     )
         // )
     }

@@ -7,6 +7,9 @@ export interface IRequirement {
     satisfy(): boolean
     go(person: IPerson): void
     checkIfActual(): boolean
+    getTitle(): string
+    getFormatedStringDate(): string
+    getBehaviorDescription(): string
 }
 
 export class Requirement implements IRequirement {
@@ -16,6 +19,36 @@ export class Requirement implements IRequirement {
     private behavior: IRequirementBehavior
     private dateToStart: Date
     // private value: number;
+
+    getFormatedStringDate(): string {
+        const monthes = [
+            'jan',
+            'pheb',
+            'marth',
+            'april',
+            'may',
+            'jun',
+            'jule',
+            'aw_ghost',
+            'septum_beer',
+            'ecto_beer',
+            'nova_beer',
+            'decemal_beer',
+        ]
+
+        return `
+        ${this.dateToStart.getDate()} 
+        ${monthes[this.dateToStart.getMonth()]} 
+        ${this.dateToStart.getFullYear()}
+
+    ${this.dateToStart.getHours()} :
+    ${this.dateToStart.getMinutes()}
+        `
+    }
+
+    getTitle(): string {
+        return this.title
+    }
 
     checkIfActual(): boolean {
         return true
@@ -39,6 +72,10 @@ export class Requirement implements IRequirement {
     decrementLevel(vlaue: number) {
         this.level -= vlaue
         return this.level
+    }
+
+    getBehaviorDescription(): string {
+        return this.behavior.getDescription()
     }
 
     constructor(

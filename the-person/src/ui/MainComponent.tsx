@@ -1,10 +1,10 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
 import './../App.css'
 import { Facade, IFacade } from '../core/Facade'
-import { RequirementsObserver } from '../core/Observer'
+import { Observer, RequirementsObserver } from '../core/Observer'
 import { IRequirement } from '../core/Requirement'
-// import { Facade, IFacade } from "../core/facade";
+import { IPerson } from '../core/Person'
 
 export type TMainContext = {
     facade: IFacade
@@ -17,46 +17,37 @@ export const mainContext = createContext<TMainContext>({
 
 const MainComponent = () => {
     const [, setState] = useState(0)
-    const [actualRequirements, setActualRequirements] = useState<
-        IRequirement[]
-    >([])
 
-    const result = useMemo(() => {}, [])
+    const [persons, setPersons] = useState<IPerson[]>(gameFacade.getPersons())
 
     useEffect(() => {
         const observer = new RequirementsObserver()
+        const requirements: IRequirement[] = []
 
-        gameFacade.getPersons().forEach((person) => {
-            observer.addCallback(() => {
-                // setActualRequirements(
-                //     person.getActualRequirements()
-                // );
-            })
+        persons.forEach((person) => {
+            // observer.addCallback(() => {
+            //
+            // })
+            // const personActualRequirements = person.getActualRequirements();
+            // setActualRequirements([...actualRequirements , personActualRequirements]);
         })
-
-        const update = () => {
-            observer.update()
-
-            console.log('update..')
-            window.requestAnimationFrame(update)
-        }
-
-        // window.requestAnimationFrame(update)
-
-        update()
-
-        observer.update()
-
-        console.log(gameFacade)
     }, [])
 
     useEffect(() => {
-        console.log(gameFacade)
-    })
+        const observer = new Observer()
+
+        const update = () => {
+            persons.forEach((elem) => {})
+
+            window.requestAnimationFrame(update)
+        }
+
+        update()
+    }, [])
 
     return (
         <mainContext.Provider value={{ facade: gameFacade }}>
-            <div className="pre--1 bdr">
+            <div className="pre--1 bdr pdg">
                 <button
                     onClick={() => {
                         gameFacade.update()
@@ -65,17 +56,47 @@ const MainComponent = () => {
                 >
                     update
                 </button>
-                {gameFacade.getPersons().map((person) => {
+                {persons.map((person) => {
                     return (
-                        <div className="bdr">
+                        <div className="bdr pdg">
                             {<button>btn</button>}wallet:
                             {person.getWalletBalance()}
                         </div>
                     )
                 })}
-                {actualRequirements.map((elem) => (
-                    <div>requirement</div>
-                ))}
+                {persons.map((person) => {
+                    if (person.getActualRequirements().length) {
+                        return (
+                            <div className="bdr pdg">
+                                {person.getActualRequirements().map((req) => {
+                                    return (
+                                        <div className="bdr pdg">
+                                            <h3>requires:</h3>
+                                            <h4>
+                                                {req.getFormatedStringDate()}
+                                            </h4>
+                                            <div>
+                                                <p>{req.getTitle()}</p>
+                                                <p>
+                                                    {req.getBehaviorDescription()}
+                                                </p>
+                                                <button
+                                                    onClick={() => {
+                                                        // req.go(person)
+                                                    }}
+                                                >
+                                                    execute
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )
+                    }
+
+                    return false
+                })}
             </div>
         </mainContext.Provider>
     )

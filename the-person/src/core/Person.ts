@@ -3,10 +3,11 @@ import { IWallet, Wallet } from './Wallet'
 import { IRequirement } from './Requirement'
 
 export interface IPerson {
-    // update(): void
+    update(): void
     getWalletBalance(): number
     addRequirement(requirement: IRequirement): IRequirement | null
     getActualRequirements(): IRequirement[]
+    decrementWallet(value: number): void
 }
 
 export abstract class Person implements IPerson {
@@ -18,6 +19,10 @@ export abstract class Person implements IPerson {
     // protected tiredLevel: number;
     // protected sleepLevel: number;
 
+    decrementWallet(value: number): void {
+        this.wallet.remove(value)
+    }
+
     addRequirement(requirement: IRequirement): IRequirement | null {
         this.requirements.push(requirement)
         return null
@@ -27,12 +32,21 @@ export abstract class Person implements IPerson {
         return this.wallet.getBalance()
     }
 
-    update() {}
+    update() {
+        this.requirements.forEach((requirement) => {
+            if (requirement) {
+            }
+        })
+    }
 
     getActualRequirements(): IRequirement[] {
         return this.requirements.filter((el) => {
             return el.checkIfActual()
         })
+    }
+
+    getAllReauirements(): IRequirement[] {
+        return this.requirements
     }
 
     constructor(wallet: IWallet, name: string) {
