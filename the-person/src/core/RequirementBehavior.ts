@@ -1,11 +1,11 @@
 import { IPerson } from './Person'
 
-export interface IRequirementBehavior {
+export interface IRequirementCommand {
     execute(person: IPerson): boolean
     getDescription(): string
 }
 
-export class DecrementMoneyRequirementBehavior implements IRequirementBehavior {
+export class DecrementMoneyRequirementCommand implements IRequirementCommand {
     decrementValue: number
 
     getDescription(): string {
@@ -13,7 +13,7 @@ export class DecrementMoneyRequirementBehavior implements IRequirementBehavior {
     }
 
     execute(person: IPerson): boolean {
-        person.decrementWallet(688)
+        person.decrementWallet(this.decrementValue)
         return true
     }
 

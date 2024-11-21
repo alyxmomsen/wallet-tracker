@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { mainContext } from './MainComponent'
+import { IPerson } from '../core/Person'
+import { IRequirement } from '../core/Requirement'
 
 const Requirement = ({
     date,
     title,
     description,
+    person,
+    requirement,
+    
 }: {
     date: string
     title: string
-    description: string
-}) => {
+        description: string
+        person: IPerson
+    requirement:IRequirement
+    }) => {
+    
+    const ctx = useContext(mainContext);
+    
     return (
-        <div>
+        <div className='bdr pdg flex-item clickable'>
             <h3>requires:</h3>
             <h4>{date}</h4>
             <div>
@@ -18,7 +29,10 @@ const Requirement = ({
                 <p>{description}</p>
                 <button
                     onClick={() => {
-                        // req.go(person)
+
+                        requirement.satisfy(person);
+
+                        ctx.update();
                     }}
                 >
                     execute

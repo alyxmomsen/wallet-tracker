@@ -1,10 +1,10 @@
-import { IRequirementBehavior } from './RequirementBehavior'
+import { IRequirementCommand } from './RequirementBehavior'
 import { IPerson } from './Person'
 
 export interface IRequirement {
     incrementLevel(value: number): number
     decrementLevel(vlaue: number): number
-    satisfy(): boolean
+    satisfy(person:IPerson): boolean
     go(person: IPerson): void
     checkIfActual(): boolean
     getTitle(): string
@@ -16,7 +16,7 @@ export class Requirement implements IRequirement {
     private title: string
     private level: number
     private isSatisfied: boolean
-    private behavior: IRequirementBehavior
+    private command: IRequirementCommand
     private dateToStart: Date
     // private value: number;
 
@@ -51,14 +51,17 @@ export class Requirement implements IRequirement {
     }
 
     checkIfActual(): boolean {
-        return true
+        return !this.isSatisfied;
     }
 
     go(person: IPerson): void {
-        this.behavior.execute(person)
+        this.command.execute(person)
     }
 
-    satisfy(): boolean {
+    satisfy(person:IPerson): boolean {
+
+        this.command.execute(person);
+
         this.isSatisfied = true
         return this.isSatisfied
     }
@@ -75,18 +78,18 @@ export class Requirement implements IRequirement {
     }
 
     getBehaviorDescription(): string {
-        return this.behavior.getDescription()
+        return this.command.getDescription()
     }
 
     constructor(
         title: string,
-        behavior: IRequirementBehavior,
+        behavior: IRequirementCommand,
         dateToStart: Date
     ) {
         this.title = title
         this.level = 0
         this.isSatisfied = false
-        this.behavior = behavior
+        this.command = behavior
         this.dateToStart = dateToStart
         // this.value = 0;
     }

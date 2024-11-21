@@ -8,7 +8,7 @@ export interface IPerson {
     addRequirement(requirement: IRequirement): IRequirement | null
     getActualRequirements(): IRequirement[]
     decrementWallet(value: number): void
-    getName():string
+    getName(): string
 }
 
 export abstract class Person implements IPerson {
@@ -21,7 +21,7 @@ export abstract class Person implements IPerson {
     // protected sleepLevel: number;
 
     getName(): string {
-        return this.name;
+        return this.name
     }
 
     decrementWallet(value: number): void {

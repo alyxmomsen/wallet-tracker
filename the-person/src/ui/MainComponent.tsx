@@ -10,13 +10,13 @@ import AddRequirement from './AddRequirement'
 
 export type TMainContext = {
     facade: IFacade
-    update:() => void,
+    update: () => void
 }
 
 const gameFacade = new Facade()
 export const mainContext = createContext<TMainContext>({
     facade: gameFacade,
-    update:() => {}
+    update: () => {},
 })
 
 const MainComponent = () => {
@@ -32,7 +32,7 @@ const MainComponent = () => {
 
         persons.forEach((person) => {
             observer.addCallback(() => {
-                setState(current => current + 1);
+                setState((current) => current + 1)
             })
             // const personActualRequirements = person.getActualRequirements();
             // setActualRequirements([...actualRequirements , personActualRequirements]);
@@ -52,7 +52,12 @@ const MainComponent = () => {
     }, [])
 
     return (
-        <mainContext.Provider value={{ facade: gameFacade , update:() => setState(current => current + 1) }}>
+        <mainContext.Provider
+            value={{
+                facade: gameFacade,
+                update: () => setState((current) => current + 1),
+            }}
+        >
             <div className="pre--1 bdr pdg">
                 <button
                     onClick={() => {
@@ -84,22 +89,18 @@ const MainComponent = () => {
                     if (person.getActualRequirements().length) {
                         return (
                             <div className="bdr pdg flex-box">
-                                {
-                                                person.getName()
-                                            }
+                                {person.getName()}
                                 {person.getActualRequirements().map((req) => {
                                     return (
-                                        <div onClick={() => {alert()}} className="bdr pdg flex-item clickable">
+                                        <Requirement
+                                                    date={req.getFormatedStringDate()}
+                                                    title={req.getTitle()}
+                                            description={req.getBehaviorDescription()}
+                                            person={person}
+                                            requirement={req}
+                                                />
                                             
-                                            <div>{
-                                                req.getFormatedStringDate()
-                                            }</div>
-                                            {false && <Requirement
-                                                date={req.getFormatedStringDate()}
-                                                title={req.getTitle()}
-                                                description={req.getBehaviorDescription()}
-                                            />}
-                                        </div>
+                                        
                                     )
                                 })}
                             </div>

@@ -1,7 +1,7 @@
 import { IPerson, MainPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
-import { DecrementMoneyRequirementBehavior } from './RequirementBehavior'
+import { DecrementMoneyRequirementCommand } from './RequirementBehavior'
 import { ITask, RequirementTask } from './Task'
 
 export interface IFacade {
@@ -56,7 +56,7 @@ export class Facade implements IFacade {
         player.addRequirement(
             new Requirement(
                 'satisfy the hunger',
-                new DecrementMoneyRequirementBehavior(500),
+                new DecrementMoneyRequirementCommand(500),
                 new Date(`${11}-${18}-${2024} ${20}:${10}`)
             )
         )
@@ -64,7 +64,7 @@ export class Facade implements IFacade {
         player.addRequirement(
             new Requirement(
                 'pay for hostel',
-                new DecrementMoneyRequirementBehavior(699),
+                new DecrementMoneyRequirementCommand(699),
                 new Date(`${11}-${18}-${2024} ${20}:${12}`)
             )
         )
