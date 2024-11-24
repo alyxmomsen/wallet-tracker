@@ -13,23 +13,25 @@ const PersonPreviewUI = ({ person }: { person: IPerson }) => {
     return (
         <div className="pdg bdr flex-item">
             <h2>{person.getName()} , Person</h2>
-            <div className="bdr pdg flex-box">
+            <div className="bdr pdg">
                 <h3>controls</h3>
-                <div>
-                    <button
-                        className="btn"
-                        onClick={() => {
-                            modalsDispatch([
-                                ...modals,
-                                <AddRequirementForm person={person} />,
-                            ])
-                        }}
-                    >
-                        Add Requirement
-                    </button>
-                </div>
-                <div>
-                    <button>Open The Card</button>
+                <div className=" flex-box gap">
+                    <div>
+                        <button
+                            className="btn"
+                            onClick={() => {
+                                modalsDispatch([
+                                    ...modals,
+                                    <AddRequirementForm person={person} />,
+                                ])
+                            }}
+                        >
+                            Add Requirement
+                        </button>
+                    </div>
+                    <div>
+                        <button className="btn">Open The Card</button>
+                    </div>
                 </div>
             </div>
             <div className="bdr pdg">
