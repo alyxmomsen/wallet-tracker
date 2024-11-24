@@ -74,8 +74,16 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
     const { service, modals, modalsDispatch, update, currentPerson } =
         UseAppContext()
 
-    const {setHours , hours , setMinutes , minutes , month , date:day , year} = UseDateContext();
-    
+    const {
+        setHours,
+        hours,
+        setMinutes,
+        minutes,
+        month,
+        date: day,
+        year,
+    } = UseDateContext()
+
     // const [day, setDay] = useState(new Date().getDate())
     // const [month, setMonth] = useState(new Date().getMonth() + 1)
     // const [year, setYear] = useState(new Date().getFullYear())
@@ -135,7 +143,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                                             const value = Number.parseInt(
                                                 e.currentTarget.value
                                             )
-                                            
+
                                             setHours(
                                                 value > 23
                                                     ? 0
