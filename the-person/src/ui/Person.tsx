@@ -7,7 +7,7 @@ import AddRequirementForm from './AddRequirementForm'
 const Person = ({ person }: { person: IPerson }) => {
     const { update, modalsDispatch, modals } = UseAppContext()
 
-    const executed = person.getExecutedReauirements()
+    const executed = person.getExecutedRequirements()
     const actual = person.getActualRequirements()
 
     return (
@@ -34,7 +34,7 @@ const Person = ({ person }: { person: IPerson }) => {
                 {executed.length ? (
                     <div className="bdr pdg">
                         <h4>executed:</h4>
-                        {person.getExecutedReauirements().map((requirement) => {
+                        {person.getExecutedRequirements().map((requirement) => {
                             return (
                                 <RequirementUI
                                     requirement={requirement}

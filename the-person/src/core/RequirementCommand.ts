@@ -27,7 +27,7 @@ export class IncrementValueRequirementCommand implements IRequirementCommand {
 
     constructor(value: number) {
         this.incrementValue = value
-        alert(this.incrementValue)
+        // alert(this.incrementValue)
     }
 }
 

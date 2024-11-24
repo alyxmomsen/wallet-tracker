@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UseAppContext } from './ApplicationContext'
 import SomeComponent from './SomeComponent'
 import { IPerson } from '../core/Person'
@@ -15,16 +15,48 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
     const { service, modals, modalsDispatch, update, currentPerson } =
         UseAppContext()
 
-    const [minutes, setMinutes] = useState(new Date().getMinutes())
-    const [hours, setHours] = useState(new Date().getHours())
-
     const [day, setDay] = useState(new Date().getDate())
     const [month, setMonth] = useState(new Date().getMonth() + 1)
     const [year, setYear] = useState(new Date().getFullYear())
 
+    const [minutes, setMinutes] = useState(new Date().getMinutes())
+    const [hours, setHours] = useState(
+        (() => {
+            return new Date().getHours()
+        })()
+    )
+
     const [transactionValue, setTransactionValue] = useState<number>(1000)
     const [transactionType, setTransactionType] =
         useState<TransactionType>('inc')
+
+    const executedRequirements = person.getExecutedRequirements()
+    const actualRequirements = person.getActualRequirements()
+
+    useEffect(() => {
+        setMinutes(
+            (() => {
+                const currentDate = new Date()
+
+                return year !== currentDate.getFullYear() ||
+                    month !== currentDate.getMonth() + 1 ||
+                    day !== currentDate.getDate()
+                    ? 30
+                    : currentDate.getMinutes()
+            })()
+        )
+        setHours(
+            (() => {
+                const currentDate = new Date()
+
+                return year !== currentDate.getFullYear() ||
+                    month !== currentDate.getMonth() + 1 ||
+                    day !== currentDate.getDate()
+                    ? 12
+                    : currentDate.getHours()
+            })()
+        )
+    }, [day, month, year])
 
     return (
         <div>
@@ -207,15 +239,41 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                 </div>
             </div>
             <div className="pdg bdr">
-                <h3>Requirements:</h3>
-                {person.getActualRequirements().map((requirement) => {
-                    return (
-                        <RequirementUI
-                            person={person}
-                            requirement={requirement}
-                        />
-                    )
-                })}
+                {actualRequirements.length || executedRequirements.length ? (
+                    <div>
+                        <h2>Requirements:</h2>
+                        {actualRequirements.length ? (
+                            <div>
+                                <h3>Actual:</h3>
+                                {person
+                                    .getActualRequirements()
+                                    .map((requirement) => {
+                                        return (
+                                            <RequirementUI
+                                                person={person}
+                                                requirement={requirement}
+                                            />
+                                        )
+                                    })}
+                            </div>
+                        ) : null}
+                        {executedRequirements.length ? (
+                            <div className="bdr pdg">
+                                <h3>Executed:</h3>
+                                {person
+                                    .getExecutedRequirements()
+                                    .map((requirement) => {
+                                        return (
+                                            <RequirementUI
+                                                person={person}
+                                                requirement={requirement}
+                                            />
+                                        )
+                                    })}
+                            </div>
+                        ) : null}
+                    </div>
+                ) : null}
             </div>
         </div>
     )

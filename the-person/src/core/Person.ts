@@ -8,7 +8,7 @@ export interface IPerson {
     addRequirement(requirement: IRequirement): IRequirement | null
     getActualRequirements(): IRequirement[]
     getAllReauirements(): IRequirement[]
-    getExecutedReauirements(): IRequirement[]
+    getExecutedRequirements(): IRequirement[]
     decrementWallet(value: number): void
     getName(): string
     incrementWallet(value: number): void
@@ -61,7 +61,7 @@ export abstract class Person implements IPerson {
         return this.requirements
     }
 
-    getExecutedReauirements(): IRequirement[] {
+    getExecutedRequirements(): IRequirement[] {
         return this.requirements.filter((elem) => {
             return !elem.checkIfActual()
         })
