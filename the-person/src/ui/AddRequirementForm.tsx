@@ -7,7 +7,7 @@ import {
     DecrementMoneyRequirementCommand,
     IncrementValueRequirementCommand,
 } from '../core/RequirementCommand'
-import RequirementUI from './Requirement'
+import RequirementPreviewUI from './Requirement'
 import AddDateForm from './AddDateForm'
 import AddTimeForm from './AddTimeForm'
 import AddRequirementButton from './AddRequirementButton'
@@ -22,14 +22,14 @@ export type DateContextValue = {
     hours: number
     minutes: number
     transactionType: 'inc' | 'dec'
-    transactionValue: number;
+    transactionValue: number
     setDate: (value: number) => void
     setMonth: (value: number) => void
     setYear: (value: number) => void
     setHours: (value: number) => void
     setMinutes: (value: number) => void
     setTransactionType: (value: TTransactionType) => void
-    setTransactionValue:(value:number)  =>void
+    setTransactionValue: (value: number) => void
 }
 
 const DateContext = createContext<DateContextValue | undefined>(undefined)
@@ -65,8 +65,10 @@ const DateContextProvider = ({ children }: { children: JSX.Element }) => {
                 setYear: (value: number) => setYear(value),
                 setHours: (value: number) => setHours(value),
                 setMinutes: (value: number) => setMinutes(value),
-                setTransactionType: (value: TTransactionType) => setTransactionType(value),
-                setTransactionValue:(value:number)=> setTransactionValue(value)
+                setTransactionType: (value: TTransactionType) =>
+                    setTransactionType(value),
+                setTransactionValue: (value: number) =>
+                    setTransactionValue(value),
             }}
         >
             {children}
@@ -99,7 +101,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
     //     })()
     // )
 
-    const [transactionValue, setTransactionValue] = useState(1000); 
+    const [transactionValue, setTransactionValue] = useState(1000)
 
     const executedRequirements = person.getExecutedRequirements()
     const actualRequirements = person.getActualRequirements()
@@ -168,7 +170,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                                         .getActualRequirements()
                                         .map((requirement) => {
                                             return (
-                                                <RequirementUI
+                                                <RequirementPreviewUI
                                                     person={person}
                                                     requirement={requirement}
                                                 />
@@ -183,7 +185,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                                         .getExecutedRequirements()
                                         .map((requirement) => {
                                             return (
-                                                <RequirementUI
+                                                <RequirementPreviewUI
                                                     person={person}
                                                     requirement={requirement}
                                                 />

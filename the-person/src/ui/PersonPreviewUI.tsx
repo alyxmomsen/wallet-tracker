@@ -1,7 +1,7 @@
 import React from 'react'
 import { IPerson } from '../core/Person'
 import { UseAppContext } from './ApplicationContext'
-import RequirementUI from './Requirement'
+import RequirementPreviewUI from './Requirement'
 import AddRequirementForm from './AddRequirementForm'
 
 const PersonPreviewUI = ({ person }: { person: IPerson }) => {

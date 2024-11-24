@@ -3,7 +3,7 @@ import { IRequirement } from '../core/Requirement'
 import { IPerson } from '../core/Person'
 import { UseAppContext } from './ApplicationContext'
 
-const RequirementUI = ({
+const RequirementPreviewUI = ({
     requirement,
     person,
 }: {
@@ -14,22 +14,35 @@ const RequirementUI = ({
 
     return (
         <div className="pdg bdr">
-            {requirement.getFormatedStringDate()}
-
+            <div className='bdr pdg'>
+                {requirement.getFormatedStringDate()}
+            </div>
             {requirement.checkIfActual() ? (
-                <button
-                    className="btn"
-                    onClick={() => {
-                        requirement.satisfy(person)
-                        update()
-                    }}
-                >
-                    exec
-                </button>
+                <div className='bdr pdg'>
+                    <h3>controls</h3>
+                    <div className='flex-box'>
+                        <div>
+                            <button
+                                className="btn"
+                                onClick={() => {
+                                    requirement.satisfy(person)
+                                    update()
+                                }}
+                            >
+                                exec
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn" onClick={() => {}}>
+                                delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
             ) : null}
-            <div>{requirement.getBehaviorDescription()}</div>
+            <div className='bdr pdg'>{requirement.getBehaviorDescription()}</div>
         </div>
     )
 }
 
-export default RequirementUI
+export default RequirementPreviewUI

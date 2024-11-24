@@ -14,48 +14,46 @@ const AddTransactionTypeForm = () => {
         setTransactionType,
     } = UseDateContext()
 
-
-
-  return (
-    <div className="bdr pdg">
-                        <h5>type transaction option: </h5>
-                        <label
-                            className={`btn pdg ${transactionType === 'inc' ? ' checked' : ''}`}
-                            htmlFor="inc-radio-button"
-                        >
-                            increment
-                        </label>{' '}
-                        |
-                        <label
-                            className={`btn pdg ${transactionType === 'dec' ? ' checked' : ''}`}
-                            htmlFor="dec-radio-button"
-                        >
-                            decrement
-                        </label>
-                        <input
-                            hidden
-                            id="inc-radio-button"
-                            onChange={() => {
-                                setTransactionType('inc')
-                            }}
-                            type="radio"
-                            value={'inc'}
-                            name="transactiontype"
-                            checked={transactionType === 'inc'}
-                        />
-                        <input
-                            hidden
-                            id="dec-radio-button"
-                            onChange={() => {
-                                setTransactionType('dec')
-                            }}
-                            type="radio"
-                            value={'dec'}
-                            name="transactiontype"
-                            checked={transactionType === 'dec'}
-                        />
-                    </div>
-  )
+    return (
+        <div className="bdr pdg">
+            <h5>type transaction option: </h5>
+            <label
+                className={`btn pdg ${transactionType === 'inc' ? ' checked' : ''}`}
+                htmlFor="inc-radio-button"
+            >
+                increment
+            </label>{' '}
+            |
+            <label
+                className={`btn pdg ${transactionType === 'dec' ? ' checked' : ''}`}
+                htmlFor="dec-radio-button"
+            >
+                decrement
+            </label>
+            <input
+                hidden
+                id="inc-radio-button"
+                onChange={() => {
+                    setTransactionType('inc')
+                }}
+                type="radio"
+                value={'inc'}
+                name="transactiontype"
+                checked={transactionType === 'inc'}
+            />
+            <input
+                hidden
+                id="dec-radio-button"
+                onChange={() => {
+                    setTransactionType('dec')
+                }}
+                type="radio"
+                value={'dec'}
+                name="transactiontype"
+                checked={transactionType === 'dec'}
+            />
+        </div>
+    )
 }
 
 export default AddTransactionTypeForm
