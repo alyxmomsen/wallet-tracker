@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { UseAppContext } from './ApplicationContext'
-import Person from './Person'
+import PersonPreviewUI from './PersonPreviewUI'
 import ModalWindow from './ModalWindow'
 import AddRequirementForm from './AddRequirementForm'
 import { OrdinaryPerson } from '../core/Person'
@@ -18,9 +18,9 @@ const AppMainComponent = () => {
     return (
         <div>
             <h2>Main Component</h2>
-            <div>
+            <div className="flex-box">
                 {service.getPersons().map((person) => (
-                    <Person person={person} />
+                    <PersonPreviewUI person={person} />
                 ))}
             </div>
             {modals.length ? (
