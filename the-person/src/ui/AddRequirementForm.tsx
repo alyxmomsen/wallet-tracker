@@ -8,8 +8,12 @@ import {
     IncrementValueRequirementCommand,
 } from '../core/RequirementCommand'
 import RequirementUI from './Requirement'
+import AddDateForm from './AddDateForm'
+import AddTimeForm from './AddTimeForm'
+import AddRequirementButton from './AddRequirementButton'
+import AddTransactionTypeForm from './AddTransactionTypeForm'
 
-export type TransactionType = 'inc' | 'dec'
+export type TTransactionType = 'inc' | 'dec'
 
 export type DateContextValue = {
     date: number
@@ -17,12 +21,15 @@ export type DateContextValue = {
     year: number
     hours: number
     minutes: number
+    transactionType: 'inc' | 'dec'
+    transactionValue: number;
     setDate: (value: number) => void
     setMonth: (value: number) => void
     setYear: (value: number) => void
     setHours: (value: number) => void
     setMinutes: (value: number) => void
-    // setDate: () => void;
+    setTransactionType: (value: TTransactionType) => void
+    setTransactionValue:(value:number)  =>void
 }
 
 const DateContext = createContext<DateContextValue | undefined>(undefined)
@@ -39,6 +46,10 @@ const DateContextProvider = ({ children }: { children: JSX.Element }) => {
         })()
     )
 
+    const [transactionValue, setTransactionValue] = useState<number>(1000)
+    const [transactionType, setTransactionType] =
+        useState<TTransactionType>('inc')
+
     return (
         <DateContext.Provider
             value={{
@@ -47,12 +58,15 @@ const DateContextProvider = ({ children }: { children: JSX.Element }) => {
                 year,
                 minutes,
                 hours,
+                transactionType,
+                transactionValue,
                 setDate: (value: number) => setDay(value),
                 setMonth: (value: number) => setMonth(value),
                 setYear: (value: number) => setYear(value),
                 setHours: (value: number) => setHours(value),
                 setMinutes: (value: number) => setMinutes(value),
-                // setMonth:(value: number) => setDay(value),
+                setTransactionType: (value: TTransactionType) => setTransactionType(value),
+                setTransactionValue:(value:number)=> setTransactionValue(value)
             }}
         >
             {children}
@@ -74,16 +88,6 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
     const { service, modals, modalsDispatch, update, currentPerson } =
         UseAppContext()
 
-    const {
-        setHours,
-        hours,
-        setMinutes,
-        minutes,
-        month,
-        date: day,
-        year,
-    } = UseDateContext()
-
     // const [day, setDay] = useState(new Date().getDate())
     // const [month, setMonth] = useState(new Date().getMonth() + 1)
     // const [year, setYear] = useState(new Date().getFullYear())
@@ -95,9 +99,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
     //     })()
     // )
 
-    const [transactionValue, setTransactionValue] = useState<number>(1000)
-    const [transactionType, setTransactionType] =
-        useState<TransactionType>('inc')
+    const [transactionValue, setTransactionValue] = useState(1000); 
 
     const executedRequirements = person.getExecutedRequirements()
     const actualRequirements = person.getActualRequirements()
@@ -132,56 +134,10 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                     </div>
                     <div className="pdg bdr">
                         <h4>date-time area</h4>
-
-                        <div className="pdg bdr">
-                            <h5>TiME</h5>
-                            <div className="scale pdg bdr">
-                                <h6>{'hours:'}</h6>
-                                <div>
-                                    <input
-                                        onChange={(e) => {
-                                            const value = Number.parseInt(
-                                                e.currentTarget.value
-                                            )
-
-                                            setHours(
-                                                value > 23
-                                                    ? 0
-                                                    : value < 0
-                                                      ? 23
-                                                      : value
-                                            )
-                                        }}
-                                        placeholder="hours"
-                                        type="number"
-                                        value={hours}
-                                    />
-                                </div>
-                            </div>
-                            <div className="scale pdg bdr">
-                                <h6>minutes</h6>
-                                <div>
-                                    <input
-                                        onChange={(e) => {
-                                            const value = Number.parseInt(
-                                                e.currentTarget.value
-                                            )
-
-                                            setMinutes(
-                                                value > 59
-                                                    ? (() => 0)()
-                                                    : value < 0
-                                                      ? 59
-                                                      : value
-                                            )
-                                        }}
-                                        placeholder="minutes"
-                                        type="number"
-                                        value={minutes}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                        <AddDateForm />
+                        <AddTimeForm />
+                        <AddTransactionTypeForm />
+                        <AddRequirementButton person={person} />
                     </div>
                     <div className="bdr pdg">
                         <h4>{'Value'}</h4>
@@ -198,70 +154,6 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                                 }}
                             />
                         </div>
-                    </div>
-                    <div className="bdr pdg">
-                        <h5>type transaction option: </h5>
-                        <label
-                            className={`btn pdg ${transactionType === 'inc' ? ' checked' : ''}`}
-                            htmlFor="inc-radio-button"
-                        >
-                            increment
-                        </label>{' '}
-                        |
-                        <label
-                            className={`btn pdg ${transactionType === 'dec' ? ' checked' : ''}`}
-                            htmlFor="dec-radio-button"
-                        >
-                            decrement
-                        </label>
-                        <input
-                            hidden
-                            id="inc-radio-button"
-                            onChange={() => {
-                                setTransactionType('inc')
-                            }}
-                            type="radio"
-                            value={'inc'}
-                            name="transactiontype"
-                            checked={transactionType === 'inc'}
-                        />
-                        <input
-                            hidden
-                            id="dec-radio-button"
-                            onChange={() => {
-                                setTransactionType('dec')
-                            }}
-                            type="radio"
-                            value={'dec'}
-                            name="transactiontype"
-                            checked={transactionType === 'dec'}
-                        />
-                    </div>
-                    <div className="pdg bdr">
-                        <button
-                            className="btn pdg"
-                            onClick={() => {
-                                person.addRequirement(
-                                    new Requirement(
-                                        'some requirement',
-                                        transactionType === 'dec'
-                                            ? new DecrementMoneyRequirementCommand(
-                                                  transactionValue
-                                              )
-                                            : new IncrementValueRequirementCommand(
-                                                  transactionValue
-                                              ),
-                                        new Date(
-                                            `${month}-${day}-${year} ${hours}:${minutes}`
-                                        )
-                                    )
-                                )
-
-                                update()
-                            }}
-                        >
-                            add requirement
-                        </button>
                     </div>
                 </div>
                 <div className="pdg bdr">
