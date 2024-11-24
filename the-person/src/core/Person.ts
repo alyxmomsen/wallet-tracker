@@ -74,8 +74,8 @@ export abstract class Person implements IPerson {
     }
 }
 
-export class MainPerson extends Person {
-    constructor(name: string) {
-        super(new Wallet(11_561 + 600), name)
+export class OrdinaryPerson extends Person {
+    constructor(name: string, walletInitValue: number) {
+        super(new Wallet(walletInitValue), name)
     }
 }

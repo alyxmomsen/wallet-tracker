@@ -3,7 +3,7 @@ import { IRequirement } from '../core/Requirement'
 import { IPerson } from '../core/Person'
 import { UseAppContext } from './ApplicationContext'
 
-const Requirement = ({
+const RequirementUI = ({
     requirement,
     person,
 }: {
@@ -32,4 +32,4 @@ const Requirement = ({
     )
 }
 
-export default Requirement
+export default RequirementUI

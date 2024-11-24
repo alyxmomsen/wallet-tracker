@@ -77,4 +77,11 @@ body {
     background-color: #16313c;
     top: 0;
     left: 0;
+    overflow: auto;
+    color: aquamarine;
+    border-color: black;
+}
+
+.checked {
+    background-color: #6b6b47;
 }

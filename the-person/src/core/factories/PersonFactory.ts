@@ -1,8 +1,8 @@
-import { IPerson, MainPerson, Person } from '../Person'
+import { IPerson, OrdinaryPerson, Person } from '../Person'
 import { Factory } from './AbstractFactory'
 
 export abstract class PersonFactory extends Factory<IPerson> {
-    abstract create(name: string): IPerson
+    abstract create(name: string, walletInitValue: number): IPerson
 
     constructor() {
         super()
@@ -10,7 +10,7 @@ export abstract class PersonFactory extends Factory<IPerson> {
 }
 
 export class PlayerPersonFactory extends PersonFactory {
-    create(name: string): IPerson {
-        return new MainPerson(name)
+    create(name: string, walletInitValue: number): IPerson {
+        return new OrdinaryPerson(name, walletInitValue)
     }
 }

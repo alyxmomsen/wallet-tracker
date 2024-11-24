@@ -3,7 +3,7 @@ import { UseAppContext } from './ApplicationContext'
 import Person from './Person'
 import ModalWindow from './ModalWindow'
 import AddRequirementForm from './AddRequirementForm'
-import { MainPerson } from '../core/Person'
+import { OrdinaryPerson } from '../core/Person'
 import { Requirement } from '../core/Requirement'
 import { DecrementMoneyRequirementCommand } from '../core/RequirementCommand'
 
@@ -18,18 +18,6 @@ const AppMainComponent = () => {
     return (
         <div>
             <h2>Main Component</h2>
-            <button
-                className="btn"
-                onClick={() => {
-                    if (currentPerson) {
-                        modalsDispatch([...modals, <AddRequirementForm />])
-                    } else {
-                        alert('no person')
-                    }
-                }}
-            >
-                Add Requirement
-            </button>
             <div>
                 {service.getPersons().map((person) => (
                     <Person person={person} />

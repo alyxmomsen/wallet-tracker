@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { ApplicationSingletoneFacade } from '../core/ApplicationFacade'
-import { IPerson, MainPerson } from '../core/Person'
+import { IPerson, OrdinaryPerson } from '../core/Person'
 import { Requirement } from '../core/Requirement'
 import { DecrementMoneyRequirementCommand } from '../core/RequirementCommand'
 

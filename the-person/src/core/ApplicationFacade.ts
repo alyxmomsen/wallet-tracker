@@ -1,4 +1,4 @@
-import { IPerson, MainPerson, Person } from './Person'
+import { IPerson, OrdinaryPerson as OrdinaryPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
 import { DecrementMoneyRequirementCommand } from './RequirementCommand'
@@ -59,15 +59,13 @@ export class ApplicationSingletoneFacade
         this.lastId = 0
         this.persons = []
         this.personsRegisty = new Map<number, IPerson>()
-        const player = new MainPerson('Arch Player')
-        const enemy = new MainPerson('Enemy Danny Elfman')
-        this.requirementPlanner = new RequirementPlanner(player)
 
         // preload
 
-        const jenaro = new MainPerson('Don Jenaro')
-        const juan = new MainPerson('Don Juan')
-        const carlos = new MainPerson('Carolos Castaneda')
+        const jenaro = new OrdinaryPerson('Don Jenaro', 6106 + 600)
+        const juan = new OrdinaryPerson('Don Juan', 0)
+        const carlos = new OrdinaryPerson('Carolos Castaneda', 0)
+        this.requirementPlanner = new RequirementPlanner(jenaro)
 
         this.addPerson(jenaro)
         this.addPerson(juan)
