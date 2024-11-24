@@ -21,7 +21,7 @@ export class ApplicationSingletoneFacade
 
     private requirements: IRequirement[]
 
-    private static instance: ApplicationSingletoneFacade | null
+    private static instance: ApplicationSingletoneFacade | null = null
 
     static Instance() {
         if (ApplicationSingletoneFacade.instance === null) {
@@ -29,6 +29,7 @@ export class ApplicationSingletoneFacade
                 new ApplicationSingletoneFacade()
         }
 
+        console.log({ instance: ApplicationSingletoneFacade.instance })
         return ApplicationSingletoneFacade.instance
     }
 

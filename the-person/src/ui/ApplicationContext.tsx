@@ -1,16 +1,18 @@
 import React, { createContext, useContext } from 'react'
+import { ApplicationSingletoneFacade } from '../core/ApplicationFacade'
 
-export type AppContextValue = {}
+export type AppContextValue = {
+    service: ApplicationSingletoneFacade,
+    update:() => void
+}
 
 const ApplicationContext = createContext<AppContextValue | undefined>(undefined)
 
-export const AppProvider = ({
-    children,
-}: {
-    children: JSX.Element
-}): JSX.Element => {
+const AppProvider = ({ children , updateCB }: { children: JSX.Element , updateCB:() => void }): JSX.Element => {
+    const appService = ApplicationSingletoneFacade.Instance()
+
     return (
-        <ApplicationContext.Provider value={{}}>
+        <ApplicationContext.Provider value={{ service: appService , update:updateCB }}>
             {children}
         </ApplicationContext.Provider>
     )
@@ -25,3 +27,5 @@ export const UseAppContext = (): AppContextValue => {
 
     return ctx
 }
+
+export default AppProvider
