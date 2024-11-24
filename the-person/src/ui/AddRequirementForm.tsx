@@ -55,8 +55,19 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                 </div>
                 <div className="pdg bdr">
                     <h4>date-time area</h4>
-                    <div className="pdg bdr">
+                    <div className="pdg bdr scale">
                         <h5>DATE</h5>
+                        <button
+                            onClick={() => {
+                                const date = new Date()
+                                setDay(date.getDate())
+                                setMonth(date.getMonth() + 1)
+                                setYear(date.getFullYear())
+                            }}
+                            className="btn"
+                        >
+                            reset
+                        </button>
                         <div className="pdg bdr">
                             <input
                                 onChange={(e) => {
@@ -75,38 +86,44 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                     </div>
                     <div className="pdg bdr">
                         <h5>TiME</h5>
-                        <input
-                            onChange={(e) => {
-                                const value = Number.parseInt(
-                                    e.currentTarget.value
-                                )
+                        <div className="scale pdg bdr">
+                            <h6>hours:</h6>
+                            <input
+                                onChange={(e) => {
+                                    const value = Number.parseInt(
+                                        e.currentTarget.value
+                                    )
 
-                                setHours(
-                                    value > 23 ? 0 : value < 0 ? 23 : value
-                                )
-                            }}
-                            placeholder="hours"
-                            type="number"
-                            value={hours}
-                        />
-                        <input
-                            onChange={(e) => {
-                                const value = Number.parseInt(
-                                    e.currentTarget.value
-                                )
+                                    setHours(
+                                        value > 23 ? 0 : value < 0 ? 23 : value
+                                    )
+                                }}
+                                placeholder="hours"
+                                type="number"
+                                value={hours}
+                            />
+                        </div>
+                        <div className="scale pdg bdr">
+                            <h6>minutes</h6>
+                            <input
+                                onChange={(e) => {
+                                    const value = Number.parseInt(
+                                        e.currentTarget.value
+                                    )
 
-                                setMinutes(
-                                    value > 59
-                                        ? (() => 0)()
-                                        : value < 0
-                                          ? 59
-                                          : value
-                                )
-                            }}
-                            placeholder="minutes"
-                            type="number"
-                            value={minutes}
-                        />
+                                    setMinutes(
+                                        value > 59
+                                            ? (() => 0)()
+                                            : value < 0
+                                              ? 59
+                                              : value
+                                    )
+                                }}
+                                placeholder="minutes"
+                                type="number"
+                                value={minutes}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="bdr pdg">
