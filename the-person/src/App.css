@@ -60,11 +60,11 @@ body {
     padding: var(--gap);
 }
 
-.clickable {
+.btn {
     cursor: pointer;
     transition: all 0.2s ease-out;
 }
 
-.clickable:hover {
+.btn:hover {
     background-color: rgb(99, 132, 193);
 }

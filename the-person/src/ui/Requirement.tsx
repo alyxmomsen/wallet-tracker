@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react'
-import { mainContext } from './MainComponent'
+// import { mainContext } from './MainComponent'
 import { IPerson } from '../core/Person'
 import { IRequirement } from '../core/Requirement'
+import { AppContext } from '../App'
 
 const Requirement = ({
     date,
@@ -16,7 +17,7 @@ const Requirement = ({
     person: IPerson
     requirement: IRequirement
 }) => {
-    const ctx = useContext(mainContext)
+    const ctx = useContext(AppContext)
 
     const [isRolledDown, setIsRolledDown] = useState(false)
 
@@ -27,7 +28,7 @@ const Requirement = ({
                     setIsRolledDown(true)
                 }
             }}
-            className={`bdr pdg flex-item ${isRolledDown ? '' : ' clickable'}`}
+            className={`bdr pdg flex-item ${isRolledDown ? '' : ' btn'}`}
         >
             <div>{date}</div>
             {isRolledDown && (
@@ -36,7 +37,7 @@ const Requirement = ({
                         onClick={() => {
                             setIsRolledDown(false)
                         }}
-                        className="pdg clickable"
+                        className="pdg btn"
                     >
                         rolup
                     </div>
@@ -45,10 +46,11 @@ const Requirement = ({
                         <p>{title}</p>
                         <p>{description}</p>
                         <button
+                            className="btn"
                             onClick={() => {
                                 requirement.satisfy(person)
 
-                                ctx.update()
+                                ctx?.update()
                             }}
                         >
                             execute

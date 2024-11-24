@@ -4,20 +4,33 @@ import { IRequirement, Requirement } from './Requirement'
 import { DecrementMoneyRequirementCommand } from './RequirementBehavior'
 import { ITask, RequirementTask } from './Task'
 
-export interface IFacade {
+export interface IApplicationSingletoneFacade {
     addPerson(person: IPerson): number
     getPersons(): IPerson[]
     addRequirementSchedule(task: ITask<IRequirement, IPerson>): void
     update(): void
 }
 
-export class Facade implements IFacade {
+export class ApplicationSingletoneFacade
+    implements IApplicationSingletoneFacade
+{
     private lastId: number
     private persons: IPerson[]
     private personsRegisty: Map<number, IPerson>
     private requirementPlanner: IPlanner<IRequirement, IPerson>
 
     private requirements: IRequirement[]
+
+    private static instance: ApplicationSingletoneFacade | null
+
+    static Instance() {
+        if (ApplicationSingletoneFacade.instance === null) {
+            ApplicationSingletoneFacade.instance =
+                new ApplicationSingletoneFacade()
+        }
+
+        return ApplicationSingletoneFacade.instance
+    }
 
     addRequirementSchedule(task: ITask<IRequirement, IPerson>) {
         this.requirementPlanner.addTask(task)
@@ -40,7 +53,7 @@ export class Facade implements IFacade {
         this.requirementPlanner.check()
     }
 
-    constructor() {
+    private constructor() {
         this.requirements = []
         this.lastId = 0
         this.persons = []
@@ -68,16 +81,5 @@ export class Facade implements IFacade {
                 new Date(`${11}-${18}-${2024} ${20}:${12}`)
             )
         )
-
-        // this.addRequirementSchedule(
-        //     new RequirementTask(
-        //         new Date(),
-        //         new Requirement(
-        //             'satisfy the hunger',
-        //             new DecrementMoneyRequirementBehavior(),
-        //             new Date(`${11}-${18}-${2024} ${16}:${35}`)
-        //         )
-        //     )
-        // )
     }
 }
