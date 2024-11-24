@@ -68,3 +68,13 @@ body {
 .btn:hover {
     background-color: rgb(99, 132, 193);
 }
+
+.modal {
+    padding: var(--gap);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #16313c;
+    top: 0;
+    left: 0;
+}

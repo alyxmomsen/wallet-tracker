@@ -7,8 +7,11 @@ export interface IPerson {
     getWalletBalance(): number
     addRequirement(requirement: IRequirement): IRequirement | null
     getActualRequirements(): IRequirement[]
+    getAllReauirements(): IRequirement[]
+    getExecutedReauirements(): IRequirement[]
     decrementWallet(value: number): void
     getName(): string
+    incrementWallet(value: number): void
 }
 
 export abstract class Person implements IPerson {
@@ -22,6 +25,10 @@ export abstract class Person implements IPerson {
 
     getName(): string {
         return this.name
+    }
+
+    incrementWallet(value: number): void {
+        this.wallet.add(value)
     }
 
     decrementWallet(value: number): void {
@@ -52,6 +59,12 @@ export abstract class Person implements IPerson {
 
     getAllReauirements(): IRequirement[] {
         return this.requirements
+    }
+
+    getExecutedReauirements(): IRequirement[] {
+        return this.requirements.filter((elem) => {
+            return !elem.checkIfActual()
+        })
     }
 
     constructor(wallet: IWallet, name: string) {

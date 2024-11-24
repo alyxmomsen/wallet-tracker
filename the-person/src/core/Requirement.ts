@@ -1,4 +1,4 @@
-import { IRequirementCommand } from './RequirementBehavior'
+import { IRequirementCommand } from './RequirementCommand'
 import { IPerson } from './Person'
 
 export interface IRequirement {

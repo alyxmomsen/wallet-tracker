@@ -8,6 +8,10 @@ export class Wallet implements IWallet {
     protected balance: number
 
     add(value: number): number {
+        const result = this.balance + value
+
+        this.balance = result
+
         return this.balance
     }
 

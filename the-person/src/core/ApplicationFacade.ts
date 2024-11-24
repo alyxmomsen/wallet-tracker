@@ -1,7 +1,7 @@
 import { IPerson, MainPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
-import { DecrementMoneyRequirementCommand } from './RequirementBehavior'
+import { DecrementMoneyRequirementCommand } from './RequirementCommand'
 import { ITask, RequirementTask } from './Task'
 
 export interface IApplicationSingletoneFacade {
@@ -62,12 +62,18 @@ export class ApplicationSingletoneFacade
         const player = new MainPerson('Arch Player')
         const enemy = new MainPerson('Enemy Danny Elfman')
         this.requirementPlanner = new RequirementPlanner(player)
-        this.addPerson(player)
-        this.addPerson(enemy)
-        // this.addPerson(new MainPerson('Enemy Dann'))
-        // this.addPerson(new MainPerson('Enemy Alex'))
 
-        player.addRequirement(
+        // preload
+
+        const jenaro = new MainPerson('Don Jenaro')
+        const juan = new MainPerson('Don Juan')
+        const carlos = new MainPerson('Carolos Castaneda')
+
+        this.addPerson(jenaro)
+        this.addPerson(juan)
+        this.addPerson(carlos)
+
+        juan.addRequirement(
             new Requirement(
                 'satisfy the hunger',
                 new DecrementMoneyRequirementCommand(500),
@@ -75,7 +81,7 @@ export class ApplicationSingletoneFacade
             )
         )
 
-        player.addRequirement(
+        jenaro.addRequirement(
             new Requirement(
                 'pay for hostel',
                 new DecrementMoneyRequirementCommand(699),
