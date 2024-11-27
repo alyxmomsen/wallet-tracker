@@ -5,6 +5,9 @@ import { UseAppContext } from './ApplicationContext'
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const { modals, setModals } = UseAppContext()
 
+    const act = person.getActualRequirements()
+    const exec = person.getExecutedRequirements()
+
     return (
         <div className="modal">
             <h2>PersonCardUI</h2>
@@ -24,10 +27,10 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <div>
                     <h3>REQUIREMENTS:</h3>
                     <div>
-                        {person.getActualRequirements().map((elem) => (
+                        {act.map((elem) => (
                             <div>{elem.getTitle()}</div>
                         ))}
-                        {person.getActualRequirements().map((elem) => (
+                        {exec.map((elem) => (
                             <div>{elem.getTitle()}</div>
                         ))}
                         <div>{}</div>

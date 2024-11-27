@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { UseDateContext } from './AddRequirementContext'
+import { UseAppContext } from './ApplicationContext'
 
 const AddDateForm = () => {
     const {
@@ -12,6 +13,8 @@ const AddDateForm = () => {
         month,
         date: day,
     } = UseDateContext()
+
+    const { setModals, modals } = UseAppContext()
 
     useEffect(() => {
         setMinutes(
@@ -39,8 +42,15 @@ const AddDateForm = () => {
     }, [day, month, year])
 
     return (
-        <div className="pdg bdr scale">
+        <div className="pdg bdr">
             <h5>DATE</h5>
+            <button
+                onClick={() => {
+                    setModals(modals.filter((elem) => elem !== modals.pop()))
+                }}
+            >
+                close
+            </button>
             <div className="pdg">
                 <button
                     onClick={() => {

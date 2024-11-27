@@ -1,7 +1,10 @@
 import { IPerson, OrdinaryPerson as OrdinaryPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
-import { DecrementMoneyRequirementCommand } from './RequirementCommand'
+import {
+    DecrementMoneyRequirementCommand,
+    IncrementValueRequirementCommand,
+} from './RequirementCommand'
 import { ITask, RequirementTask } from './Task'
 
 export interface IApplicationSingletoneFacade {
@@ -54,7 +57,7 @@ export class ApplicationSingletoneFacade
         this.requirementPlanner.check()
     }
 
-    private constructor() {
+    /* private  */ constructor() {
         this.requirements = []
         this.lastId = 0
         this.persons = []
@@ -62,7 +65,7 @@ export class ApplicationSingletoneFacade
 
         // preload
 
-        const jenaro = new OrdinaryPerson('Don Jenaro', 6106 + 600)
+        const jenaro = new OrdinaryPerson('Don Jenaro', 2106 + 400)
         const juan = new OrdinaryPerson('Don Juan', 0)
         const carlos = new OrdinaryPerson('Carolos Castaneda', 0)
         this.requirementPlanner = new RequirementPlanner(jenaro)
@@ -70,21 +73,5 @@ export class ApplicationSingletoneFacade
         this.addPerson(jenaro)
         this.addPerson(juan)
         this.addPerson(carlos)
-
-        juan.addRequirement(
-            new Requirement(
-                'satisfy the hunger',
-                new DecrementMoneyRequirementCommand(500),
-                new Date(`${11}-${18}-${2024} ${20}:${10}`)
-            )
-        )
-
-        jenaro.addRequirement(
-            new Requirement(
-                'pay for hostel',
-                new DecrementMoneyRequirementCommand(699),
-                new Date(`${11}-${18}-${2024} ${20}:${12}`)
-            )
-        )
     }
 }

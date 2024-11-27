@@ -6,8 +6,6 @@ const ModalWindow = ({ component }: { component: JSX.Element }) => {
         <div className="modal">
             <AddRequirementContextPorvider>
                 <>
-                    <h2>Modal Window</h2>
-
                     <div>{component}</div>
                 </>
             </AddRequirementContextPorvider>

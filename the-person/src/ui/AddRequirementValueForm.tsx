@@ -9,6 +9,7 @@ const AddRequirementValueForm = () => {
         <div className="bdr pdg">
             <input
                 type="number"
+                step={50}
                 value={transactionValue}
                 onChange={(e) => {
                     setTransactionValue(

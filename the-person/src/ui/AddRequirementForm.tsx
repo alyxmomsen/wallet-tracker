@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './ApplicationContext'
 import { IPerson } from '../core/Person'
-import RequirementPreviewUI from './Requirement'
+import RequirementPreviewUI from './RequirementPrevUI'
 import AddDateForm from './AddDateForm'
 import AddTimeForm from './AddTimeForm'
 import AddRequirementButton from './AddRequirementButton'
@@ -10,7 +10,10 @@ import AddRequirementValueForm from './AddRequirementValueForm'
 import {
     AddRequirementContextPorvider,
     DateContext,
+    UseDateContext,
 } from './AddRequirementContext'
+import PersonCardUI from './PersonCardUI'
+import RequirementsUI from './RequirementsUI'
 
 export type TTransactionType = 'inc' | 'dec'
 
@@ -39,16 +42,41 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
         update,
         currentPerson,
     } = UseAppContext()
+
+    const { date, month, year, hours, minutes } = UseDateContext()
     const executedRequirements = person.getExecutedRequirements()
     const actualRequirements = person.getActualRequirements()
     return (
-        <div>
-            <h2>AddRequirementForm</h2>
-            <h3>{person.getName()}</h3>
-            <div>wallet balance: {person.getWalletBalance()}</div>
-            <div className="flex-box">
+        <div className="flex-box flex-dir-col">
+            <h2 className="bdr pdg">AddRequirementForm</h2>
+            <header className="bdr pdg flex-box">
+                <div
+                    className="bdr pdg btn"
+                    onClick={() => {
+                        setModals([...modals, <PersonCardUI person={person} />])
+                    }}
+                >
+                    {person.getName()}
+                </div>
                 <div className="bdr pdg">
-                    <h5>close button control area</h5>
+                    wallet balance: {person.getWalletBalance()}
+                </div>
+                <div className="bdr pdg flex-box">
+                    actual:{actualRequirements.length} executed:
+                    {executedRequirements.length}
+                    <button
+                        className="btn"
+                        onClick={() => {
+                            setModals([
+                                ...modals,
+                                <RequirementsUI person={person} />,
+                            ])
+                        }}
+                    >
+                        open
+                    </button>
+                </div>
+                <div className="bdr pdg">
                     <button
                         className="btn"
                         onClick={() => {
@@ -65,19 +93,38 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                         close
                     </button>
                 </div>
+            </header>
+            <div className="flex-box">
                 <div className="pdg bdr">
                     <h4>date-time area</h4>
-                    <button
-                        onClick={() => {
-                            setModals([...modals, <AddDateForm />])
-                        }}
-                    >
-                        set date
-                    </button>
-                    <button onClick={() => {}}>set time</button>
-                    {}
-                    <AddDateForm />
-                    <AddTimeForm />
+                    <div className="pdg flex-box">
+                        <div className=" bdr pdg flex-box flex-dir-col">
+                            {`${date}-${month}-${year}`}
+                            <div>
+                                <button
+                                    className="btn"
+                                    onClick={() => {
+                                        setModals([...modals, <AddDateForm />])
+                                    }}
+                                >
+                                    set date
+                                </button>
+                            </div>
+                        </div>
+                        <div className="bdr pdg flex-box flex-dir-col">
+                            {`${hours}:${minutes}`}
+                            <div>
+                                <button
+                                    className="btn"
+                                    onClick={() => {
+                                        setModals([...modals, <AddTimeForm />])
+                                    }}
+                                >
+                                    set time
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <AddTransactionTypeForm />
@@ -88,43 +135,6 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                 <div>
                     <AddRequirementValueForm />
                 </div>
-            </div>
-            <div className="pdg bdr">
-                {actualRequirements.length || executedRequirements.length ? (
-                    <div>
-                        <h2>Requirements:</h2>
-                        {actualRequirements.length ? (
-                            <div>
-                                <h3>Actual:</h3>
-                                {person
-                                    .getActualRequirements()
-                                    .map((requirement) => {
-                                        return (
-                                            <RequirementPreviewUI
-                                                person={person}
-                                                requirement={requirement}
-                                            />
-                                        )
-                                    })}
-                            </div>
-                        ) : null}
-                        {executedRequirements.length ? (
-                            <div className="bdr pdg">
-                                <h3>Executed:</h3>
-                                {person
-                                    .getExecutedRequirements()
-                                    .map((requirement) => {
-                                        return (
-                                            <RequirementPreviewUI
-                                                person={person}
-                                                requirement={requirement}
-                                            />
-                                        )
-                                    })}
-                            </div>
-                        ) : null}
-                    </div>
-                ) : null}
             </div>
         </div>
     )

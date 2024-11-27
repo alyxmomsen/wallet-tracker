@@ -21,7 +21,8 @@ const AppContextProvider = ({
     children: JSX.Element
     updateCB: () => void
 }): JSX.Element => {
-    const appService = ApplicationSingletoneFacade.Instance()
+    // const appService = ApplicationSingletoneFacade.Instance()
+    const appService = new ApplicationSingletoneFacade()
 
     const [modals, setModals] = useState<JSX.Element[]>([])
 
