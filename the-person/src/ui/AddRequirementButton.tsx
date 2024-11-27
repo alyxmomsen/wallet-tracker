@@ -1,5 +1,5 @@
 import React from 'react'
-import { UseDateContext } from './AddRequirementForm'
+
 import { IPerson } from '../core/Person'
 import { Requirement } from '../core/Requirement'
 import {
@@ -7,6 +7,7 @@ import {
     IncrementValueRequirementCommand,
 } from '../core/RequirementCommand'
 import { UseAppContext } from './ApplicationContext'
+import { UseDateContext } from './AddRequirementContext'
 
 const AddRequirementButton = ({ person }: { person: IPerson }) => {
     const {
@@ -22,6 +23,8 @@ const AddRequirementButton = ({ person }: { person: IPerson }) => {
     } = UseDateContext()
 
     const { update } = UseAppContext()
+
+    console.log({ transactionValue })
 
     return (
         <div className="pdg bdr">

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import AppProvider, { UseAppContext } from './ui/ApplicationContext'
+import AppContextProvider, { UseAppContext } from './ui/ApplicationContext'
 import AppMainComponent from './ui/AppMainComponent'
 
 function App() {
@@ -8,9 +8,9 @@ function App() {
 
     return (
         <div className="App">
-            <AppProvider updateCB={() => setState((curr) => curr + 1)}>
+            <AppContextProvider updateCB={() => setState((curr) => curr + 1)}>
                 <AppMainComponent />
-            </AppProvider>
+            </AppContextProvider>
         </div>
     )
 }

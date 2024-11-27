@@ -8,12 +8,8 @@ import { Requirement } from '../core/Requirement'
 import { DecrementMoneyRequirementCommand } from '../core/RequirementCommand'
 
 const AppMainComponent = () => {
-    const { service, modals, modalsDispatch, currentPerson, update } =
+    const { service, modals, setModals, currentPerson, update } =
         UseAppContext()
-
-    useEffect(() => {
-        console.log({ service })
-    }, [])
 
     return (
         <div>

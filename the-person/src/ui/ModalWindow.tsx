@@ -1,11 +1,16 @@
 import React from 'react'
+import { AddRequirementContextPorvider } from './AddRequirementContext'
 
 const ModalWindow = ({ component }: { component: JSX.Element }) => {
     return (
         <div className="modal">
-            <h2>Modal Window</h2>
+            <AddRequirementContextPorvider>
+                <>
+                    <h2>Modal Window</h2>
 
-            <div>{component}</div>
+                    <div>{component}</div>
+                </>
+            </AddRequirementContextPorvider>
         </div>
     )
 }

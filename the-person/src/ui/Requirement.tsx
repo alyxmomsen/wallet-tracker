@@ -14,13 +14,11 @@ const RequirementPreviewUI = ({
 
     return (
         <div className="pdg bdr">
-            <div className='bdr pdg'>
-                {requirement.getFormatedStringDate()}
-            </div>
+            <div className="bdr pdg">{requirement.getFormatedStringDate()}</div>
             {requirement.checkIfActual() ? (
-                <div className='bdr pdg'>
+                <div className="bdr pdg">
                     <h3>controls</h3>
-                    <div className='flex-box'>
+                    <div className="flex-box">
                         <div>
                             <button
                                 className="btn"
@@ -40,7 +38,9 @@ const RequirementPreviewUI = ({
                     </div>
                 </div>
             ) : null}
-            <div className='bdr pdg'>{requirement.getBehaviorDescription()}</div>
+            <div className="bdr pdg">
+                {requirement.getBehaviorDescription()}
+            </div>
         </div>
     )
 }

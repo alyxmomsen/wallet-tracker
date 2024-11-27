@@ -3,9 +3,10 @@ import { IPerson } from '../core/Person'
 import { UseAppContext } from './ApplicationContext'
 import RequirementPreviewUI from './Requirement'
 import AddRequirementForm from './AddRequirementForm'
+import PersonCardUI from './PersonCardUI'
 
 const PersonPreviewUI = ({ person }: { person: IPerson }) => {
-    const { update, modalsDispatch, modals } = UseAppContext()
+    const { update, setModals, modals } = UseAppContext()
 
     const executed = person.getExecutedRequirements()
     const actual = person.getActualRequirements()
@@ -20,7 +21,7 @@ const PersonPreviewUI = ({ person }: { person: IPerson }) => {
                         <button
                             className="btn"
                             onClick={() => {
-                                modalsDispatch([
+                                setModals([
                                     ...modals,
                                     <AddRequirementForm person={person} />,
                                 ])
@@ -30,7 +31,17 @@ const PersonPreviewUI = ({ person }: { person: IPerson }) => {
                         </button>
                     </div>
                     <div>
-                        <button className="btn">Open The Card</button>
+                        <button
+                            onClick={() => {
+                                setModals([
+                                    ...modals,
+                                    <PersonCardUI person={person} />,
+                                ])
+                            }}
+                            className="btn"
+                        >
+                            Open The Card
+                        </button>
                     </div>
                 </div>
             </div>

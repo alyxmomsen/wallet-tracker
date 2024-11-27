@@ -2,7 +2,7 @@ import React from 'react'
 import { UseAppContext } from './ApplicationContext'
 
 const SomeComponent = () => {
-    const { modals, modalsDispatch, update } = UseAppContext()
+    const { modals, setModals: modalsDispatch, update } = UseAppContext()
 
     return (
         <div>

@@ -9,12 +9,12 @@ export type AppContextValue = {
     update: () => void
     currentPerson: IPerson | null
     modals: JSX.Element[]
-    modalsDispatch: (elems: JSX.Element[]) => void
+    setModals: (elems: JSX.Element[]) => void
 }
 
 const ApplicationContext = createContext<AppContextValue | undefined>(undefined)
 
-const AppProvider = ({
+const AppContextProvider = ({
     children,
     updateCB,
 }: {
@@ -38,7 +38,7 @@ const AppProvider = ({
                     ? appService.getPersons()[0]
                     : null,
                 modals,
-                modalsDispatch: (elems: JSX.Element[]) => setModals([...elems]),
+                setModals: (elems: JSX.Element[]) => setModals([...elems]),
             }}
         >
             {children}
@@ -57,4 +57,4 @@ export const UseAppContext = (): AppContextValue => {
     return ctx
 }
 
-export default AppProvider
+export default AppContextProvider
