@@ -88,7 +88,7 @@ export function trackWalletChanges(
             actReqDateObj.getMonth() === month &&
             actReqDateObj.getFullYear() === year
         ) {
-            walletValue -= requirement.getValue()
+            walletValue += requirement.getValue()
             const newWalletValue = walletValue - requirement.getValue()
             requirementValueeees.push({
                 value: requirement.getValue(),
