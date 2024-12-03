@@ -6,7 +6,7 @@ export interface IRequirementCommand {
     getValue(): number
 }
 
-export class IncrementValueRequirementCommand implements IRequirementCommand {
+export class IncrementMoneyRequirementCommand implements IRequirementCommand {
     private incrementValue: number
 
     execute(person: IPerson): boolean {

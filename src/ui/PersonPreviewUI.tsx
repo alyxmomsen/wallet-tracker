@@ -1,12 +1,15 @@
 import React from 'react'
 import { IPerson } from '../core/Person'
-import { UseAppContext } from './ApplicationContext'
+import { UseAppCtx } from './AppCtxProvider'
 import RequirementPreviewUI from './RequirementPrevUI'
-import AddRequirementForm from './add-requirements-form/AddRequirementForm'
-import PersonCardUI from './PersonCardUI'
+import AddReqForm from './add-requirements-form/AddReqForm'
+import PersonCdUi from './PrsnCrdUI'
+import { UseAppContext } from '../ui-v2/context/UseAppContext'
 
 const PersonPreviewUI = ({ person }: { person: IPerson }) => {
-    const { update, setModals, modals } = UseAppContext()
+    // const { update, setModals, modals } = UseAppCtx()
+
+    const appContext = UseAppContext()
 
     const executed = person.getExecutedRequirements()
     const actual = person.getActualRequirements()
@@ -21,10 +24,10 @@ const PersonPreviewUI = ({ person }: { person: IPerson }) => {
                         <button
                             className="btn"
                             onClick={() => {
-                                setModals([
-                                    ...modals,
-                                    <AddRequirementForm person={person} />,
-                                ])
+                                // setModals([
+                                //     ...modals,
+                                //     <AddRequirementForm person={person} />,
+                                // ])
                             }}
                         >
                             Add Requirement
@@ -33,10 +36,10 @@ const PersonPreviewUI = ({ person }: { person: IPerson }) => {
                     <div>
                         <button
                             onClick={() => {
-                                setModals([
-                                    ...modals,
-                                    <PersonCardUI person={person} />,
-                                ])
+                                // setModals([
+                                //     ...modals,
+                                //     <PersonCardUI person={person} />,
+                                // ])
                             }}
                             className="btn"
                         >

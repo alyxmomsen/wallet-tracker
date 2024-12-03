@@ -1,21 +1,25 @@
 import React from 'react'
 import { IPerson } from '../core/Person'
-import { UseAppContext } from './ApplicationContext'
 import { IRequirement } from '../core/Requirement'
+import { UseAppContext } from '../ui-v2/context/UseAppContext'
 type TValues = {
     date: number
     month: number
     year: number
     values: { balanceBefore: number; value: number; balanceAfter: number }[]
 }
-const PersonCardUI = ({ person }: { person: IPerson }) => {
-    const { modals, setModals } = UseAppContext()
+const PersonCdUi = ({ person }: { person: IPerson }) => {
+    // const { modals, setModals } = UseAppCtx()
+
+    const { currentPerson } = UseAppContext()
+
+    const {} = UseAppContext()
 
     let actualReqs = person.getActualRequirements()
     const exec = person.getExecutedRequirements()
 
     return (
-        <div className="modal">
+        <div className="">
             <h2>PersonCardUI</h2>
             <div>
                 {trackWalletChanges(
@@ -41,9 +45,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
             <div>
                 <button
                     onClick={() => {
-                        setModals(
-                            modals.filter((elem) => elem !== modals.pop())
-                        )
+                        // setModals(
+                        //     modals.filter((elem) => elem !== modals.pop())
+                        // )
                     }}
                 >
                     close button
@@ -68,7 +72,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     )
 }
 
-export default PersonCardUI
+export default PersonCdUi
 
 export function trackWalletChanges(
     iterations: number,

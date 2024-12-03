@@ -4,9 +4,9 @@ import { IPerson } from '../../core/Person'
 import { Requirement } from '../../core/Requirement'
 import {
     DecrementMoneyRequirementCommand,
-    IncrementValueRequirementCommand,
+    IncrementMoneyRequirementCommand,
 } from '../../core/RequirementCommand'
-import { UseAppContext } from '../ApplicationContext'
+import { UseAppCtx } from '../AppCtxProvider'
 import { UseDateContext } from './AddRequirementContext'
 
 const AddRequirementButton = ({ person }: { person: IPerson }) => {
@@ -22,7 +22,7 @@ const AddRequirementButton = ({ person }: { person: IPerson }) => {
         transactionValue,
     } = UseDateContext()
 
-    const { update } = UseAppContext()
+    const { update } = UseAppCtx()
 
     console.log({ transactionValue })
 
@@ -38,7 +38,7 @@ const AddRequirementButton = ({ person }: { person: IPerson }) => {
                                 ? new DecrementMoneyRequirementCommand(
                                       transactionValue
                                   )
-                                : new IncrementValueRequirementCommand(
+                                : new IncrementMoneyRequirementCommand(
                                       transactionValue
                                   ),
                             new Date(

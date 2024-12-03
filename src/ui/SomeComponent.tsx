@@ -1,8 +1,8 @@
 import React from 'react'
-import { UseAppContext } from './ApplicationContext'
+import { UseAppCtx } from './AppCtxProvider'
 
 const SomeComponent = () => {
-    const { modals, setModals: modalsDispatch, update } = UseAppContext()
+    const { modals, setModals: modalsDispatch, update } = UseAppCtx()
 
     return (
         <div>

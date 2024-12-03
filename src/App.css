@@ -1,7 +1,3 @@
-* {
-    box-sizing: border-box;
-}
-
 :root {
     --background-color: #03151a;
     --color: whitesmoke;
@@ -10,6 +6,12 @@
     --gap-3: calc(9px * 4);
     --gap-4: calc(9px * 8);
     --gap-5: calc(9px * 16);
+}
+
+* {
+    box-sizing: border-box;
+    /* border: 1px dotted whitesmoke; */
+    /* padding: var(--gap) ; */
 }
 
 #root {
@@ -25,6 +27,11 @@ body {
     background-color: var(--background-color);
     color: var(--color);
     padding: var(--gap-3);
+}
+
+.margin-auto {
+    margin: 0 auto;
+    width: max-content;
 }
 
 .flex-box {
@@ -106,4 +113,8 @@ body {
     transform: scale(1.3);
     background-color: #1b212e;
     opacity: 1;
+}
+
+.disabled {
+    display: none;
 }

@@ -3,7 +3,7 @@ import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirement, Requirement } from './Requirement'
 import {
     DecrementMoneyRequirementCommand,
-    IncrementValueRequirementCommand,
+    IncrementMoneyRequirementCommand,
 } from './RequirementCommand'
 import { ITask, RequirementTask } from './Task'
 

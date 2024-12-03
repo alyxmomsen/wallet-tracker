@@ -2,13 +2,13 @@ import React from 'react'
 import { IPerson } from '../core/Person'
 import RequirementPreviewUI from './RequirementPrevUI'
 import { UseDateContext } from './add-requirements-form/AddRequirementContext'
-import { UseAppContext } from './ApplicationContext'
+import { UseAppCtx } from './AppCtxProvider'
 
 const RequirementsUI = ({ person }: { person: IPerson }) => {
     const act = person.getActualRequirements()
     const exec = person.getExecutedRequirements()
 
-    const { modals, setModals } = UseAppContext()
+    const { modals, setModals } = UseAppCtx()
 
     return (
         <div className="modal">

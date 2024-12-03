@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { UseDateContext } from './AddRequirementContext'
-import { UseAppContext } from '../ApplicationContext'
+import { UseAppCtx } from '../AppCtxProvider'
 
 const AddDateForm = () => {
     const {
@@ -14,7 +14,7 @@ const AddDateForm = () => {
         date: day,
     } = UseDateContext()
 
-    const { setModals, modals } = UseAppContext()
+    const { setModals, modals } = UseAppCtx()
 
     useEffect(() => {
         setMinutes(

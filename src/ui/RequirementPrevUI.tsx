@@ -1,7 +1,7 @@
 import React from 'react'
 import { IRequirement } from '../core/Requirement'
 import { IPerson } from '../core/Person'
-import { UseAppContext } from './ApplicationContext'
+import { UseAppCtx } from './AppCtxProvider'
 
 const RequirementPreviewUI = ({
     requirement,
@@ -10,7 +10,7 @@ const RequirementPreviewUI = ({
     requirement: IRequirement
     person: IPerson
 }) => {
-    const { update } = UseAppContext()
+    const { update } = UseAppCtx()
 
     return (
         <div className="pdg bdr">

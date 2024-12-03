@@ -1,53 +1,57 @@
-import React from 'react'
-import { UseAppContext } from './ApplicationContext'
+import React, { useEffect } from 'react'
+import { UseAppCtx } from './AppCtxProvider'
 import ModalWindow from './ModalWindow'
 import { Page } from './Page'
+import { UseAppContext } from '../ui-v2/context/UseAppContext'
+import PersonCdUi from './PrsnCrdUI'
+import AddReqForm from './add-requirements-form/AddReqForm'
 
 const AppMainComponent = () => {
-    const { modals, currentPage, setCurrentPage } = UseAppContext()
+    const { app, currentPerson, setCurrentPerson, curPage, setCurPage } =
+        UseAppContext()
+
+    useEffect(() => {
+        if (currentPerson) {
+            setCurPage(<PersonCdUi person={currentPerson} />)
+        } else {
+            setCurPage(<div>no page</div>)
+        }
+    }, [currentPerson])
 
     return (
         <div>
             <h2>Main Component</h2>
-            <div className="bdr">
+            <div>
+                <button className={``}>person</button>
+                <button className={``}>track</button>
                 <button
                     onClick={() => {
-                        setCurrentPage(<div>hellooooo woooorlldd</div>)
-                        return 0
+                        const persons = app.getPersons()
+
+                        if (persons.length) {
+                            setCurPage(<AddReqForm person={persons[0]} />)
+                        }
                     }}
-                    className="btn"
+                    className={``}
                 >
-                    btn
+                    add requirement
                 </button>
                 <button
                     onClick={() => {
-                        return 0
+                        const persons = app.getPersons()
+
+                        if (persons.length > 0) {
+                            setCurrentPerson(persons[0])
+                        } else {
+                            alert('no')
+                        }
                     }}
-                    className="btn"
+                    className={``}
                 >
-                    btn
-                </button>
-                <button
-                    onClick={() => {
-                        return 0
-                    }}
-                    className="btn"
-                >
-                    btn
-                </button>
-                <button
-                    onClick={() => {
-                        return 0
-                    }}
-                    className="btn"
-                >
-                    btn
+                    login
                 </button>
             </div>
-            <div>{currentPage.getElement()}</div>
-            {modals.length ? (
-                <ModalWindow component={modals[modals.length - 1]} />
-            ) : null}
+            <div>{curPage ? curPage : curPage}</div>
         </div>
     )
 }

@@ -1,11 +1,11 @@
 export interface IPage {
-    getElement(): JSX.Element
+    exec(): JSX.Element
 }
 
-export class Page {
+export class Page implements IPage {
     private element: JSX.Element
 
-    getElement() {
+    exec() {
         return this.element
     }
 

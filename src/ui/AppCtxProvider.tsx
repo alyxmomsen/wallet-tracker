@@ -1,11 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { ApplicationSingletoneFacade } from '../core/ApplicationFacade'
-import { IPerson, OrdinaryPerson, Person } from '../core/Person'
-import { Requirement } from '../core/Requirement'
-import { DecrementMoneyRequirementCommand } from '../core/RequirementCommand'
+import { IPerson } from '../core/Person'
+
 import { IPage, Page } from './Page'
-import AppMainComponent from './AppMainComponent'
-import PersonCardUI from './PersonCardUI'
+
 import PersonPreviewUI from './PersonPreviewUI'
 
 export type AppContextValue = {
@@ -21,7 +19,7 @@ export type AppContextValue = {
 
 const ApplicationContext = createContext<AppContextValue | undefined>(undefined)
 
-const AppContextProvider = ({
+const AppCtxProvider = ({
     children,
     updateCB,
 }: {
@@ -65,9 +63,7 @@ const AppContextProvider = ({
                 pages: [],
                 update: updateCB,
                 setModals: (elems: JSX.Element[]) => setModals([...elems]),
-                setCurrentPage: (elem: JSX.Element) => {
-                    setCurpage(new Page(elem))
-                },
+                setCurrentPage: (elem: JSX.Element) => elem,
             }}
         >
             {children}
@@ -75,7 +71,7 @@ const AppContextProvider = ({
     )
 }
 
-export const UseAppContext = (): AppContextValue => {
+export const UseAppCtx = (): AppContextValue => {
     const ctx = useContext(ApplicationContext)
 
     if (ctx === undefined) {
@@ -86,7 +82,7 @@ export const UseAppContext = (): AppContextValue => {
     return ctx
 }
 
-export default AppContextProvider
+export default AppCtxProvider
 
 function initPersonValue(appService: ApplicationSingletoneFacade) {
     const persons: IPerson[] = appService.getPersons()

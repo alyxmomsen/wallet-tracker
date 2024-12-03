@@ -1,6 +1,6 @@
 import React from 'react'
 import { UseDateContext } from './AddRequirementContext'
-import { UseAppContext } from '../ApplicationContext'
+import { UseAppCtx } from '../AppCtxProvider'
 
 const AddTimeForm = () => {
     const {
@@ -13,7 +13,7 @@ const AddTimeForm = () => {
         year,
     } = UseDateContext()
 
-    const { setModals, modals } = UseAppContext()
+    const { setModals, modals } = UseAppCtx()
     return (
         <div className="pdg bdr">
             <header className="flex-box">
