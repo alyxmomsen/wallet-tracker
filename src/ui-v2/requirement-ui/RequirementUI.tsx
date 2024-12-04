@@ -4,10 +4,10 @@ import { IPerson } from '../../core/Person'
 
 const RequirementUI = ({
     requirement,
-    person
+    person,
 }: {
-        requirement: IRequirementCommand,
-    person:IPerson
+    requirement: IRequirementCommand
+    person: IPerson
 }) => {
     return (
         <div>
@@ -28,9 +28,14 @@ const RequirementUI = ({
                     })()}
                 </div>
                 <div>
-                    <button onClick={() => {
-                        requirement.execute(person)
-                    }} className='btn'>execute</button>
+                    <button
+                        onClick={() => {
+                            requirement.execute(person)
+                        }}
+                        className="btn"
+                    >
+                        execute
+                    </button>
                 </div>
             </div>
         </div>

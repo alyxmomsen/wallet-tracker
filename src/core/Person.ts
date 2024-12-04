@@ -7,7 +7,7 @@ export type TWalletTrackValue = {
     valueAfter: number
     valueBefore: number
     value: number
-    executionDate:number
+    executionDate: number
 }
 
 export interface IPerson {
@@ -62,7 +62,9 @@ export abstract class Person implements IPerson {
                     value,
                     valueBefore,
                     valueAfter,
-                    executionDate:Number.parseInt(elem.getExecutionDate().toISOString())
+                    executionDate: Number.parseInt(
+                        elem.getExecutionDate().toISOString()
+                    ),
                 }
             })
     }

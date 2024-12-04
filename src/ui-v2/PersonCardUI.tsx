@@ -48,7 +48,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                     className="bdr pdg btn"
                                 >
                                     <div>= {r.getDescription()} =</div>
-                                    <div className='flex-box'>
+                                    <div className="flex-box">
                                         <div>{d.getDate()}</div>
                                         <div>{d.getMonth() + 1}</div>
                                         <div>{d.getFullYear()}</div>
