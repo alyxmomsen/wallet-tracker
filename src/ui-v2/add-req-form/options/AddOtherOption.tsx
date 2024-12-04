@@ -6,7 +6,7 @@ const AddOtherOption = () => {
     const [isActive, setIsActive] = useState(false)
 
     return (
-        <div className="flex-box margin-auto">
+        <div className="flex-box">
             <div>options:</div>
             <div>
                 <button onClick={() => setIsActive((cur) => !cur)}>+</button>
