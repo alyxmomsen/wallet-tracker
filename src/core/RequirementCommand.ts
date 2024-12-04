@@ -5,7 +5,7 @@ export interface IRequirementCommand {
     getDescription(): string
     getValue(): number
     executeWithValue(value: number): number
-    getExecuteDate(): Date
+    getExecutionDate(): Date
     checkIfExecuted(): boolean
 }
 
@@ -24,7 +24,7 @@ abstract class RequirementCommand implements IRequirementCommand {
         return this.isExecuted
     }
 
-    getExecuteDate(): Date {
+    getExecutionDate(): Date {
         return this.date
     }
 

@@ -1,4 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { UseAppContext } from './UseAppContext'
+import { IPerson } from '../../core/Person'
+import { averageValueUtil } from '../../utils/averageValueUtil'
 
 export type TDirection = 'increment' | 'decrement'
 
@@ -23,11 +26,15 @@ const AddDateFormContextProvider = ({
 }: {
     children: JSX.Element
 }) => {
+    const { currentPerson } = UseAppContext()
+
     const [dateObj, setDateObj] = useState<Date>(new Date())
     const [direction, setDirection] = useState<TDirection>('increment')
-    const [value, setValue] = useState<number>(0)
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
+    const [value, setValue] = useState<number>(
+        currentPerson ? averageValueUtil(currentPerson) : 0
+    )
+    const [title, setTitle] = useState('no title')
+    const [description, setDescription] = useState('no description')
 
     useEffect(() => {
         console.log({ direction })

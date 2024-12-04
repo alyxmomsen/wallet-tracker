@@ -8,6 +8,7 @@ import DateOptionUI from './options/DateOptionUI'
 import AddOtherOption from './options/AddOtherOption'
 import AddDateFormContextProvider from '../context/AddRequirementContextProvider'
 import ApplyButtonUI from './options/ApplyButtonUI'
+import DescriptionOptionUI from './options/DescriptionOption'
 
 const AddRequirementForm = ({ person }: { person: IPerson }) => {
     const {} = UseAppContext()
@@ -23,6 +24,7 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
                     <DateOptionUI />
                     <AddOtherOption />
                     <ApplyButtonUI />
+                    <DescriptionOptionUI />
                 </div>
             </div>
         </AddDateFormContextProvider>

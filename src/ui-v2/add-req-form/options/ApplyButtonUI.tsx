@@ -6,11 +6,12 @@ import {
 } from '../../../core/RequirementCommand'
 import { Requirement } from '../../../core/Requirement'
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
+import { averageValueUtil } from '../../../utils/averageValueUtil'
 
 const ApplyButtonUI = () => {
     const { app, currentPerson } = UseAppContext()
 
-    const { title, value, direction, dateObj, description } =
+    const { title, value, setValue, direction, dateObj, description } =
         UseDateFormContext()
 
     return (
@@ -36,6 +37,9 @@ const ApplyButtonUI = () => {
                         console.log({ newReq })
 
                         currentPerson.addRequirementCommand(newReq)
+                        // setValue(
+                        //     averageValueUtil(currentPerson)
+                        // );
                     }
                 }}
             >

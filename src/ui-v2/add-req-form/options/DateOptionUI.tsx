@@ -24,22 +24,171 @@ const DateOptionUI = () => {
         setYear(dateObj.getFullYear().toString())
     }, [dateObj])
 
-    useEffect(() => {
-        //{date  , month , year});
-    }, [year, month, date])
+    useEffect(() => {}, [year, month, date])
 
     return (
         <div className="flex-box">
-            <div>date:</div>
-            <input
-                value={`${year}-${month}-${date}`}
-                type="date"
-                onChange={(e) => {
-                    const dateString = e.target.value
+            <div className="flex-box bdr pdg">
+                <div>date:</div>
+                <div>
+                    <input
+                        className=""
+                        value={`${year}-${month}-${date}`}
+                        type="date"
+                        onChange={(e) => {
+                            const dateString = e.target.value
 
-                    setDateObj(new Date(foo(dateString)))
-                }}
-            />
+                            setDateObj(new Date(foo(dateString)))
+                        }}
+                    />
+                </div>
+            </div>
+            <div className="flex-box">
+                <div className="flex-box bdr pdg">
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setDate(dateObj.getDate() + 1)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <div>day</div>
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setDate(dateObj.getDate() - 1)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            -
+                        </button>
+                    </div>
+                </div>
+                <div className="flex-box bdr pdg">
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setDate(dateObj.getDate() + 7)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <div>week</div>
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setDate(dateObj.getDate() - 7)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            -
+                        </button>
+                    </div>
+                </div>
+                <div className="flex-box bdr pdg">
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setMonth(dateObj.getMonth() + 1)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <div>month</div>
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setMonth(dateObj.getMonth() - 1)
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            -
+                        </button>
+                    </div>
+                </div>
+                <div className="flex-box bdr pdg">
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setFullYear(
+                                    dateObj.getFullYear() + 1
+                                )
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <div>year</div>
+                    <div>
+                        <button
+                            onClick={() => {
+                                const newDateObj = new Date(
+                                    dateObj.toUTCString()
+                                )
+
+                                newDateObj.setFullYear(
+                                    dateObj.getFullYear() - 1
+                                )
+
+                                setDateObj(newDateObj)
+                            }}
+                            className="btn"
+                        >
+                            -
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

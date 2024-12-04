@@ -18,14 +18,15 @@ const ValueOptionUI = () => {
         { value: 700, id: 4, checked: false },
     ])
 
-    const [checkedValueVar, setCh] = useState<TValueVariate | null>(
-        valueVariates.length ? valueVariates[0] : null
-    )
+    const [checkedValueVar, setCheckedValueVariate] =
+        useState<TValueVariate | null>(
+            valueVariates.length ? valueVariates[0] : null
+        )
 
     return (
         <div className="bdr pdg">
             <div className="flex-box">
-                <div className="flex-box bdr">
+                <div className="flex-box bdr pdg">
                     {valueVariates.map((variate) => {
                         return (
                             <div key={variate.id}>
@@ -35,7 +36,11 @@ const ValueOptionUI = () => {
                                         `${variate.id === checkedValueVar?.id ? ' checked' : ''}`
                                     }
                                     onClick={() => {
-                                        setCh(variate)
+                                        if (variate === checkedValueVar) {
+                                            setValue(variate.value)
+                                        }
+
+                                        setCheckedValueVariate(variate)
                                     }}
                                 >
                                     {variate.value}
@@ -44,7 +49,7 @@ const ValueOptionUI = () => {
                         )
                     })}
                 </div>
-                <div className="flex-box bdr">
+                <div className="flex-box bdr pdg">
                     <div>
                         <button
                             onClick={() => {
@@ -57,10 +62,13 @@ const ValueOptionUI = () => {
                             +
                         </button>
                     </div>
+                    <div>{checkedValueVar ? checkedValueVar.value : 0}</div>
                     <div>
                         <button
                             onClick={() => {
-                                setValue(value - 0)
+                                if (checkedValueVar) {
+                                    setValue(value - checkedValueVar.value)
+                                }
                             }}
                             className="btn"
                         >

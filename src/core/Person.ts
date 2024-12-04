@@ -7,6 +7,7 @@ export type TWalletTrackValue = {
     valueAfter: number
     valueBefore: number
     value: number
+    executionDate:number
 }
 
 export interface IPerson {
@@ -40,7 +41,7 @@ export abstract class Person implements IPerson {
         return this.requirementCommands
             .filter((requirement) => {
                 const currentDateObj = getDateUtil(new Date())
-                const executeDate = getDateUtil(requirement.getExecuteDate())
+                const executeDate = getDateUtil(requirement.getExecutionDate())
 
                 if (
                     currentDateObj.year <= executeDate.year &&
@@ -61,6 +62,7 @@ export abstract class Person implements IPerson {
                     value,
                     valueBefore,
                     valueAfter,
+                    executionDate:Number.parseInt(elem.getExecutionDate().toISOString())
                 }
             })
     }
@@ -95,7 +97,7 @@ export abstract class Person implements IPerson {
             const currDateObj = getDateUtil(new Date())
 
             const requirementDateObj = getDateUtil(
-                requirementCommand.getExecuteDate()
+                requirementCommand.getExecutionDate()
             )
 
             if (

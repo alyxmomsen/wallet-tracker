@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { UseAppContext } from './context/UseAppContext'
 import PersonCardUI from './PersonCardUI'
 import AddRequirementForm from './add-req-form/AddRequirementForm'
+import TrackComponentUI from './track-component-ui/TrackComponentUI'
 
 const AppComponent = () => {
     const { app, curPage, setCurPage, currentPerson, setCurrentPerson } =
@@ -43,7 +44,13 @@ const AppComponent = () => {
                     add requirement
                 </button>
                 <button
-                    onClick={() => {}}
+                    onClick={() => {
+                        if (currentPerson) {
+                            setCurPage(
+                                <TrackComponentUI person={currentPerson} />
+                            )
+                        }
+                    }}
                     disabled={currentPerson ? false : true}
                     className={``}
                 >
