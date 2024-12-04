@@ -8,7 +8,7 @@ const DirectionOptionUI = () => {
     const { direction, setDirection } = UseDateFormContext()
 
     return (
-        <div className="flex-box margin-auto">
+        <div className="flex-box ">
             <div>{direction}</div>
             <div>
                 <input

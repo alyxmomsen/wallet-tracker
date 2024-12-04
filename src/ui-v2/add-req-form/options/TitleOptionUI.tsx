@@ -5,7 +5,7 @@ const TitleOptionUI = () => {
     const { title, setTitle } = UseDateFormContext()
 
     return (
-        <div className="flex-box margin-auto">
+        <div className="flex-box ">
             <div>title:</div>
             <div>
                 <input

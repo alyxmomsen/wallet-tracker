@@ -5,7 +5,7 @@ const ValueOptionUI = () => {
     const { value, setValue } = UseDateFormContext()
 
     return (
-        <div className="flex-box margin-auto">
+        <div className="flex-box ">
             <div>value:</div>
             <div>
                 <input

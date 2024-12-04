@@ -12,6 +12,7 @@ export interface IRequirement {
     getBehaviorDescription(): string
     getDateObj(): Date
     getValue(): number
+    executeWithValue(value: number): number
 }
 
 export class Requirement implements IRequirement {
@@ -21,6 +22,10 @@ export class Requirement implements IRequirement {
     private command: IRequirementCommand
     private dateToStart: Date
     // private value: number;
+
+    executeWithValue(value: number): number {
+        return 0
+    }
 
     getValue(): number {
         return this.command.getValue()

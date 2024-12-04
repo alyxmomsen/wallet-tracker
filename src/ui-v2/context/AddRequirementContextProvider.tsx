@@ -7,10 +7,12 @@ export type TDateContext = {
     direction: TDirection
     value: number
     title: string
+    description: string
     setDateObj: (dateObj: Date) => void
     setDirection: (direction: TDirection) => void
     setValue: (value: number) => void
     setTitle: (title: string) => void
+    setDescription: (descr: string) => void
     // setDirection:() => void
 }
 
@@ -25,6 +27,7 @@ const AddDateFormContextProvider = ({
     const [direction, setDirection] = useState<TDirection>('increment')
     const [value, setValue] = useState<number>(0)
     const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
 
     useEffect(() => {
         console.log({ direction })
@@ -41,10 +44,12 @@ const AddDateFormContextProvider = ({
                 direction,
                 value,
                 title,
+                description,
                 setDateObj,
                 setDirection /*: (direction:TDirection) => setDirection(direction) */,
                 setTitle,
                 setValue,
+                setDescription,
             }}
         >
             {children}

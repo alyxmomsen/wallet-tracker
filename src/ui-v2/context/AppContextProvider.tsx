@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { ApplicationSingletoneFacade } from '../../core/ApplicationFacade'
 import { IPerson } from '../../core/Person'
-import PersonCdUi from '../../ui/PrsnCrdUI'
 
 export type TAppCtx = {
     app: ApplicationSingletoneFacade

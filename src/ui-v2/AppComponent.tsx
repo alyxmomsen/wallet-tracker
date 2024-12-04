@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { UseAppContext } from './context/UseAppContext'
-import AddReqForm from '../ui/add-requirements-form/AddReqForm'
 import PersonCardUI from './PersonCardUI'
 import AddRequirementForm from './add-req-form/AddRequirementForm'
 
