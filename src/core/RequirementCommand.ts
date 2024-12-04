@@ -54,7 +54,7 @@ export class IncrementMoneyRequirementCommand extends RequirementCommand {
     }
 
     executeWithValue(value: number): number {
-        return value + this.value;
+        return value + this.value
     }
 
     constructor(value: number, title: string, description: string, date: Date) {

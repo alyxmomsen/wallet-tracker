@@ -37,33 +37,32 @@ export abstract class Person implements IPerson {
     getWalletTrackForActualRequirements(): TWalletTrackValue[] {
         let balance = this.wallet.getBalance()
 
-        return this.requirementCommands.filter((requirement) => {
-            
-            const currentDateObj = getDateUtil(new Date());
-            const executeDate = getDateUtil(requirement.getExecuteDate());
+        return this.requirementCommands
+            .filter((requirement) => {
+                const currentDateObj = getDateUtil(new Date())
+                const executeDate = getDateUtil(requirement.getExecuteDate())
 
-            if (currentDateObj.year <= executeDate.year &&
-                currentDateObj.month <= executeDate.month &&
-                currentDateObj.date <= executeDate.date
-            ) {
+                if (
+                    currentDateObj.year <= executeDate.year &&
+                    currentDateObj.month <= executeDate.month &&
+                    currentDateObj.date <= executeDate.date
+                ) {
+                    return true
+                }
 
-                return true
-            }
-
-            return false;
-
-        }).map(elem => {
-
-            const value = elem.getValue()
-            const valueBefore = balance;
-            const valueAfter = elem.executeWithValue(balance)
-            balance = valueAfter;
-            return {
-                value,
-                valueBefore,
-                valueAfter,
-            }
-        });
+                return false
+            })
+            .map((elem) => {
+                const value = elem.getValue()
+                const valueBefore = balance
+                const valueAfter = elem.executeWithValue(balance)
+                balance = valueAfter
+                return {
+                    value,
+                    valueBefore,
+                    valueAfter,
+                }
+            })
     }
     getName(): string {
         return this.name

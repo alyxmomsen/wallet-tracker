@@ -24,11 +24,13 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
             <div>
                 {
                     person.getWalletTrackForActualRequirements().map((elem) => {
-                        return <div className='bdr pdg flex-box'>
-                            <div>{elem.valueBefore}</div> after 
-                            <div>{elem.value}</div> = 
-                            <div>{elem.valueAfter}</div>
-                        </div>
+                        return (
+                            <div className="bdr pdg flex-box">
+                                <div>{elem.valueBefore}</div> after
+                                <div>{elem.value}</div> =
+                                <div>{elem.valueAfter}</div>
+                            </div>
+                        )
                     })
                     // [''].map(elem =><div>foobar</div>)
                 }
@@ -46,4 +48,3 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 }
 
 export default PersonCardUI
-
