@@ -3,6 +3,12 @@ import { IWallet, Wallet } from './Wallet'
 import { IRequirement } from './Requirement'
 import { IRequirementCommand } from './RequirementCommand'
 
+export type TWalletTrackValue = {
+    valueAfter: number
+    valueBefore: number
+    value: number
+}
+
 export interface IPerson {
     update(): void
     getWalletBalance(): number
@@ -15,22 +21,11 @@ export interface IPerson {
     decrementWallet(value: number): void
     getName(): string
     incrementWallet(value: number): void
-    getWalletTrackFor(): any[]
+    getWalletTrackForActualRequirements(): TWalletTrackValue[]
 }
 
 export abstract class Person implements IPerson {
     // private id: number;
-    getWalletTrackFor(): any[] {
-        let balance = this.wallet.getBalance()
-
-        this.requirementCommands.map((requirement) => {
-            // requirement.
-
-            return requirement
-        })
-
-        return []
-    }
     protected name: string
     protected wallet: IWallet
     protected requirementCommands: IRequirementCommand[]
@@ -39,6 +34,37 @@ export abstract class Person implements IPerson {
     // protected sleepLevel: number;
     protected averageSpending: number
 
+    getWalletTrackForActualRequirements(): TWalletTrackValue[] {
+        let balance = this.wallet.getBalance()
+
+        return this.requirementCommands.filter((requirement) => {
+            
+            const currentDateObj = getDateUtil(new Date());
+            const executeDate = getDateUtil(requirement.getExecuteDate());
+
+            if (currentDateObj.year <= executeDate.year &&
+                currentDateObj.month <= executeDate.month &&
+                currentDateObj.date <= executeDate.date
+            ) {
+
+                return true
+            }
+
+            return false;
+
+        }).map(elem => {
+
+            const value = elem.getValue()
+            const valueBefore = balance;
+            const valueAfter = elem.executeWithValue(balance)
+            balance = valueAfter;
+            return {
+                value,
+                valueBefore,
+                valueAfter,
+            }
+        });
+    }
     getName(): string {
         return this.name
     }
@@ -82,22 +108,6 @@ export abstract class Person implements IPerson {
             }
 
             return false
-
-            function getDateUtil(dateObj: Date): {
-                date: number
-                year: number
-                month: number
-            } {
-                const date = dateObj.getDate()
-                const month = dateObj.getMonth()
-                const year = dateObj.getFullYear()
-
-                return {
-                    date,
-                    month,
-                    year,
-                }
-            }
         })
     }
 
@@ -122,5 +132,21 @@ export abstract class Person implements IPerson {
 export class OrdinaryPerson extends Person {
     constructor(name: string, walletInitValue: number) {
         super(new Wallet(walletInitValue), name)
+    }
+}
+
+export function getDateUtil(dateObj: Date): {
+    date: number
+    year: number
+    month: number
+} {
+    const date = dateObj.getDate()
+    const month = dateObj.getMonth()
+    const year = dateObj.getFullYear()
+
+    return {
+        date,
+        month,
+        year,
     }
 }

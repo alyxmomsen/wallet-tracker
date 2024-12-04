@@ -65,7 +65,7 @@ export class ApplicationSingletoneFacade
 
         // preload
 
-        const jenaro = new OrdinaryPerson('Don Jenaro', 2106 + 400)
+        const jenaro = new OrdinaryPerson('Don Jenaro', 10500)
         const juan = new OrdinaryPerson('Don Juan', 0)
         const carlos = new OrdinaryPerson('Carolos Castaneda', 0)
         this.requirementPlanner = new RequirementPlanner(jenaro)

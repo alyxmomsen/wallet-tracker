@@ -21,7 +21,18 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     return (
         <div className="">
             <h2>PersonCardUI</h2>
-            <div></div>
+            <div>
+                {
+                    person.getWalletTrackForActualRequirements().map((elem) => {
+                        return <div className='bdr pdg flex-box'>
+                            <div>{elem.valueBefore}</div> after 
+                            <div>{elem.value}</div> = 
+                            <div>{elem.valueAfter}</div>
+                        </div>
+                    })
+                    // [''].map(elem =><div>foobar</div>)
+                }
+            </div>
 
             <h3>{person.getName()}</h3>
             <div>
@@ -36,27 +47,3 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
 export default PersonCardUI
 
-export function trackWalletChanges(
-    requirements: IRequirement[],
-    person: IPerson
-): TValues[] {
-    const balance = person.getWalletBalance()
-
-    return requirements.map((req) => {
-        const dateObj = req.getDateObj()
-        const date = dateObj.getDate()
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-
-        return {
-            date,
-            month,
-            year,
-            values: {
-                balanceAfter: 0,
-                balanceBefore: 0,
-                value: 0,
-            },
-        }
-    })
-}
