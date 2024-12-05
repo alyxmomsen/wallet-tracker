@@ -21,6 +21,8 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     const [statusStarted, setStatusStarted] = useState(0)
 
+    let reqanfrid = 0
+
     useEffect(() => {
         ;(() => {
             const r = () => {
@@ -28,22 +30,30 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
                 const updatedDiff = now - updated
                 const statusAgeValue = now - statusStarted
+                console.log(statusAgeValue, updatedDiff, statusStarted)
                 if (statusAgeValue >= 1000 * 60) {
                     if (updatedDiff >= 1000 * 60) {
                         setUpdated(now)
+                        console.log({ statusAgeValue, updatedDiff })
                     }
                 } else {
+                    console.log({ statusAgeValue, updatedDiff })
                     if (updatedDiff >= 1000) {
                         setUpdated(now)
+                        console.log({ statusAgeValue, updatedDiff })
                     }
                 }
 
-                window.requestAnimationFrame(r)
+                reqanfrid = window.requestAnimationFrame(r)
             }
 
             r()
         })()
-    }, [updated])
+
+        return () => {
+            window.cancelAnimationFrame(reqanfrid)
+        }
+    }, [updated, statusStarted])
 
     const [sleepingStatusFactories, setSleepingStatusFactories] = useState<
         PersonStatusFactory[]
