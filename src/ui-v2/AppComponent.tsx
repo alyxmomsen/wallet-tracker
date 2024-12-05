@@ -102,7 +102,7 @@ const AppComponent = () => {
                     </div>
                 ) : null}
             </div>
-            <div className="main-window__body">{curPage}</div>
+            <div className="main-window__body ">{curPage}</div>
         </div>
     )
 }
