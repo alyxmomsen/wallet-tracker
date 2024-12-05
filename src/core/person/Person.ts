@@ -1,6 +1,12 @@
 import { networkInterfaces } from 'os'
-import { IWallet, Wallet } from './Wallet'
-import { IRequirementCommand } from './RequirementCommand'
+import { IWallet, Wallet } from '../Wallet'
+import { IRequirementCommand } from '../RequirementCommand'
+import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
+
+export type TStatus = {
+    id: number
+    title: string
+}
 
 export type TWalletTrackValue = {
     valueAfter: number
@@ -23,6 +29,8 @@ export interface IPerson {
     getName(): string
     incrementWallet(value: number): void
     getWalletTrackForActualRequirements(): TWalletTrackValue[]
+    getStatusDescription(): string
+    setStatus(status: IPersonStatusSystem): boolean
 }
 
 export abstract class Person implements IPerson {
@@ -34,6 +42,16 @@ export abstract class Person implements IPerson {
     // protected tiredLevel: number;
     // protected sleepLevel: number;
     protected averageSpending: number
+    protected status: IPersonStatusSystem
+
+    getStatusDescription(): string {
+        return this.status.getDescription()
+    }
+
+    setStatus(status: IPersonStatusSystem): boolean {
+        this.status = status
+        return true
+    }
 
     getWalletTrackForActualRequirements(): TWalletTrackValue[] {
         let balance = this.wallet.getBalance()
@@ -133,6 +151,7 @@ export abstract class Person implements IPerson {
         this.name = name
         this.requirementCommands = []
         this.averageSpending = 700
+        this.status = new GoingSleepStatus()
     }
 }
 

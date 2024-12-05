@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
-import { IPerson } from '../core/Person'
+import { IPerson } from '../core/person/Person'
 import { UseAppContext } from './context/UseAppContext'
 import RequirementUI from './requirement-ui/RequirementUI'
 import AddRequirementForm from './add-req-form/AddRequirementForm'
+import {
+    AwakenStatusFactory,
+    SlepStatusFactory,
+} from '../core/person/PersonStatus'
 
-type TValues = {
-    date: number
-    month: number
-    year: number
-    values: {
-        balanceBefore: number
-        balanceAfter: number
-        value: number
-    }
-}
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const { curPage, setCurPage, update } = UseAppContext()
 
@@ -21,6 +15,11 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     const exec = person.getExecutedRequirementCommands()
 
     const [actReqs, setAR] = useState(actualReqs)
+
+    const [statuses, setStatuses] = useState([
+        new AwakenStatusFactory(),
+        new SlepStatusFactory(),
+    ])
 
     return (
         <div className="">
@@ -32,6 +31,21 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     <h3>Wallet</h3>
                     <div>{person.getWalletBalance()}</div>
                 </div>
+                <div>
+                    {statuses.map((factory) => {
+                        return (
+                            <button
+                                onClick={() => {
+                                    person.setStatus(factory.instance())
+                                    update()
+                                }}
+                            >
+                                {'status'}
+                            </button>
+                        )
+                    })}
+                </div>
+                <div>{person.getStatusDescription()}</div>
                 <div>
                     <h3>
                         {person.getAllReauirementCommands().length ? (

@@ -1,4 +1,4 @@
-import { IPerson } from '../core/Person'
+import { IPerson } from '../core/person/Person'
 
 export function averageValueUtil(person: IPerson) {
     const curPerActReqs = person.getActualRequirementCommands()

@@ -1,4 +1,8 @@
-import { IPerson, OrdinaryPerson as OrdinaryPerson, Person } from './Person'
+import {
+    IPerson,
+    OrdinaryPerson as OrdinaryPerson,
+    Person,
+} from './person/Person'
 import { IPlanner, RequirementPlanner } from './Planner'
 import { IRequirementCommand } from './RequirementCommand'
 

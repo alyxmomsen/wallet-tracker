@@ -1,6 +1,6 @@
 import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import { IPerson } from '../../core/Person'
+import { IPerson } from '../../core/person/Person'
 import DirectionOptionUI from './options/DirectionOptionUI'
 import ValueOptionUI from './options/ValueOptionUI'
 import TitleOptionUI from './options/TitleOptionUI'

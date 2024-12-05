@@ -1,6 +1,6 @@
 import React from 'react'
 import { IRequirementCommand } from '../../core/RequirementCommand'
-import { IPerson } from '../../core/Person'
+import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 
 const RequirementUI = ({

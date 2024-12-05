@@ -1,5 +1,5 @@
 import React from 'react'
-import { IPerson } from '../../core/Person'
+import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementForm'
 
@@ -31,6 +31,12 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                                         </div>
                                         <div>{elem.value}</div> =
                                         <div>{elem.valueAfter}</div>
+                                        <button
+                                            className="btn"
+                                            onClick={() => {}}
+                                        >
+                                            execute
+                                        </button>
                                     </div>
                                 )
                             })

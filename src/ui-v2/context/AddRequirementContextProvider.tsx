@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './UseAppContext'
-import { IPerson } from '../../core/Person'
+import { IPerson } from '../../core/person/Person'
 import { averageValueUtil } from '../../utils/averageValueUtil'
 
 export type TDirection = 'increment' | 'decrement'
