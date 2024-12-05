@@ -31,7 +31,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 const updatedDiff = now - updated
                 const statusAgeValue = now - statusStarted
                 console.log(statusAgeValue, updatedDiff, statusStarted)
-                if (statusAgeValue >= 1000 * 60) {
+                if (statusAgeValue > 1000 * 60) {
                     if (updatedDiff >= 1000 * 60) {
                         setUpdated(now)
                         console.log({ statusAgeValue, updatedDiff })
