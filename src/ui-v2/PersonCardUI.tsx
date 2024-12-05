@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IPerson } from '../core/person/Person'
 import { UseAppContext } from './context/UseAppContext'
 import RequirementUI from './requirement-ui/RequirementUI'
@@ -16,6 +16,34 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     const exec = person.getExecutedRequirementCommands()
 
     const [actReqs, setAR] = useState(actualReqs)
+
+    const [updated, setUpdated] = useState(0)
+
+    const [statusStarted, setStatusStarted] = useState(0)
+
+    useEffect(() => {
+        ;(() => {
+            const r = () => {
+                const now = Date.now()
+
+                const updatedDiff = now - updated
+                const statusAgeValue = now - statusStarted
+                if (statusAgeValue >= 1000 * 60) {
+                    if (updatedDiff >= 1000 * 60) {
+                        setUpdated(now)
+                    }
+                } else {
+                    if (updatedDiff >= 1000) {
+                        setUpdated(now)
+                    }
+                }
+
+                window.requestAnimationFrame(r)
+            }
+
+            r()
+        })()
+    }, [updated])
 
     const [sleepingStatusFactories, setSleepingStatusFactories] = useState<
         PersonStatusFactory[]
@@ -50,9 +78,10 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                       className="btn"
                                       onClick={() => {
                                           setCurrentStatusFactory(link)
-                                          person.setStatus(
+                                          const instance =
                                               currentStatusFactory.instance()
-                                          )
+                                          person.setStatus(instance)
+                                          setStatusStarted(instance.getDate())
                                           update()
                                       }}
                                   >
@@ -66,11 +95,14 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                       <button
                                           className="btn"
                                           onClick={() => {
-                                              person.setStatus(
+                                              const instance =
                                                   sleepStatusfactory.instance()
-                                              )
+                                              person.setStatus(instance)
                                               setCurrentStatusFactory(
                                                   sleepStatusfactory
+                                              )
+                                              setStatusStarted(
+                                                  instance.getDate()
                                               )
                                               update()
                                           }}
