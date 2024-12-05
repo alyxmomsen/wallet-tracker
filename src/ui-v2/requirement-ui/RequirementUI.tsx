@@ -1,6 +1,7 @@
 import React from 'react'
 import { IRequirementCommand } from '../../core/RequirementCommand'
 import { IPerson } from '../../core/Person'
+import { UseAppContext } from '../context/UseAppContext'
 
 const RequirementUI = ({
     requirement,
@@ -9,6 +10,8 @@ const RequirementUI = ({
     requirement: IRequirementCommand
     person: IPerson
 }) => {
+    const { update } = UseAppContext()
+
     return (
         <div>
             <h1>RequirementUI</h1>
@@ -29,12 +32,16 @@ const RequirementUI = ({
                 </div>
                 <div>
                     <button
+                        disabled={requirement.checkIfExecuted()}
                         onClick={() => {
                             requirement.execute(person)
+                            update()
                         }}
-                        className="btn"
+                        className={requirement.checkIfExecuted() ? '' : 'btn'}
                     >
-                        execute
+                        {!requirement.checkIfExecuted()
+                            ? 'Execute'
+                            : 'executed!'}
                     </button>
                 </div>
             </div>

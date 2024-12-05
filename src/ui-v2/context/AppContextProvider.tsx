@@ -8,6 +8,7 @@ export type TAppCtx = {
     setCurrentPerson: (person: IPerson | null) => void
     curPage: JSX.Element
     setCurPage: (elem: JSX.Element) => void
+    update: () => void
 }
 
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
@@ -18,6 +19,8 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     )
     const [currentPerson, setCurrentPerson] = useState<IPerson | null>(null)
     const [curPage, setCurPage] = useState<JSX.Element>(<div>no page</div>)
+
+    const [, update] = useState(0)
 
     useEffect(() => {}, [currentPerson])
 
@@ -30,6 +33,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                     setCurrentPerson(person),
                 curPage,
                 setCurPage: (elem: JSX.Element) => setCurPage(elem),
+                update: () => update((cur) => cur + 1),
             }}
         >
             {children}

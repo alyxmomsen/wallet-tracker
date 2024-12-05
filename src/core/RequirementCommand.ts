@@ -47,8 +47,13 @@ abstract class RequirementCommand implements IRequirementCommand {
 
 export class IncrementMoneyRequirementCommand extends RequirementCommand {
     execute(person: IPerson): boolean {
+        if (this.isExecuted) {
+            return false
+        }
+
         const balanceBefore = person.getWalletBalance()
         person.incrementWallet(this.value)
+        this.isExecuted = true
 
         return true
     }

@@ -14,7 +14,7 @@ type TValues = {
     }
 }
 const PersonCardUI = ({ person }: { person: IPerson }) => {
-    const { curPage, setCurPage } = UseAppContext()
+    const { curPage, setCurPage, update } = UseAppContext()
 
     let actualReqs = person.getActualRequirementCommands()
     const exec = person.getExecutedRequirementCommands()
@@ -28,33 +28,53 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
             <h3>{person.getName()}</h3>
             <div>
                 <div>
+                    <h3>Wallet</h3>
+                    <div>{person.getWalletBalance()}</div>
+                </div>
+                <div>
                     <h3>REQUIREMENTS:</h3>
                     <div className="flex-box">
-                        {person.getActualRequirementCommands().map((r, i) => {
-                            const d = r.getExecutionDate()
+                        {person
+                            .getActualRequirementCommands()
+                            .map((requirement, i) => {
+                                const d = requirement.getExecutionDate()
 
-                            return (
-                                <div
-                                    onClick={() => {
-                                        setCurPage(
-                                            <RequirementUI
-                                                requirement={r}
-                                                person={person}
-                                                key={i}
-                                            />
-                                        )
-                                    }}
-                                    className="bdr pdg btn"
-                                >
-                                    <div>= {r.getDescription()} =</div>
-                                    <div className="flex-box">
-                                        <div>{d.getDate()}</div>
-                                        <div>{d.getMonth() + 1}</div>
-                                        <div>{d.getFullYear()}</div>
+                                return (
+                                    <div
+                                        onClick={() => {
+                                            setCurPage(
+                                                <RequirementUI
+                                                    requirement={requirement}
+                                                    person={person}
+                                                    key={i}
+                                                />
+                                            )
+                                        }}
+                                        className="bdr pdg btn  hover--parent flex-box flex-dir-col"
+                                    >
+                                        <div>
+                                            = {requirement.getDescription()} =
+                                        </div>
+                                        <div className="flex-box">
+                                            <div>{d.getDate()}</div>
+                                            <div>{d.getMonth() + 1}</div>
+                                            <div>{d.getFullYear()}</div>
+                                        </div>
+                                        {!requirement.checkIfExecuted() ? (
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    requirement.execute(person)
+                                                    update()
+                                                }}
+                                                className="hover--child btn"
+                                            >
+                                                execute
+                                            </button>
+                                        ) : null}
                                     </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
                     </div>
                 </div>
             </div>

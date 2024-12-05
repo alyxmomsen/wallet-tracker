@@ -8,9 +8,8 @@ const AppComponent = () => {
     const { app, curPage, setCurPage, currentPerson, setCurrentPerson } =
         UseAppContext()
 
-    const [isLogined, setIfLoginClicked] = useState(false)
-
-    const [tabs] = useState<{ foo: () => JSX.Element }[]>([])
+    const [isLogined, setIsLogined] = useState(false)
+    const [isPersonMenuRolledDown, setIsPersonMenuRolledDown] = useState(false)
 
     useEffect(() => {}, [currentPerson])
     useEffect(() => {}, [curPage])
@@ -22,13 +21,13 @@ const AppComponent = () => {
                     onClick={() => {
                         if (currentPerson) {
                             setCurPage(<PersonCardUI person={currentPerson} />)
-                            setIfLoginClicked(false)
+                            setIsLogined(false)
                         }
                     }}
                     disabled={currentPerson ? false : true}
                     className={``}
                 >
-                    person
+                    {currentPerson ? currentPerson.getName() : 'Person'}
                 </button>
                 <button
                     onClick={() => {
@@ -41,7 +40,7 @@ const AppComponent = () => {
                     disabled={currentPerson ? false : true}
                     className={``}
                 >
-                    add requirement
+                    Add requirement
                 </button>
                 <button
                     onClick={() => {
@@ -54,37 +53,53 @@ const AppComponent = () => {
                     disabled={currentPerson ? false : true}
                     className={``}
                 >
-                    track
+                    Track
                 </button>
                 <button
                     onClick={() => {
-                        setIfLoginClicked((cur) => !cur)
+                        if (currentPerson) {
+                            setCurrentPerson(null)
+                            setIsLogined(false)
+                            setIsPersonMenuRolledDown(false)
+                            return
+                        }
+                        // setIsLogined((cur) => !cur)
+                        setIsPersonMenuRolledDown((cur) => !cur)
                         setCurPage(
                             <div>
-                                <h1>login page</h1>
+                                <h1>Login page</h1>
                             </div>
                         )
                     }}
                     disabled={false}
                     className={``}
                 >
-                    {isLogined ? 'LogOut' : 'LogIn'}
+                    {currentPerson ? 'LogOut' : 'LogIn'}
                 </button>
-                {isLogined
-                    ? [
-                          ...app.getPersons().map((person) => {
-                              return (
-                                  <button
-                                      onClick={() => {
-                                          setCurrentPerson(person)
-                                      }}
-                                  >
-                                      {person.getName()}
-                                  </button>
-                              )
-                          }),
-                      ]
-                    : null}
+                {isPersonMenuRolledDown && !currentPerson ? (
+                    <div>
+                        {[
+                            ...app
+                                .getPersons()
+                                .filter((person) => {
+                                    return !currentPerson
+                                        ? true
+                                        : currentPerson === person
+                                })
+                                .map((person) => {
+                                    return (
+                                        <button
+                                            onClick={() => {
+                                                setCurrentPerson(person)
+                                            }}
+                                        >
+                                            {person.getName()}
+                                        </button>
+                                    )
+                                }),
+                        ]}
+                    </div>
+                ) : null}
             </div>
             <div>
                 <div>{curPage}</div>

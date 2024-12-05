@@ -118,3 +118,14 @@ body {
 .disabled {
     display: none;
 }
+
+.hover--parent {
+}
+
+.hover--child {
+    visibility: hidden;
+}
+
+.hover--parent:hover .hover--child {
+    visibility: unset;
+}
