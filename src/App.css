@@ -129,3 +129,13 @@ body {
 .hover--parent:hover .hover--child {
     visibility: unset;
 }
+
+/* ---- */
+
+.requirement--executed {
+    background-color: grey;
+}
+
+.requirement--executed:hover {
+    background-color: inherit;
+}

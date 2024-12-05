@@ -50,7 +50,12 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                                 />
                                             )
                                         }}
-                                        className="bdr pdg btn  hover--parent flex-box flex-dir-col"
+                                        className={
+                                            'bdr pdg btn  hover--parent flex-box flex-dir-col' +
+                                            (requirement.checkIfExecuted()
+                                                ? ' requirement--executed'
+                                                : '')
+                                        }
                                     >
                                         <div>
                                             = {requirement.getDescription()} =
