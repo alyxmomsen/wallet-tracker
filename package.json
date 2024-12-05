@@ -22,7 +22,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "pretty": "npx prettier --write . && git add . && git commit -m 'update' && git push origin master"
+        "pretty-push": "npx prettier --write . && git add . && git commit -m 'update' && git push origin master",
+        "pretty": "npx prettier --write . && git add . && git commit -m 'update' && git status"
     },
     "eslintConfig": {
         "extends": [
