@@ -8,11 +8,15 @@ export interface IPlanner<T, S> {
     check(): void
 }
 
-export class RequirementPlanner implements IPlanner<IRequirementCommand, IPerson> {
+export class RequirementPlanner
+    implements IPlanner<IRequirementCommand, IPerson>
+{
     private tasks: ITask<IRequirementCommand, IPerson>[]
     private subject: IPerson
 
-    addTask(task: ITask<IRequirementCommand, IPerson>): ITask<IRequirementCommand, IPerson> {
+    addTask(
+        task: ITask<IRequirementCommand, IPerson>
+    ): ITask<IRequirementCommand, IPerson> {
         this.tasks.push(task)
         return task
     }

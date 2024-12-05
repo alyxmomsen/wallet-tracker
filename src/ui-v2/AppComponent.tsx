@@ -68,9 +68,7 @@ const AppComponent = () => {
                     disabled={false}
                     className={``}
                 >
-                    {
-                        isLogined ? 'LogOut' : 'LogIn'
-                    }
+                    {isLogined ? 'LogOut' : 'LogIn'}
                 </button>
                 {isLogined
                     ? [

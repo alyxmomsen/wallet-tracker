@@ -1,7 +1,6 @@
 import { IPerson } from './Person'
 import { IRequirementCommand } from './RequirementCommand'
 
-
 export interface ITask<T, S> {
     // apply(subject: S): void
     getRequirement(): IRequirementCommand
