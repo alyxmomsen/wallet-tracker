@@ -38,6 +38,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                             'REQUIREMENTS:'
                         ) : (
                             <button
+                                className="btn"
                                 onClick={() => {
                                     if (person) {
                                         setCurPage(

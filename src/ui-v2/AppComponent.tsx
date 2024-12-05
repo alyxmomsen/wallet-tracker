@@ -16,7 +16,7 @@ const AppComponent = () => {
 
     return (
         <div>
-            <div>
+            <div className="main-window__header">
                 <button
                     onClick={() => {
                         if (currentPerson) {
@@ -89,6 +89,7 @@ const AppComponent = () => {
                                 .map((person) => {
                                     return (
                                         <button
+                                            className="btn main-menu__button"
                                             onClick={() => {
                                                 setCurrentPerson(person)
                                             }}
@@ -101,9 +102,7 @@ const AppComponent = () => {
                     </div>
                 ) : null}
             </div>
-            <div>
-                <div>{curPage}</div>
-            </div>
+            <div className="main-window__body">{curPage}</div>
         </div>
     )
 }

@@ -9,7 +9,7 @@ const DirectionOptionUI = () => {
 
     return (
         <div className="flex-box flex-item bdr pdg">
-            <div>{direction}</div>
+            <div className="value-color--txt">{direction.toUpperCase()}</div>
             <div>
                 <input
                     onChange={(e) => {
@@ -24,6 +24,7 @@ const DirectionOptionUI = () => {
                     checked={direction === 'increment'}
                     value={'increment'}
                     type="radio"
+                    className="btn"
                 />
                 <input
                     onChange={(e) => {
@@ -37,6 +38,7 @@ const DirectionOptionUI = () => {
                     checked={direction === 'decrement'}
                     value={'decrement'}
                     type="radio"
+                    className="btn"
                 />
             </div>
         </div>

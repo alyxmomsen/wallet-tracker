@@ -18,7 +18,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         new ApplicationSingletoneFacade()
     )
     const [currentPerson, setCurrentPerson] = useState<IPerson | null>(null)
-    const [curPage, setCurPage] = useState<JSX.Element>(<div>no page</div>)
+    const [curPage, setCurPage] = useState<JSX.Element>(
+        <div>{'Login, please'.toUpperCase()}</div>
+    )
 
     const [, update] = useState(0)
 

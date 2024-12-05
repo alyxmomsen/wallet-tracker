@@ -81,6 +81,7 @@ const ValueOptionUI = () => {
                 <div>value:</div>
                 <div>
                     <input
+                        className="value-color--txt"
                         type="number"
                         value={value}
                         onChange={(e) =>

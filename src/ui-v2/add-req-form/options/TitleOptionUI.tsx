@@ -12,6 +12,7 @@ const TitleOptionUI = () => {
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    className="value-color--txt"
                 />
             </div>
         </div>

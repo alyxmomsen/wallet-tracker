@@ -32,7 +32,7 @@ const DateOptionUI = () => {
                 <div>date:</div>
                 <div>
                     <input
-                        className=""
+                        className="value-color--txt"
                         value={`${year}-${month}-${date}`}
                         type="date"
                         onChange={(e) => {

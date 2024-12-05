@@ -8,12 +8,20 @@
     --gap-5: calc(9px * 16);
     --bdr-1: #3f792b;
     --color-1: #acd0a0;
+    --value: #ff4;
 }
 
 * {
     box-sizing: border-box;
 
     border-radius: calc(var(--gap) / 2);
+}
+
+.value-color--txt {
+    color: var(--value);
+}
+
+.value-color--bkg {
 }
 
 #root {
@@ -184,4 +192,12 @@ input {
 
 .main-menu__button {
     border-radius: 0;
+}
+
+.main-window__header {
+    height: calc((100vh - var(--gap-3) * 4) / 100 * 20);
+}
+
+.main-window__body {
+    height: calc((100vh - var(--gap-3) * 4) / 100 * 80);
 }
