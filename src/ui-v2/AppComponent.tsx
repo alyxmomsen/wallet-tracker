@@ -25,7 +25,7 @@ const AppComponent = () => {
                         }
                     }}
                     disabled={currentPerson ? false : true}
-                    className={``}
+                    className={`main-menu__button btn`}
                 >
                     {currentPerson ? currentPerson.getName() : 'Person'}
                 </button>
@@ -38,7 +38,7 @@ const AppComponent = () => {
                         }
                     }}
                     disabled={currentPerson ? false : true}
-                    className={``}
+                    className={`main-menu__button btn`}
                 >
                     Add requirement
                 </button>
@@ -51,7 +51,7 @@ const AppComponent = () => {
                         }
                     }}
                     disabled={currentPerson ? false : true}
-                    className={``}
+                    className={`main-menu__button btn`}
                 >
                     Track
                 </button>
@@ -72,7 +72,7 @@ const AppComponent = () => {
                         )
                     }}
                     disabled={false}
-                    className={``}
+                    className={`main-menu__button btn`}
                 >
                     {currentPerson ? 'LogOut' : 'LogIn'}
                 </button>

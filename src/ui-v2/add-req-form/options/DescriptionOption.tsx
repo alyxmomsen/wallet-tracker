@@ -15,7 +15,7 @@ const DescriptionOptionUI = () => {
     const { description, setDescription } = UseDateFormContext()
 
     return (
-        <div className="flex-box ">
+        <div style={{ display: 'none' }} className="flex-box ">
             <div>description:</div>
             <div>
                 <textarea

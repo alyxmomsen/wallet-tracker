@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { IPerson } from '../core/Person'
 import { UseAppContext } from './context/UseAppContext'
 import RequirementUI from './requirement-ui/RequirementUI'
+import AddRequirementForm from './add-req-form/AddRequirementForm'
 
 type TValues = {
     date: number
@@ -32,7 +33,25 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     <div>{person.getWalletBalance()}</div>
                 </div>
                 <div>
-                    <h3>REQUIREMENTS:</h3>
+                    <h3>
+                        {person.getAllReauirementCommands().length ? (
+                            'REQUIREMENTS:'
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    if (person) {
+                                        setCurPage(
+                                            <AddRequirementForm
+                                                person={person}
+                                            />
+                                        )
+                                    }
+                                }}
+                            >
+                                ADD REQUIREMENT
+                            </button>
+                        )}
+                    </h3>
                     <div className="flex-box">
                         {person
                             .getActualRequirementCommands()

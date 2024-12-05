@@ -7,6 +7,7 @@ export type TWalletTrackValue = {
     valueBefore: number
     value: number
     executionDate: number
+    transactionTypeCode: number
 }
 
 export interface IPerson {
@@ -52,18 +53,22 @@ export abstract class Person implements IPerson {
 
                 return false
             })
-            .map((elem) => {
-                const value = elem.getValue()
+            .map((requirement) => {
+                const value = requirement.getValue()
                 const valueBefore = balance
-                const valueAfter = elem.executeWithValue(balance)
+                const valueAfter = requirement.executeWithValue(balance)
                 balance = valueAfter
                 return {
                     value,
                     valueBefore,
                     valueAfter,
                     executionDate: Number.parseInt(
-                        elem.getExecutionDate().toISOString()
+                        requirement
+                            .getExecutionDate()
+                            .getTime() /* / 1000 */
+                            .toString()
                     ),
+                    transactionTypeCode: requirement.getTransactionTypeCode(),
                 }
             })
     }

@@ -16,6 +16,7 @@ const ApplyButtonUI = () => {
     return (
         <div className="flex-box">
             <button
+                className="btn"
                 onClick={() => {
                     if (currentPerson) {
                         const newReq =

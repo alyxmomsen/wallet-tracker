@@ -6,13 +6,20 @@ const AddOtherOption = () => {
     const [isActive, setIsActive] = useState(false)
 
     return (
-        <div className="flex-box">
+        <div className="flex-box flex-center flex-item bdr pdg">
             <div>options:</div>
             <div>
-                <button onClick={() => setIsActive((cur) => !cur)}>+</button>
+                <button
+                    className="btn"
+                    onClick={() => setIsActive((cur) => !cur)}
+                >
+                    +
+                </button>
                 {isActive
                     ? options.map((elem) => (
-                          <button className={'btn'}>{elem}</button>
+                          <button disabled className={'btn'}>
+                              {elem}
+                          </button>
                       ))
                     : null}
             </div>

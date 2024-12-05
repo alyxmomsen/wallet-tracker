@@ -15,9 +15,9 @@ const AddRequirementForm = ({ person }: { person: IPerson }) => {
 
     return (
         <AddDateFormContextProvider>
-            <div>
+            <div className="element-type--1 flex-box flex-dir-col gap">
                 <h2>Add Requirement Form</h2>
-                <div className="flex-box flex-dir-col pdg bdr">
+                <div className="flex-box flex-dir-col pdg-x3 bdr flex-item">
                     <DirectionOptionUI />
                     <ValueOptionUI />
                     <TitleOptionUI />

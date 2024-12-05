@@ -27,8 +27,8 @@ const DateOptionUI = () => {
     useEffect(() => {}, [year, month, date])
 
     return (
-        <div className="flex-box">
-            <div className="flex-box bdr pdg">
+        <div className="flex-box flex-item bdr pdg">
+            <div className="flex-box flex-center bdr pdg">
                 <div>date:</div>
                 <div>
                     <input
@@ -44,7 +44,7 @@ const DateOptionUI = () => {
                 </div>
             </div>
             <div className="flex-box">
-                <div className="flex-box bdr pdg">
+                <div className="flex-box flex-center bdr pdg">
                     <div>
                         <button
                             onClick={() => {
@@ -79,7 +79,7 @@ const DateOptionUI = () => {
                         </button>
                     </div>
                 </div>
-                <div className="flex-box bdr pdg">
+                <div className="flex-box flex-center bdr pdg">
                     <div>
                         <button
                             onClick={() => {
@@ -114,7 +114,7 @@ const DateOptionUI = () => {
                         </button>
                     </div>
                 </div>
-                <div className="flex-box bdr pdg">
+                <div className="flex-box flex-center bdr pdg">
                     <div>
                         <button
                             onClick={() => {
@@ -149,7 +149,7 @@ const DateOptionUI = () => {
                         </button>
                     </div>
                 </div>
-                <div className="flex-box bdr pdg">
+                <div className="flex-box flex-center bdr pdg">
                     <div>
                         <button
                             onClick={() => {

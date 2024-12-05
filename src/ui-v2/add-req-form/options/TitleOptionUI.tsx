@@ -5,7 +5,7 @@ const TitleOptionUI = () => {
     const { title, setTitle } = UseDateFormContext()
 
     return (
-        <div className="flex-box ">
+        <div className="flex-box flex-item flex-center bdr pdg">
             <div>title:</div>
             <div>
                 <input

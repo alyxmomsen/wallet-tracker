@@ -24,7 +24,7 @@ const ValueOptionUI = () => {
         )
 
     return (
-        <div className="bdr pdg">
+        <div className="bdr pdg flex-box flex-dir-col flex-item">
             <div className="flex-box">
                 <div className="flex-box bdr pdg">
                     {valueVariates.map((variate) => {
@@ -49,7 +49,7 @@ const ValueOptionUI = () => {
                         )
                     })}
                 </div>
-                <div className="flex-box bdr pdg">
+                <div className="flex-box bdr pdg flex-center">
                     <div>
                         <button
                             onClick={() => {
@@ -77,7 +77,7 @@ const ValueOptionUI = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex-box ">
+            <div className="flex-box flex-center">
                 <div>value:</div>
                 <div>
                     <input
