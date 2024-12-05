@@ -1,16 +1,13 @@
 import { IPerson, OrdinaryPerson as OrdinaryPerson, Person } from './Person'
 import { IPlanner, RequirementPlanner } from './Planner'
-import { IRequirement, Requirement } from './Requirement'
-import {
-    DecrementMoneyRequirementCommand,
-    IncrementMoneyRequirementCommand,
-} from './RequirementCommand'
-import { ITask, RequirementTask } from './Task'
+import { IRequirementCommand } from './RequirementCommand'
+
+import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
     addPerson(person: IPerson): number
     getPersons(): IPerson[]
-    addRequirementSchedule(task: ITask<IRequirement, IPerson>): void
+    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
 }
 
@@ -20,9 +17,9 @@ export class ApplicationSingletoneFacade
     private lastId: number
     private persons: IPerson[]
     private personsRegisty: Map<number, IPerson>
-    private requirementPlanner: IPlanner<IRequirement, IPerson>
+    private requirementPlanner: IPlanner<IRequirementCommand, IPerson>
 
-    private requirements: IRequirement[]
+    private requirements: IRequirementCommand[]
 
     private static instance: ApplicationSingletoneFacade | null = null
 
@@ -36,7 +33,7 @@ export class ApplicationSingletoneFacade
         return ApplicationSingletoneFacade.instance
     }
 
-    addRequirementSchedule(task: ITask<IRequirement, IPerson>) {
+    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {
         this.requirementPlanner.addTask(task)
     }
 

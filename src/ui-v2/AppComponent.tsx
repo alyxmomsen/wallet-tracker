@@ -68,7 +68,9 @@ const AppComponent = () => {
                     disabled={false}
                     className={``}
                 >
-                    login
+                    {
+                        isLogined ? 'LogOut' : 'LogIn'
+                    }
                 </button>
                 {isLogined
                     ? [
@@ -85,7 +87,6 @@ const AppComponent = () => {
                           }),
                       ]
                     : null}
-                {currentPerson ? <button>logout</button> : null}
             </div>
             <div>
                 <div>{curPage}</div>

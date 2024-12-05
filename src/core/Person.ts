@@ -1,6 +1,5 @@
 import { networkInterfaces } from 'os'
 import { IWallet, Wallet } from './Wallet'
-import { IRequirement } from './Requirement'
 import { IRequirementCommand } from './RequirementCommand'
 
 export type TWalletTrackValue = {

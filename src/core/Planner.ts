@@ -1,5 +1,6 @@
 import { IPerson } from './Person'
-import { IRequirement } from './Requirement'
+import { IRequirementCommand } from './RequirementCommand'
+
 import { ITask, RequirementTask } from './Task'
 
 export interface IPlanner<T, S> {
@@ -7,17 +8,17 @@ export interface IPlanner<T, S> {
     check(): void
 }
 
-export class RequirementPlanner implements IPlanner<IRequirement, IPerson> {
-    private tasks: ITask<IRequirement, IPerson>[]
+export class RequirementPlanner implements IPlanner<IRequirementCommand, IPerson> {
+    private tasks: ITask<IRequirementCommand, IPerson>[]
     private subject: IPerson
 
-    addTask(task: ITask<IRequirement, IPerson>): ITask<IRequirement, IPerson> {
+    addTask(task: ITask<IRequirementCommand, IPerson>): ITask<IRequirementCommand, IPerson> {
         this.tasks.push(task)
         return task
     }
 
     check() {
-        const updatedTasks: ITask<IRequirement, IPerson>[] = []
+        const updatedTasks: ITask<IRequirementCommand, IPerson>[] = []
 
         this.tasks = this.tasks.filter((task) => {
             if (true) {

@@ -1,6 +1,5 @@
-import React, { act, useState } from 'react'
+import React, { useState } from 'react'
 import { IPerson } from '../core/Person'
-import { IRequirement } from '../core/Requirement'
 import { UseAppContext } from './context/UseAppContext'
 import RequirementUI from './requirement-ui/RequirementUI'
 

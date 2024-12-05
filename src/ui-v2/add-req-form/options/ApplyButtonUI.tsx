@@ -4,9 +4,9 @@ import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
 } from '../../../core/RequirementCommand'
-import { Requirement } from '../../../core/Requirement'
+
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
-import { averageValueUtil } from '../../../utils/averageValueUtil'
+
 
 const ApplyButtonUI = () => {
     const { app, currentPerson } = UseAppContext()

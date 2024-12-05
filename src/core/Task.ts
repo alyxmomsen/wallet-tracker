@@ -1,25 +1,26 @@
 import { IPerson } from './Person'
-import { IRequirement } from './Requirement'
+import { IRequirementCommand } from './RequirementCommand'
+
 
 export interface ITask<T, S> {
     // apply(subject: S): void
-    getRequirement(): IRequirement
+    getRequirement(): IRequirementCommand
     getDateStart(): Date
 }
 
-export class RequirementTask implements ITask<IRequirement, IPerson> {
+export class RequirementTask implements ITask<IRequirementCommand, IPerson> {
     dateStart: Date
-    requirement: IRequirement
+    requirement: IRequirementCommand
     // apply(subject: IPerson) {
     //     subject.addRequirement(this.requirement)
     // }
-    getRequirement(): IRequirement {
+    getRequirement(): IRequirementCommand {
         return this.requirement
     }
     getDateStart(): Date {
         return this.dateStart
     }
-    constructor(dateStart: Date, requirement: IRequirement) {
+    constructor(dateStart: Date, requirement: IRequirementCommand) {
         this.dateStart = dateStart
         this.requirement = requirement
     }
