@@ -30,7 +30,7 @@ export class GoingSleepStatus extends PersonStatusSystem {
     }
 
     getDescription(): string {
-        return 'you sleep for ' + Math.floor(this.getDifference() / 1000)
+        return `You fell asleep ${Math.floor(this.getDifference() / 1000)} seconds ago`
     }
 
     constructor() {
@@ -44,7 +44,7 @@ export class AwakeningStatus extends PersonStatusSystem {
     }
 
     getDescription(): string {
-        return 'you awaken for ' + Math.floor(this.getDifference() / 1000)
+        return `You woke up ${Math.floor(this.getDifference() / 1000)} seconds ago`
     }
 
     constructor() {
@@ -54,16 +54,37 @@ export class AwakeningStatus extends PersonStatusSystem {
 }
 
 export abstract class PersonStatusFactory {
+    protected links: PersonStatusFactory[]
+    protected title: string
     abstract instance(): IPersonStatusSystem
+    addLinkFactory(linkFactory: PersonStatusFactory) {
+        this.links.push(linkFactory)
+    }
+    getLinks(): PersonStatusFactory[] {
+        return this.links
+    }
+    getTitle(): string {
+        return this.title
+    }
+    constructor(title: string) {
+        this.title = title
+        this.links = []
+    }
 }
 
-export class AwakenStatusFactory {
+export class AwakenStatusFactory extends PersonStatusFactory {
     instance(): IPersonStatusSystem {
         return new AwakeningStatus()
     }
+    constructor() {
+        super('wake up')
+    }
 }
-export class SlepStatusFactory {
+export class SlepStatusFactory extends PersonStatusFactory {
     instance(): IPersonStatusSystem {
         return new GoingSleepStatus()
+    }
+    constructor() {
+        super('sleep')
     }
 }

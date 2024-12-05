@@ -5,6 +5,7 @@ import RequirementUI from './requirement-ui/RequirementUI'
 import AddRequirementForm from './add-req-form/AddRequirementForm'
 import {
     AwakenStatusFactory,
+    PersonStatusFactory,
     SlepStatusFactory,
 } from '../core/person/PersonStatus'
 
@@ -16,10 +17,20 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     const [actReqs, setAR] = useState(actualReqs)
 
-    const [statuses, setStatuses] = useState([
-        new AwakenStatusFactory(),
-        new SlepStatusFactory(),
-    ])
+    const [sleepingStatusFactories, setSleepingStatusFactories] = useState<
+        PersonStatusFactory[]
+    >(
+        (() => {
+            const factory1 = new AwakenStatusFactory()
+            const factory2 = new SlepStatusFactory()
+            factory1.addLinkFactory(factory2)
+            factory2.addLinkFactory(factory1)
+            return [factory1, factory2]
+        })()
+    )
+
+    const [currentStatusFactory, setCurrentStatusFactory] =
+        useState<PersonStatusFactory | null>(null)
 
     return (
         <div className="">
@@ -31,19 +42,44 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     <h3>Wallet</h3>
                     <div>{person.getWalletBalance()}</div>
                 </div>
-                <div>
-                    {statuses.map((factory) => {
-                        return (
-                            <button
-                                onClick={() => {
-                                    person.setStatus(factory.instance())
-                                    update()
-                                }}
-                            >
-                                {'status'}
-                            </button>
-                        )
-                    })}
+                <div className="bdr pdg flex-box flex-item">
+                    {currentStatusFactory
+                        ? currentStatusFactory.getLinks().map((link) => {
+                              return (
+                                  <button
+                                      className="btn"
+                                      onClick={() => {
+                                          setCurrentStatusFactory(link)
+                                          person.setStatus(
+                                              currentStatusFactory.instance()
+                                          )
+                                          update()
+                                      }}
+                                  >
+                                      {link.getTitle()}
+                                  </button>
+                              )
+                          })
+                        : sleepingStatusFactories.map((sleepStatusfactory) => {
+                              return (
+                                  <div className=" flex-item">
+                                      <button
+                                          className="btn"
+                                          onClick={() => {
+                                              person.setStatus(
+                                                  sleepStatusfactory.instance()
+                                              )
+                                              setCurrentStatusFactory(
+                                                  sleepStatusfactory
+                                              )
+                                              update()
+                                          }}
+                                      >
+                                          {sleepStatusfactory.getTitle()}
+                                      </button>
+                                  </div>
+                              )
+                          })}
                 </div>
                 <div>{person.getStatusDescription()}</div>
                 <div>

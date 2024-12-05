@@ -47,6 +47,7 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                 <div>
                     <h2>No Requirements Yet</h2>
                     <button
+                        className="btn"
                         onClick={() => {
                             if (person) {
                                 setCurPage(
