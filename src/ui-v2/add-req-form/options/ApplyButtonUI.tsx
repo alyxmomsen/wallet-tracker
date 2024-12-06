@@ -18,6 +18,7 @@ const ApplyButtonUI = () => {
         dateObj,
         description,
         setIsRequirementAddedSuccessfully,
+        setIsNewRequirementBeingWritten,
     } = UseDateFormContext()
 
     return (
@@ -45,6 +46,7 @@ const ApplyButtonUI = () => {
 
                         currentPerson.addRequirementCommand(newReq)
                         setIsRequirementAddedSuccessfully(true)
+                        setIsNewRequirementBeingWritten(false)
                         update()
                     }
                 }}

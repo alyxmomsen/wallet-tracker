@@ -30,7 +30,21 @@ const AddRequirementFormComponent = () => {
                     <DescriptionOptionUI />
                 </div>
             ) : isRequirementAddedSuccessfully ? (
-                <div>case 1</div>
+                <div>
+                    <h3>thank you for you added you requrierement</h3>
+
+                    <div>
+                        <button
+                            onClick={() => {
+                                setIsNewRequirementBeingWritten(true)
+                            }}
+                            className="btn"
+                        >
+                            Add another one
+                        </button>
+                        {/* <button></button> */}
+                    </div>
+                </div>
             ) : (
                 <div>case2</div>
             )}
