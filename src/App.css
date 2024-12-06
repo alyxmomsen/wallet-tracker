@@ -40,8 +40,8 @@
 #root {
     background-color: var(--background-color);
     padding: var(--gap);
-    width: calc(100vw - var(--gap-3) * 2);
-    height: calc(100vh - var(--gap-3) * 2);
+    width: calc(100vw - var(--gap) * 2);
+    height: calc(100vh - var(--gap) * 2);
 }
 
 .App {

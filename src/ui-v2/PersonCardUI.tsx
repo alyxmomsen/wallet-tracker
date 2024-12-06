@@ -79,7 +79,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <div>
                     <div className="flex-box">
                         <span>Wallet: </span>
-                        <span className='value-color--txt'>{person.getWalletBalance()}</span>
+                        <span className="value-color--txt">
+                            {person.getWalletBalance()}
+                        </span>
                     </div>
                 </div>
                 <div className="bdr pdg flex-box flex-item">
