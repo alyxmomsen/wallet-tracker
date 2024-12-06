@@ -30,17 +30,17 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
                 const updatedDiff = now - updated
                 const statusAgeValue = now - statusStarted
-                console.log(statusAgeValue, updatedDiff, statusStarted)
+                //
                 if (statusAgeValue > 1000 * 60) {
                     if (updatedDiff >= 1000 * 60) {
                         setUpdated(now)
-                        console.log({ statusAgeValue, updatedDiff })
+                        //
                     }
                 } else {
-                    console.log({ statusAgeValue, updatedDiff })
                     if (updatedDiff >= 1000) {
                         setUpdated(now)
-                        console.log({ statusAgeValue, updatedDiff })
+                        //
+                        console.log('time updated')
                     }
                 }
 
@@ -71,14 +71,16 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
         useState<PersonStatusFactory | null>(null)
 
     return (
-        <div className="">
+        <div className="flex-box flex-dir-col">
             <h2>PersonCardUI</h2>
 
-            <h3>{person.getName()}</h3>
-            <div>
+            <div className="flex-box flex-dir-col bdr pdg">
+                <h3>{person.getName()}</h3>
                 <div>
-                    <h3>Wallet</h3>
-                    <div>{person.getWalletBalance()}</div>
+                    <div className="flex-box">
+                        <span>Wallet: </span>
+                        <span className='value-color--txt'>{person.getWalletBalance()}</span>
+                    </div>
                 </div>
                 <div className="bdr pdg flex-box flex-item">
                     {currentStatusFactory

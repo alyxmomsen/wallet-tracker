@@ -25,7 +25,7 @@ const ValueOptionUI = () => {
 
     return (
         <div className="bdr pdg flex-box flex-dir-col flex-item">
-            <div className="flex-box">
+            <div className="flex-box flex-dir-col">
                 <div className="flex-box bdr pdg">
                     {valueVariates.map((variate) => {
                         return (
