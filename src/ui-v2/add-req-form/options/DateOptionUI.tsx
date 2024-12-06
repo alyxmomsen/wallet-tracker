@@ -27,7 +27,7 @@ const DateOptionUI = () => {
     useEffect(() => {}, [year, month, date])
 
     return (
-        <div className="flex-box flex-item bdr pdg">
+        <div className="flex-box flex-dir-col flex-item bdr pdg">
             <div className="flex-box flex-center bdr pdg">
                 <div>date:</div>
                 <div>

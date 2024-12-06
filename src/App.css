@@ -194,10 +194,10 @@ input {
 /* ----- */
 
 .element-type--1 {
-    padding: 18px;
+    padding: var(--gap-2);
     /* background-color: #395131; */
-    border-radius: 0 calc(var(--gap) / 2) calc(var(--gap) / 2)
-        calc(var(--gap) / 2);
+    border-radius: var(--gap) var(--gap) var(--gap) var(--gap);
+    width: 100%;
 }
 
 .main-menu {
