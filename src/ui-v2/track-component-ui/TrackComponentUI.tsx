@@ -17,26 +17,41 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                         person
                             .getWalletTrackForActualRequirements()
                             .map((elem, i) => {
+                                const unixTime = elem.executionDate
+
+                                const dateObj = new Date(unixTime)
+
+                                const date = dateObj.getDate()
+                                const month = dateObj.getMonth()
+                                const year = dateObj.getFullYear()
+
                                 return (
                                     <div className="bdr pdg flex-box">
-                                        <div>{i + 1}.</div>
-                                        <div>{elem.executionDate}</div>
-                                        <div>{elem.valueBefore}</div>
-                                        <div>
+                                        <div className={`pdg`}>{i + 1}.</div>
+                                        <div className="flex-box no-gap-flex bdr pdg">
+                                            <span>{date}</span>
+                                            <div>-</div>
+                                            <span>{month}</span>
+                                            <div>-</div>
+                                            <span>{year}</span>
+                                        </div>
+                                        <div className={`bdr pdg`}>
+                                            {elem.valueBefore}
+                                        </div>
+                                        <div className={` pdg`}>
                                             {
                                                 transactionTypeCode[
                                                     elem.transactionTypeCode
                                                 ]
                                             }
                                         </div>
-                                        <div>{elem.value}</div> =
-                                        <div>{elem.valueAfter}</div>
-                                        <button
-                                            className="btn"
-                                            onClick={() => {}}
-                                        >
-                                            execute
-                                        </button>
+                                        <div className={`bdr pdg`}>
+                                            {elem.value}
+                                        </div>{' '}
+                                        =
+                                        <div className={`bdr pdg`}>
+                                            {elem.valueAfter}
+                                        </div>
                                     </div>
                                 )
                             })

@@ -72,6 +72,10 @@ input {
     flex-wrap: wrap;
 }
 
+.no-gap-flex {
+    gap: unset;
+}
+
 .flex-dir-col {
     flex-direction: column;
 }
