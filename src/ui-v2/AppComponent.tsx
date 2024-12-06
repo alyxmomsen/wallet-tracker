@@ -4,7 +4,7 @@ import { UseAppContext } from './context/UseAppContext'
 import MainMenuRibbon from './MainMenuRibbon/MainMenuRibbon'
 
 const AppComponent = () => {
-    const { curPage, currentPerson } = UseAppContext()
+    const { curPage, loginedPerson: currentPerson } = UseAppContext()
 
     useEffect(() => {}, [currentPerson])
     useEffect(() => {}, [curPage])

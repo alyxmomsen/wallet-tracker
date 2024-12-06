@@ -3,7 +3,12 @@ import { UseAppContext } from '../../context/UseAppContext'
 import AddRequirementForm from '../../add-req-form/AddRequirementFormWindow'
 
 const AddRequirementTabUI = () => {
-    const { currentPerson, setCurrentPerson, setCurPage, app } = UseAppContext()
+    const {
+        loginedPerson: currentPerson,
+        setLoginedPerson: setCurrentPerson,
+        setCurPage,
+        app,
+    } = UseAppContext()
     return (
         <button
             onClick={() => {

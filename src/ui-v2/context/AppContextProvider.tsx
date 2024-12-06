@@ -4,8 +4,8 @@ import { IPerson } from '../../core/person/Person'
 
 export type TAppCtx = {
     app: ApplicationSingletoneFacade
-    currentPerson: IPerson | null
-    setCurrentPerson: (person: IPerson | null) => void
+    loginedPerson: IPerson | null
+    setLoginedPerson: (person: IPerson | null) => void
     curPage: JSX.Element
     setCurPage: (elem: JSX.Element) => void
     update: () => void
@@ -17,22 +17,22 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [app, setApp] = useState<ApplicationSingletoneFacade>(
         new ApplicationSingletoneFacade()
     )
-    const [currentPerson, setCurrentPerson] = useState<IPerson | null>(null)
+    const [loginedPerson, setLoginedPerson] = useState<IPerson | null>(null)
     const [curPage, setCurPage] = useState<JSX.Element>(
         <div>{'Login, please'.toUpperCase()}</div>
     )
 
     const [, update] = useState(0)
 
-    useEffect(() => {}, [currentPerson])
+    useEffect(() => {}, [loginedPerson])
 
     return (
         <AppContext.Provider
             value={{
                 app,
-                currentPerson,
-                setCurrentPerson: (person: IPerson | null) =>
-                    setCurrentPerson(person),
+                loginedPerson,
+                setLoginedPerson: (person: IPerson | null) =>
+                    setLoginedPerson(person),
                 curPage,
                 setCurPage: (elem: JSX.Element) => setCurPage(elem),
                 update: () => update((cur) => cur + 1),

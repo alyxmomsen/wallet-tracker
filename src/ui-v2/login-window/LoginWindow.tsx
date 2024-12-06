@@ -1,26 +1,65 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
+import RegistrationUI from './RegistrationUI'
+import AuthorizationUI from './AuthorizationUI'
+
+class NavigationElementFactory {
+    protected links: NavigationElementFactory[]
+
+    addLink(link: NavigationElementFactory) {
+        this.links.push(link)
+    }
+
+    getLinks() {
+        return this.links
+    }
+
+    Instance() {}
+
+    constructor() {
+        this.links = []
+    }
+}
+
+const arr = [() => <AuthorizationUI />, () => <RegistrationUI />]
 
 const LoginWindow = () => {
-    const { currentPerson, setCurrentPerson, setCurPage, app } = UseAppContext()
+    const { loginedPerson, setLoginedPerson, setCurPage, app } = UseAppContext()
+
+    const [index, setIndex] = useState<number | undefined>(
+        arr.length ? 0 : undefined
+    )
+
+    const [HOCs, setHOCs] = useMemo(
+        () =>
+            useState<(() => JSX.Element)[]>([
+                () => <RegistrationUI />,
+                loginedPerson
+                    ? () => <button>logout</button>
+                    : () => <AuthorizationUI />,
+            ]),
+        [loginedPerson]
+    )
+
     return (
         <div>
             <h2>loggin window</h2>
+            <div>{HOCs.map((hoc) => hoc())}</div>
             <div>
                 {[
                     ...app
                         .getPersons()
                         .filter((person) => {
-                            return !currentPerson
+                            return !loginedPerson
                                 ? true
-                                : currentPerson === person
+                                : loginedPerson === person
                         })
                         .map((person) => {
                             return (
                                 <button
                                     className="btn main-menu__button"
                                     onClick={() => {
-                                        setCurrentPerson(person)
+                                        setLoginedPerson(person)
                                     }}
                                 >
                                     {person.getName()}

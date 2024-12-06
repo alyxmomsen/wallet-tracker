@@ -72,6 +72,10 @@ input {
     flex-wrap: wrap;
 }
 
+.flex-jtf-btw {
+    justify-content: space-between;
+}
+
 .no-gap-flex {
     gap: unset;
 }

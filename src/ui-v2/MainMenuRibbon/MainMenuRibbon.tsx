@@ -9,7 +9,12 @@ import TrackTabUI from './tabs/TrackTabUI'
 import LoginButtonTabUI from './tabs/LoginButtonTabUI'
 
 const MainMenuRibbon = () => {
-    const { currentPerson, setCurrentPerson, setCurPage, app } = UseAppContext()
+    const {
+        loginedPerson: currentPerson,
+        setLoginedPerson: setCurrentPerson,
+        setCurPage,
+        app,
+    } = UseAppContext()
 
     const [isLogined, setIsLogined] = useState(false)
     const [isPersonMenuRolledDown, setIsPersonMenuRolledDown] = useState(false)

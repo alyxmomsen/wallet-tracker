@@ -30,7 +30,7 @@ const AddDateFormContextProvider = ({
 }: {
     children: JSX.Element
 }) => {
-    const { currentPerson } = UseAppContext()
+    const { loginedPerson: currentPerson } = UseAppContext()
 
     const [dateObj, setDateObj] = useState<Date>(new Date())
     const [direction, setDirection] = useState<TDirection>('increment')

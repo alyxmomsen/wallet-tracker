@@ -1,8 +1,13 @@
 import React from 'react'
 import { UseAppContext } from '../../context/UseAppContext'
+import LoginWindow from '../../login-window/LoginWindow'
 
 const LoginButtonTabUI = () => {
-    const { currentPerson, setCurrentPerson, setCurPage } = UseAppContext()
+    const {
+        loginedPerson: currentPerson,
+        setLoginedPerson: setCurrentPerson,
+        setCurPage,
+    } = UseAppContext()
     return (
         <button
             onClick={() => {
@@ -14,11 +19,7 @@ const LoginButtonTabUI = () => {
                 }
 
                 // setIsPersonMenuRolledDown((cur) => !cur)
-                setCurPage(
-                    <div>
-                        <h1>Login page</h1>
-                    </div>
-                )
+                setCurPage(<LoginWindow />)
             }}
             disabled={false}
             className={`main-menu__button btn`}
