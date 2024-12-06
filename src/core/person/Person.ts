@@ -56,39 +56,24 @@ export abstract class Person implements IPerson {
     getWalletTrackForActualRequirements(): TWalletTrackValue[] {
         let balance = this.wallet.getBalance()
 
-        return this.requirementCommands
-            .filter((requirement) => {
-                const currentDateObj = getDateUtil(new Date())
-                const executeDate = getDateUtil(requirement.getExecutionDate())
-
-                if (
-                    currentDateObj.year <= executeDate.year &&
-                    currentDateObj.month <= executeDate.month &&
-                    currentDateObj.date <= executeDate.date
-                ) {
-                    return true
-                }
-
-                return false
-            })
-            .map((requirement) => {
-                const value = requirement.getValue()
-                const valueBefore = balance
-                const valueAfter = requirement.executeWithValue(balance)
-                balance = valueAfter
-                return {
-                    value,
-                    valueBefore,
-                    valueAfter,
-                    executionDate: Number.parseInt(
-                        requirement
-                            .getExecutionDate()
-                            .getTime() /* / 1000 */
-                            .toString()
-                    ),
-                    transactionTypeCode: requirement.getTransactionTypeCode(),
-                }
-            })
+        return this.getActualRequirementCommands().map((requirement) => {
+            const value = requirement.getValue()
+            const valueBefore = balance
+            const valueAfter = requirement.executeWithValue(balance)
+            balance = valueAfter
+            return {
+                value,
+                valueBefore,
+                valueAfter,
+                executionDate: Number.parseInt(
+                    requirement
+                        .getExecutionDate()
+                        .getTime() /* / 1000 */
+                        .toString()
+                ),
+                transactionTypeCode: requirement.getTransactionTypeCode(),
+            }
+        })
     }
     getName(): string {
         return this.name
@@ -118,6 +103,10 @@ export abstract class Person implements IPerson {
 
     getActualRequirementCommands(): IRequirementCommand[] {
         return this.requirementCommands.filter((requirementCommand) => {
+            if (requirementCommand.checkIfExecuted()) {
+                return false
+            }
+
             const currDateObj = getDateUtil(new Date())
 
             const requirementDateObj = getDateUtil(

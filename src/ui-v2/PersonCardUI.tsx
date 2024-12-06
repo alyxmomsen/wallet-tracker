@@ -153,7 +153,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                         {person
                             .getActualRequirementCommands()
                             .map((requirement, i) => {
-                                const d = requirement.getExecutionDate()
+                                const execDate = requirement.getExecutionDate()
 
                                 return (
                                     <div
@@ -177,9 +177,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                             = {requirement.getDescription()} =
                                         </div>
                                         <div className="flex-box">
-                                            <div>{d.getDate()}</div>
-                                            <div>{d.getMonth() + 1}</div>
-                                            <div>{d.getFullYear()}</div>
+                                            <div>{execDate.getDate()}</div>
+                                            <div>{execDate.getMonth() + 1}</div>
+                                            <div>{execDate.getFullYear()}</div>
                                         </div>
                                         {!requirement.checkIfExecuted() ? (
                                             <button

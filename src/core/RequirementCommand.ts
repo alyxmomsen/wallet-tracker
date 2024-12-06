@@ -94,7 +94,14 @@ export class DecrementMoneyRequirementCommand extends RequirementCommand {
     }
 
     execute(person: IPerson): boolean {
+        if (this.isExecuted) {
+            return false
+        }
+
+        const balanceBefore = person.getWalletBalance()
         person.decrementWallet(this.value)
+        this.isExecuted = true
+
         return true
     }
 
