@@ -25,6 +25,19 @@ const ValueOptionUI = () => {
 
     return (
         <div className="bdr pdg flex-box flex-dir-col flex-item">
+            <div className="flex-box flex-center">
+                <div>value:</div>
+                <div>
+                    <input
+                        className="value-color--txt"
+                        type="number"
+                        value={value}
+                        onChange={(e) =>
+                            setValue(Number.parseFloat(e.target.value))
+                        }
+                    />
+                </div>
+            </div>
             <div className="flex-box flex-dir-col">
                 <div className="flex-box bdr pdg">
                     {valueVariates.map((variate) => {
@@ -75,19 +88,6 @@ const ValueOptionUI = () => {
                             -
                         </button>
                     </div>
-                </div>
-            </div>
-            <div className="flex-box flex-center">
-                <div>value:</div>
-                <div>
-                    <input
-                        className="value-color--txt"
-                        type="number"
-                        value={value}
-                        onChange={(e) =>
-                            setValue(Number.parseFloat(e.target.value))
-                        }
-                    />
                 </div>
             </div>
         </div>

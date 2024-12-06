@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { IPerson } from '../core/person/Person'
 import { UseAppContext } from './context/UseAppContext'
 import RequirementUI from './requirement-ui/RequirementUI'
-import AddRequirementForm from './add-req-form/AddRequirementForm'
+import AddRequirementForm from './add-req-form/AddRequirementFormWindow'
 import {
     AwakenStatusFactory,
     PersonStatusFactory,

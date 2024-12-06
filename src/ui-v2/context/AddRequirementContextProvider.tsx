@@ -16,6 +16,10 @@ export type TDateContext = {
     setValue: (value: number) => void
     setTitle: (title: string) => void
     setDescription: (descr: string) => void
+    isRequirementAddedSuccessfully: boolean
+    setIsRequirementAddedSuccessfully: (state: boolean) => void
+    isNewRequirementBeingWritten: boolean
+    setIsNewRequirementBeingWritten: (state: boolean) => void
     // setDirection:() => void
 }
 
@@ -35,6 +39,11 @@ const AddDateFormContextProvider = ({
     )
     const [title, setTitle] = useState('no title')
     const [description, setDescription] = useState('no description')
+
+    const [isRequirementAddedSuccessfully, setIsRequirementAddedSuccessfully] =
+        useState(false)
+    const [isNewRequirementBeingWritten, setIsNewRequirementBeingWritten] =
+        useState(true)
 
     useEffect(() => {
         console.log({ direction })
@@ -57,6 +66,10 @@ const AddDateFormContextProvider = ({
                 setTitle,
                 setValue,
                 setDescription,
+                isRequirementAddedSuccessfully,
+                setIsRequirementAddedSuccessfully,
+                isNewRequirementBeingWritten,
+                setIsNewRequirementBeingWritten,
             }}
         >
             {children}

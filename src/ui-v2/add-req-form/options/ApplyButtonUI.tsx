@@ -8,10 +8,17 @@ import {
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const ApplyButtonUI = () => {
-    const { app, currentPerson } = UseAppContext()
+    const { app, currentPerson, update } = UseAppContext()
 
-    const { title, value, setValue, direction, dateObj, description } =
-        UseDateFormContext()
+    const {
+        title,
+        value,
+        setValue,
+        direction,
+        dateObj,
+        description,
+        setIsRequirementAddedSuccessfully,
+    } = UseDateFormContext()
 
     return (
         <div className="flex-box">
@@ -37,9 +44,8 @@ const ApplyButtonUI = () => {
                         console.log({ newReq })
 
                         currentPerson.addRequirementCommand(newReq)
-                        // setValue(
-                        //     averageValueUtil(currentPerson)
-                        // );
+                        setIsRequirementAddedSuccessfully(true)
+                        update()
                     }
                 }}
             >

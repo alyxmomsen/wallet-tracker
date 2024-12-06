@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { UseAppContext } from './context/UseAppContext'
 import PersonCardUI from './PersonCardUI'
-import AddRequirementForm from './add-req-form/AddRequirementForm'
+import AddRequirementForm from './add-req-form/AddRequirementFormWindow'
 import TrackComponentUI from './track-component-ui/TrackComponentUI'
 
 const AppComponent = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
-import AddRequirementForm from '../add-req-form/AddRequirementForm'
+import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 
 const TrackComponentUI = ({ person }: { person: IPerson }) => {
     const { setCurPage } = UseAppContext()
