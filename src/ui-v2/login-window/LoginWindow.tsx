@@ -30,16 +30,14 @@ const LoginWindow = () => {
         arr.length ? 0 : undefined
     )
 
-    const [HOCs, setHOCs] = useMemo(
-        () =>
-            useState<(() => JSX.Element)[]>([
-                () => <RegistrationUI />,
-                loginedPerson
-                    ? () => <button>logout</button>
-                    : () => <AuthorizationUI />,
-            ]),
-        [loginedPerson]
-    )
+    const HOCs = useMemo(() => {
+        return [
+            () => <RegistrationUI />,
+            loginedPerson
+                ? () => <button>logout</button>
+                : () => <AuthorizationUI />,
+        ]
+    }, [loginedPerson])
 
     return (
         <div>
