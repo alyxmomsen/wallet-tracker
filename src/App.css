@@ -208,9 +208,9 @@ input {
 }
 
 .main-window__header {
-    height: calc((100vh - var(--gap-3) * 4) / 100 * 20);
+    height: calc((100vh - var(--gap) * 4) / 100 * 5);
 }
 
 .main-window__body {
-    height: calc((100vh - var(--gap-3) * 4) / 100 * 80);
+    height: calc((100vh - var(--gap) * 4) / 100 * 95);
 }
