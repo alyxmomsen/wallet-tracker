@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { UseAppContext } from './context/UseAppContext'
-import PersonCardUI from './PersonCardUI'
-import AddRequirementForm from './add-req-form/AddRequirementFormWindow'
-import TrackComponentUI from './track-component-ui/TrackComponentUI'
+
 import MainMenuRibbon from './MainMenuRibbon/MainMenuRibbon'
 
 const AppComponent = () => {
-    const { app, curPage, setCurPage, currentPerson, setCurrentPerson } =
-        UseAppContext()
+    const { curPage, currentPerson } = UseAppContext()
 
     useEffect(() => {}, [currentPerson])
     useEffect(() => {}, [curPage])

@@ -3,6 +3,8 @@ import { UseAppContext } from '../context/UseAppContext'
 import PersonCardUI from '../PersonCardUI'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
+import CurrentPersonTabUI from './tabs/CurrentPersonTabUI'
+import AddRequirementTabUI from './tabs/AddRequirementTabUI'
 
 const MainMenuRibbon = () => {
     const { currentPerson, setCurrentPerson, setCurPage, app } = UseAppContext()
@@ -12,42 +14,9 @@ const MainMenuRibbon = () => {
 
     return (
         <div>
-            <button
-                onClick={() => {
-                    if (currentPerson) {
-                        setCurPage(<PersonCardUI person={currentPerson} />)
-                        setIsLogined(false)
-                    }
-                }}
-                disabled={currentPerson ? false : true}
-                className={`main-menu__button btn`}
-            >
-                {currentPerson ? currentPerson.getName() : 'Person'}
-            </button>
-            <button
-                onClick={() => {
-                    if (currentPerson) {
-                        setCurPage(
-                            <AddRequirementForm person={currentPerson} />
-                        )
-                    }
-                }}
-                disabled={currentPerson ? false : true}
-                className={`main-menu__button btn`}
-            >
-                Add requirement
-            </button>
-            <button
-                onClick={() => {
-                    if (currentPerson) {
-                        setCurPage(<TrackComponentUI person={currentPerson} />)
-                    }
-                }}
-                disabled={currentPerson ? false : true}
-                className={`main-menu__button btn`}
-            >
-                Track
-            </button>
+            <CurrentPersonTabUI />
+            <AddRequirementTabUI />
+
             <button
                 onClick={() => {
                     if (currentPerson) {
