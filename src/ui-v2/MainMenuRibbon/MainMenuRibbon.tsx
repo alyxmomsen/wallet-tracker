@@ -12,7 +12,7 @@ const MainMenuRibbon = () => {
     const {
         loginedPerson: currentPerson,
         setLoginedPerson: setCurrentPerson,
-        setCurPage,
+        setCurentWindow: setCurPage,
         app,
     } = UseAppContext()
 

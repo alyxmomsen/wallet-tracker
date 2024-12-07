@@ -4,7 +4,7 @@ import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 
 const TrackComponentUI = ({ person }: { person: IPerson }) => {
-    const { setCurPage } = UseAppContext()
+    const { setCurentWindow: setCurPage } = UseAppContext()
 
     const transactionTypeCode = ['PLUS', 'MINUS']
 

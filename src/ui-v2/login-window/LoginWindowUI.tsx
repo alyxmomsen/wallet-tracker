@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import RegistrationUI from './RegistrationUI'
 import AuthorizationUI from './AuthorizationUI'
+import PersonCardUI from '../PersonCardUI'
 
 class NavigationElementFactory {
     protected links: NavigationElementFactory[]
@@ -23,8 +24,13 @@ class NavigationElementFactory {
 
 const arr = [() => <AuthorizationUI />, () => <RegistrationUI />]
 
-const LoginWindow = () => {
-    const { loginedPerson, setLoginedPerson, setCurPage, app } = UseAppContext()
+const LoginWindowUI = () => {
+    const {
+        loginedPerson,
+        setLoginedPerson,
+        setCurentWindow: setCurPage,
+        app,
+    } = UseAppContext()
 
     const [index, setIndex] = useState<number | undefined>(
         arr.length ? 0 : undefined
@@ -43,31 +49,17 @@ const LoginWindow = () => {
         <div>
             <h2>loggin window</h2>
             <div>{HOCs.map((hoc) => hoc())}</div>
-            <div>
-                {[
-                    ...app
-                        .getPersons()
-                        .filter((person) => {
-                            return !loginedPerson
-                                ? true
-                                : loginedPerson === person
-                        })
-                        .map((person) => {
-                            return (
-                                <button
-                                    className="btn main-menu__button"
-                                    onClick={() => {
-                                        setLoginedPerson(person)
-                                    }}
-                                >
-                                    {person.getName()}
-                                </button>
-                            )
-                        }),
-                ]}
-            </div>
+            <button
+                onClick={() => {
+                    if (loginedPerson) {
+                        setCurPage(<PersonCardUI person={loginedPerson} />)
+                    }
+                }}
+            >
+                JOIN
+            </button>
         </div>
     )
 }
 
-export default LoginWindow
+export default LoginWindowUI

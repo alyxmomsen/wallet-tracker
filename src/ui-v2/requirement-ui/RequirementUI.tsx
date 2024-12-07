@@ -2,6 +2,7 @@ import React from 'react'
 import { IRequirementCommand } from '../../core/RequirementCommand'
 import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
+import GoPersonButton from '../shared/GoPersonButtonUI'
 
 const RequirementUI = ({
     requirement,
@@ -15,6 +16,7 @@ const RequirementUI = ({
     return (
         <div>
             <h1>RequirementUI</h1>
+            <GoPersonButton />
             <div>
                 <div>{requirement.getDescription()}</div>
                 <div>{requirement.getValue()}</div>

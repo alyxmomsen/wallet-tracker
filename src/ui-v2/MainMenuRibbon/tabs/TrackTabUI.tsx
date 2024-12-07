@@ -3,7 +3,8 @@ import { UseAppContext } from '../../context/UseAppContext'
 import TrackComponentUI from '../../track-component-ui/TrackComponentUI'
 
 const TrackTabUI = () => {
-    const { loginedPerson: currentPerson, setCurPage } = UseAppContext()
+    const { loginedPerson: currentPerson, setCurentWindow: setCurPage } =
+        UseAppContext()
     return (
         <button
             onClick={() => {

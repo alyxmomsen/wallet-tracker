@@ -1,30 +1,63 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { ApplicationSingletoneFacade } from '../../core/ApplicationFacade'
-import { IPerson } from '../../core/person/Person'
+import { IPerson, OrdinaryPerson } from '../../core/person/Person'
+import RegistrationUI from '../login-window/RegistrationUI'
+import LoginWindowUI from '../login-window/LoginWindowUI'
+import PersonCardUI from '../PersonCardUI'
 
 export type TAppCtx = {
     app: ApplicationSingletoneFacade
     loginedPerson: IPerson | null
     setLoginedPerson: (person: IPerson | null) => void
-    curPage: JSX.Element
-    setCurPage: (elem: JSX.Element) => void
+    curentWindow: JSX.Element
+    setCurentWindow: (elem: JSX.Element) => void
     update: () => void
 }
 
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
 
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
-    const [app, setApp] = useState<ApplicationSingletoneFacade>(
+    const [app] = useState<ApplicationSingletoneFacade>(
         new ApplicationSingletoneFacade()
     )
     const [loginedPerson, setLoginedPerson] = useState<IPerson | null>(null)
     const [curPage, setCurPage] = useState<JSX.Element>(
-        <div>{'Login, please'.toUpperCase()}</div>
+        <div className="flex-box flex-center vh vw">
+            <div className="flex-item">
+                <button
+                    onClick={() => {
+                        setCurPage(<LoginWindowUI />)
+                    }}
+                    className="btn"
+                >
+                    {'Login, please'.toUpperCase()}
+                </button>
+            </div>
+        </div>
     )
 
-    const [, update] = useState(0)
+    const [s, update] = useState(0)
 
-    useEffect(() => {}, [loginedPerson])
+    useEffect(() => {
+        fetch('http://localhost:3030')
+            .then((response) => {
+                return response.text()
+            })
+            .then((data) => {
+                console.log({ data })
+
+                setLoginedPerson(new OrdinaryPerson('Alex Wellick', 0))
+            })
+            .finally(() => {
+                console.log('fetch is done')
+            })
+    }, [])
+
+    useEffect(() => {
+        if (loginedPerson) {
+            setCurPage(<PersonCardUI person={loginedPerson} />)
+        }
+    }, [loginedPerson])
 
     useEffect(() => {
         fetch('http://localhost:3030/')
@@ -43,10 +76,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             value={{
                 app,
                 loginedPerson,
-                setLoginedPerson: (person: IPerson | null) =>
-                    setLoginedPerson(person),
-                curPage,
-                setCurPage: (elem: JSX.Element) => setCurPage(elem),
+                setLoginedPerson,
+                curentWindow: curPage,
+                setCurentWindow: (elem: JSX.Element) => setCurPage(elem),
                 update: () => update((cur) => cur + 1),
             }}
         >

@@ -7,6 +7,9 @@ import AddOtherOption from './options/AddOtherOption'
 import ApplyButtonUI from './options/ApplyButtonUI'
 import DescriptionOptionUI from './options/DescriptionOption'
 import { UseDateFormContext } from '../context/AddRequirementContextProvider'
+import { UseAppContext } from '../context/UseAppContext'
+import PersonCardUI from '../PersonCardUI'
+import GoPersonButton from '../shared/GoPersonButtonUI'
 
 const AddRequirementFormComponent = () => {
     const {
@@ -16,11 +19,14 @@ const AddRequirementFormComponent = () => {
         setIsNewRequirementBeingWritten,
     } = UseDateFormContext()
 
+    const { setCurentWindow, curentWindow, loginedPerson } = UseAppContext()
+
     return (
         <div className="element-type--1 flex-box flex-dir-col gap">
             <h2>Add Requirement Form</h2>
             {isNewRequirementBeingWritten ? (
                 <div className="flex-box flex-dir-col pdg bdr flex-item">
+                    <GoPersonButton />
                     <DirectionOptionUI />
                     <ValueOptionUI />
                     <TitleOptionUI />
@@ -42,7 +48,7 @@ const AddRequirementFormComponent = () => {
                         >
                             Add another one
                         </button>
-                        {/* <button></button> */}
+                        <GoPersonButton />
                     </div>
                 </div>
             ) : (

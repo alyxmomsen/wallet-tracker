@@ -8,9 +8,10 @@ import {
     PersonStatusFactory,
     SlepStatusFactory,
 } from '../core/person/PersonStatus'
+import GoPersonButton from './shared/GoPersonButtonUI'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
-    const { curPage, setCurPage, update } = UseAppContext()
+    const { curentWindow: curPage, setCurentWindow, update } = UseAppContext()
 
     let actualReqs = person.getActualRequirementCommands()
     const exec = person.getExecutedRequirementCommands()
@@ -130,6 +131,18 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <div>{person.getStatusDescription()}</div>
                 <div>
                     <h3>
+                        <div>
+                            <button
+                                className="btn"
+                                onClick={() => {
+                                    setCurentWindow(
+                                        <AddRequirementForm person={person} />
+                                    )
+                                }}
+                            >
+                                Add Requirements
+                            </button>
+                        </div>
                         {person.getAllReauirementCommands().length ? (
                             'REQUIREMENTS:'
                         ) : (
@@ -137,7 +150,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                 className="btn"
                                 onClick={() => {
                                     if (person) {
-                                        setCurPage(
+                                        setCurentWindow(
                                             <AddRequirementForm
                                                 person={person}
                                             />
@@ -158,7 +171,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                 return (
                                     <div
                                         onClick={() => {
-                                            setCurPage(
+                                            setCurentWindow(
                                                 <RequirementUI
                                                     requirement={requirement}
                                                     person={person}

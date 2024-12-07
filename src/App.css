@@ -61,6 +61,14 @@ input {
     padding: var(--gap);
 }
 
+.vh {
+    height: 100vh;
+}
+
+.vw {
+    width: 100vw;
+}
+
 .margin-auto {
     margin: 0 auto;
     width: max-content;
@@ -216,9 +224,9 @@ input {
 }
 
 .main-window__header {
-    height: calc((100vh - var(--gap) * 4) / 100 * 5);
+    height: calc((100vh - var(--gap) * 4));
 }
 
 .main-window__body {
-    height: calc((100vh - var(--gap) * 4) / 100 * 95);
+    height: calc((100vh - var(--gap) * 4));
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 import AppContextProvider from './ui-v2/context/AppContextProvider'
@@ -8,11 +8,7 @@ function App() {
     return (
         <div className="App">
             <AppContextProvider>
-                <>
-                    {/* <AppMainComponent /> */}
-
-                    <AppComponent />
-                </>
+                <AppComponent />
             </AppContextProvider>
         </div>
     )
