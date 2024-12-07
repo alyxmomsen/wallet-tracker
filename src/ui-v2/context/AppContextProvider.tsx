@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { ApplicationSingletoneFacade } from '../../core/ApplicationFacade'
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
-import RegistrationUI from '../login-window/RegistrationUI'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI from '../PersonCardUI'
 
@@ -58,18 +57,6 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             setCurPage(<PersonCardUI person={loginedPerson} />)
         }
     }, [loginedPerson])
-
-    useEffect(() => {
-        fetch('http://localhost:3030/')
-            .then((res) => {
-                const { body } = res
-
-                return res.text()
-            })
-            .then((text) => console.log(text))
-
-        // setApp();
-    }, [])
 
     return (
         <AppContext.Provider

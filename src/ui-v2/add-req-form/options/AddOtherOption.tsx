@@ -8,7 +8,7 @@ const AddOtherOption = () => {
     return (
         <div className="flex-box flex-center flex-item bdr pdg">
             <div>options:</div>
-            <div>
+            <div className="flex-box">
                 <button
                     className="btn"
                     onClick={() => setIsActive((cur) => !cur)}

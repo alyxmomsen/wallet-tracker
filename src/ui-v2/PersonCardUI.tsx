@@ -9,6 +9,7 @@ import {
     SlepStatusFactory,
 } from '../core/person/PersonStatus'
 import GoPersonButton from './shared/GoPersonButtonUI'
+import TrackComponentUI from './track-component-ui/TrackComponentUI'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const { curentWindow: curPage, setCurentWindow, update } = UseAppContext()
@@ -129,22 +130,38 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                           })}
                 </div>
                 <div>{person.getStatusDescription()}</div>
-                <div>
+                <div className="flex-box flex-dir-col">
                     <h3>{'REQUIREMENTS:'}</h3>
 
-                    <div>
-                        <button
-                            className="btn"
-                            onClick={() => {
-                                if (person) {
+                    <div className="flex-box">
+                        <div>
+                            <button
+                                className="btn"
+                                onClick={() => {
+                                    if (person) {
+                                        setCurentWindow(
+                                            <AddRequirementForm
+                                                person={person}
+                                            />
+                                        )
+                                    }
+                                }}
+                            >
+                                ADD REQUIREMENT
+                            </button>
+                        </div>
+                        <div>
+                            <button
+                                className="btn"
+                                onClick={() => {
                                     setCurentWindow(
-                                        <AddRequirementForm person={person} />
+                                        <TrackComponentUI person={person} />
                                     )
-                                }
-                            }}
-                        >
-                            ADD REQUIREMENT
-                        </button>
+                                }}
+                            >
+                                GO the FLOW
+                            </button>
+                        </div>
                     </div>
                     <div className="flex-box">
                         {person

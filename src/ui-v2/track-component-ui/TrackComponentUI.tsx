@@ -2,6 +2,7 @@ import React from 'react'
 import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
+import GoPersonButton from '../shared/GoPersonButtonUI'
 
 const TrackComponentUI = ({ person }: { person: IPerson }) => {
     const { setCurentWindow: setCurPage } = UseAppContext()
@@ -10,6 +11,19 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
 
     return (
         <div className="overflow">
+            <div className="flex-box">
+                <GoPersonButton />
+                <div>
+                    <button
+                        className="btn"
+                        onClick={() => {
+                            setCurPage(<AddRequirementForm person={person} />)
+                        }}
+                    >
+                        Add Requirement
+                    </button>
+                </div>
+            </div>
             <h2>Track</h2>
             {person.getActualRequirementCommands().length ? (
                 <div className="flex-box flex-dir-col">
