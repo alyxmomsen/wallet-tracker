@@ -18,6 +18,7 @@ const AddRequirementFormComponent = () => {
         setIsRequirementAddedSuccessfully,
         isNewRequirementBeingWritten,
         setIsNewRequirementBeingWritten,
+        optionalFields,
     } = UseDateFormContext()
 
     const { setCurentWindow, loginedPerson } = UseAppContext()
@@ -50,7 +51,9 @@ const AddRequirementFormComponent = () => {
                     <DateOptionUI />
                     <AddOtherOption />
                     <ApplyButtonUI />
-                    <DescriptionOptionUI />
+                    {optionalFields.map((elem) => {
+                        return elem.execute()
+                    })}
                 </div>
             ) : isRequirementAddedSuccessfully ? (
                 <ThankYouMessageUI />

@@ -3,6 +3,7 @@ import { IPerson } from './person/Person'
 export interface IRequirementCommand {
     execute(person: IPerson): boolean
     getDescription(): string
+    getTitle(): string
     getValue(): number
     executeWithValue(value: number): number
     getExecutionDate(): Date
@@ -21,6 +22,10 @@ abstract class RequirementCommand implements IRequirementCommand {
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
+
+    getTitle(): string {
+        return this.title
+    }
 
     getTransactionTypeCode(): number {
         return this.transactionTypeCode

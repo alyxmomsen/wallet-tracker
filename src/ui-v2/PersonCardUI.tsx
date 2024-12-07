@@ -187,13 +187,39 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                                 : '')
                                         }
                                     >
-                                        <div>
-                                            = {requirement.getDescription()} =
-                                        </div>
-                                        <div className="flex-box">
-                                            <div>{execDate.getDate()}</div>
-                                            <div>{execDate.getMonth() + 1}</div>
-                                            <div>{execDate.getFullYear()}</div>
+                                        <div className="flex-box flex-dir-col flex-center">
+                                            <div>
+                                                {' '}
+                                                == {requirement.getTitle()} =={' '}
+                                            </div>
+                                            {/* <div>
+                                                = {requirement.getDescription()}{' '}
+                                                =
+                                            </div> */}
+                                            <div className="flex-box">
+                                                <div className="value-color--txt flex-item">
+                                                    {
+                                                        [' ADD ', ' REMOVE '][
+                                                            requirement.getTransactionTypeCode()
+                                                        ]
+                                                    }
+                                                </div>
+                                                <div className="flex-item">
+                                                    :
+                                                </div>
+                                                <div className="value-color--txt flex-item">
+                                                    {requirement.getValue()}
+                                                </div>
+                                            </div>
+                                            <div className="flex-box">
+                                                <div>{execDate.getDate()}</div>
+                                                <div>
+                                                    {execDate.getMonth() + 1}
+                                                </div>
+                                                <div>
+                                                    {execDate.getFullYear()}
+                                                </div>
+                                            </div>
                                         </div>
                                         {!requirement.checkIfExecuted() ? (
                                             <button

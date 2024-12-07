@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './UseAppContext'
 import { IPerson } from '../../core/person/Person'
 import { averageValueUtil } from '../../utils/averageValueUtil'
+import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
 
 export type TDirection = 'increment' | 'decrement'
 
@@ -21,6 +22,8 @@ export type TDateContext = {
     isNewRequirementBeingWritten: boolean
     setIsNewRequirementBeingWritten: (state: boolean) => void
     // setDirection:() => void
+    optionalFields: OptionElement[]
+    setOptionalFields: (elem: OptionElement[]) => void
 }
 
 const DateContext = createContext<TDateContext | undefined>(undefined)
@@ -44,6 +47,10 @@ const AddDateFormContextProvider = ({
         useState(false)
     const [isNewRequirementBeingWritten, setIsNewRequirementBeingWritten] =
         useState(true)
+
+    const [optionalFields, setOptionalFields] = useState<OptionElement[]>([
+        new OptionElement('DESK Creep SHon', () => <DescriptionOptionUI />),
+    ])
 
     useEffect(() => {
         console.log({ direction })
@@ -70,6 +77,8 @@ const AddDateFormContextProvider = ({
                 setIsRequirementAddedSuccessfully,
                 isNewRequirementBeingWritten,
                 setIsNewRequirementBeingWritten,
+                optionalFields,
+                setOptionalFields,
             }}
         >
             {children}
@@ -88,3 +97,36 @@ export const UseDateFormContext = () => {
 }
 
 export default AddDateFormContextProvider
+
+export class OptionElement {
+    protected id: number
+    protected hof: () => JSX.Element
+    protected title: string
+    protected isActive: boolean
+    execute(): JSX.Element | null {
+        if (!this.isActive) {
+            return null
+        }
+
+        return this.hof()
+    }
+
+    getTitle() {
+        return this.title
+    }
+
+    setIsActive(value: boolean) {
+        this.isActive = value
+    }
+
+    getIsActive(): boolean {
+        return this.isActive
+    }
+
+    constructor(title: string, Hof: () => JSX.Element) {
+        this.id = 0
+        this.hof = Hof
+        this.title = title
+        this.isActive = false
+    }
+}

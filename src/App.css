@@ -55,7 +55,8 @@ body {
     height: 100%;
 }
 
-input {
+input,
+textarea {
     background-color: #534e77;
     color: whitesmoke;
     padding: var(--gap);
