@@ -26,6 +26,18 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
 
     useEffect(() => {}, [loginedPerson])
 
+    useEffect(() => {
+        fetch('http://localhost:3030/')
+            .then((res) => {
+                const { body } = res
+
+                return res.text()
+            })
+            .then((text) => console.log(text))
+
+        // setApp();
+    }, [])
+
     return (
         <AppContext.Provider
             value={{
