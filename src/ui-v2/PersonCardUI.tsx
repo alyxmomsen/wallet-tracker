@@ -130,38 +130,22 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 </div>
                 <div>{person.getStatusDescription()}</div>
                 <div>
-                    <h3>
-                        <div>
-                            <button
-                                className="btn"
-                                onClick={() => {
+                    <h3>{'REQUIREMENTS:'}</h3>
+
+                    <div>
+                        <button
+                            className="btn"
+                            onClick={() => {
+                                if (person) {
                                     setCurentWindow(
                                         <AddRequirementForm person={person} />
                                     )
-                                }}
-                            >
-                                Add Requirements
-                            </button>
-                        </div>
-                        {person.getAllReauirementCommands().length ? (
-                            'REQUIREMENTS:'
-                        ) : (
-                            <button
-                                className="btn"
-                                onClick={() => {
-                                    if (person) {
-                                        setCurentWindow(
-                                            <AddRequirementForm
-                                                person={person}
-                                            />
-                                        )
-                                    }
-                                }}
-                            >
-                                ADD REQUIREMENT
-                            </button>
-                        )}
-                    </h3>
+                                }
+                            }}
+                        >
+                            ADD REQUIREMENT
+                        </button>
+                    </div>
                     <div className="flex-box">
                         {person
                             .getActualRequirementCommands()
