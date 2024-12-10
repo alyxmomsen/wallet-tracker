@@ -15,3 +15,7 @@
     - [ ] useEffect
     - [ ] useMemo
 - [ ] custom css styles that is the "tailwind" principle alternative
+
+issue:
+
+person factory dont use persons registry

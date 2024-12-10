@@ -13,7 +13,6 @@ const MainMenuRibbon = () => {
         loginedPerson: currentPerson,
         setLoginedPerson: setCurrentPerson,
         setCurentWindow: setCurPage,
-        app,
     } = UseAppContext()
 
     const [isLogined, setIsLogined] = useState(false)

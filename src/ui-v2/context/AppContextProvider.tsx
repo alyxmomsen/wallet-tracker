@@ -1,11 +1,14 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { ApplicationSingletoneFacade } from '../../core/ApplicationFacade'
+import {
+    ApplicationSingletoneFacade,
+    IApplicationSingletoneFacade,
+} from '../../core/ApplicationFacade'
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI from '../PersonCardUI'
 
 export type TAppCtx = {
-    app: ApplicationSingletoneFacade
+    app: IApplicationSingletoneFacade
     loginedPerson: IPerson | null
     setLoginedPerson: (person: IPerson | null) => void
     curentWindow: JSX.Element
@@ -36,21 +39,6 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     )
 
     const [s, update] = useState(0)
-
-    useEffect(() => {
-        fetch('http://localhost:3030')
-            .then((response) => {
-                return response.text()
-            })
-            .then((data) => {
-                console.log({ data })
-
-                setLoginedPerson(new OrdinaryPerson('Alex Wellick', 0))
-            })
-            .finally(() => {
-                console.log('fetch is done')
-            })
-    }, [])
 
     useEffect(() => {
         if (loginedPerson) {

@@ -1,31 +1,53 @@
-import {
-    IPerson,
-    OrdinaryPerson as OrdinaryPerson,
-    Person,
-} from './person/Person'
-import { IPlanner, RequirementPlanner } from './Planner'
+import { PersonRegistry } from '../core-utils/core-utils'
+import { PersonFactory } from './person/factories/PersonFactory'
+import { IPerson } from './person/Person'
 import { IRequirementCommand } from './RequirementCommand'
 
 import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
-    addPerson(person: IPerson): number
+    addPerson(name: string, walletInitialValue: number, pass: string): string
     getPersons(): IPerson[]
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
+    setUser(): void
 }
 
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
-    private lastId: number
-    private persons: IPerson[]
-    private personsRegisty: Map<number, IPerson>
-    private requirementPlanner: IPlanner<IRequirementCommand, IPerson>
-
-    private requirements: IRequirementCommand[]
-
+    private personFactory: PersonFactory
+    private personRegistryLocal: PersonRegistry // is temporary
+    // private persons: IPerson[]
+    private currentPerson: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
+
+    setUser(): void {
+        this.personFactory.execute('', 0)
+    }
+
+    setCurrentPersonBy(username: string, pass: string) {
+        const result = this.personRegistryLocal.getPersonsByUserNameAndPass(
+            username,
+            pass
+        )
+
+        if (result.length) {
+            this.currentPerson = result[0]
+
+            return true
+        }
+
+        return false
+    }
+
+    setCurrentPerson(person: IPerson) {
+        this.currentPerson = person
+    }
+
+    getPersonById() {
+        // this.k
+    }
 
     static Instance() {
         if (ApplicationSingletoneFacade.instance === null) {
@@ -37,42 +59,34 @@ export class ApplicationSingletoneFacade
         return ApplicationSingletoneFacade.instance
     }
 
-    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {
-        this.requirementPlanner.addTask(task)
+    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {}
+
+    addPerson(name: string, walletInitialValue: number, pass: string): string {
+        const newPerson = this.personFactory.execute(
+            name,
+            walletInitialValue
+            // pass
+        )
+
+        this.personRegistryLocal.addPerson(newPerson)
+
+        // this.persons.push(newPerson)
+
+        return newPerson.getId()
     }
 
-    addPerson(person: IPerson): number {
-        const newID = this.lastId + 1
-        this.lastId = newID
-        this.personsRegisty.set(newID, person)
-        this.persons.push(person)
-
-        return newID
+    getPersons(): IPerson[] {
+        return []
     }
 
-    getPersons() {
-        return this.persons
-    }
-
-    update() {
-        this.requirementPlanner.check()
-    }
+    update() {}
 
     /* private  */ constructor() {
-        this.requirements = []
-        this.lastId = 0
-        this.persons = []
-        this.personsRegisty = new Map<number, IPerson>()
+        this.personRegistryLocal = new PersonRegistry()
+        this.personFactory = new PersonFactory()
 
-        // preload
+        // this.persons = []
 
-        const jenaro = new OrdinaryPerson('Don Jenaro', 10500)
-        const juan = new OrdinaryPerson('Don Juan', 0)
-        const carlos = new OrdinaryPerson('Carolos Castaneda', 0)
-        this.requirementPlanner = new RequirementPlanner(jenaro)
-
-        this.addPerson(jenaro)
-        this.addPerson(juan)
-        this.addPerson(carlos)
+        this.currentPerson = null
     }
 }

@@ -7,7 +7,6 @@ const AddRequirementTabUI = () => {
         loginedPerson: currentPerson,
         setLoginedPerson: setCurrentPerson,
         setCurentWindow: setCurPage,
-        app,
     } = UseAppContext()
     return (
         <button

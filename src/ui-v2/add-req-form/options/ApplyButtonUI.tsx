@@ -8,7 +8,7 @@ import {
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const ApplyButtonUI = () => {
-    const { app, loginedPerson: currentPerson, update } = UseAppContext()
+    const { loginedPerson: currentPerson, update } = UseAppContext()
 
     const {
         title,

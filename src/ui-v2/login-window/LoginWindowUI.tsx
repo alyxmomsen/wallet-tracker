@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import RegistrationUI from './RegistrationUI'
-import AuthorizationUI from './AuthorizationUI'
+
 import PersonCardUI from '../PersonCardUI'
+import { PersonFactory } from '../../core/person/factories/PersonFactory'
+import AuthorizationUI from './AuthorizationUI'
+import RegistrationUI from './RegistrationUI'
 
 class NavigationElementFactory {
     protected links: NavigationElementFactory[]
@@ -22,42 +24,32 @@ class NavigationElementFactory {
     }
 }
 
-const arr = [() => <AuthorizationUI />, () => <RegistrationUI />]
+// const arr = [() => <RegistrationUI />, () => <RegistrationUI />]
 
 const LoginWindowUI = () => {
+    const [state, setState] = useState(false)
+
     const {
         loginedPerson,
         setLoginedPerson,
         setCurentWindow: setCurPage,
-        app,
     } = UseAppContext()
-
-    const [index, setIndex] = useState<number | undefined>(
-        arr.length ? 0 : undefined
-    )
-
-    const HOCs = useMemo(() => {
-        return [
-            () => <RegistrationUI />,
-            loginedPerson
-                ? () => <button>logout</button>
-                : () => <AuthorizationUI />,
-        ]
-    }, [loginedPerson])
 
     return (
         <div>
             <h2>loggin window</h2>
-            <div>{HOCs.map((hoc) => hoc())}</div>
-            <button
-                onClick={() => {
-                    if (loginedPerson) {
-                        setCurPage(<PersonCardUI person={loginedPerson} />)
-                    }
-                }}
-            >
-                JOIN
-            </button>
+            {loginedPerson && <PersonCardUI person={loginedPerson} />}
+            <div className="pdg">
+                <button
+                    onClick={() => {
+                        setState((state) => !state)
+                    }}
+                    className="btn"
+                >
+                    swap
+                </button>
+            </div>
+            {state ? <AuthorizationUI /> : <RegistrationUI />}
         </div>
     )
 }
