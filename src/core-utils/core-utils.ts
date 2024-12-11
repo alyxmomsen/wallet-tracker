@@ -1,122 +1,121 @@
 import { maxHeaderSize } from 'http'
 import { IPerson, Person } from '../core/person/Person'
 import { Wallet } from '../core/Wallet'
-import { al } from 'react-router/dist/production/fog-of-war-CbNQuoo8'
 
 export interface IRegistry {}
 
 export class Registry implements IRegistry {}
 
-export class PersonRegistry extends Registry {
-    persons: IPerson[]
+// export class PersonRegistry extends Registry {
+//     persons: IPerson[]
 
-    getPersonsByUserNameAndPass(username: string, passwordd: string) {
-        const persons: IPerson[] = []
+//     getPersonsByUserNameAndPass(username: string, passwordd: string) {
+//         const persons: IPerson[] = []
 
-        this.persons.forEach((person) => {
-            if (
-                person.getName() === username &&
-                person.getPassword() === passwordd
-            ) {
-                persons.push(person)
-            }
-        })
+//         this.persons.forEach((person) => {
+//             if (
+//                 person.getName() === username &&
+//                 person.getPassword() === passwordd
+//             ) {
+//                 persons.push(person)
+//             }
+//         })
 
-        return [...persons]
-    }
+//         return [...persons]
+//     }
 
-    getPersonsBy(personData: {
-        username: string | undefined
-        password: string | undefined
-        id: string | undefined
-    }) {
-        const { username, password, id } = personData
+//     getPersonsBy(personData: {
+//         username: string | undefined
+//         password: string | undefined
+//         id: string | undefined
+//     }) {
+//         const { username, password, id } = personData
 
-        if (
-            username === undefined &&
-            password === undefined &&
-            id === undefined
-        ) {
-            return []
-        }
+//         if (
+//             username === undefined &&
+//             password === undefined &&
+//             id === undefined
+//         ) {
+//             return []
+//         }
 
-        if (
-            username === undefined &&
-            password === undefined &&
-            id !== undefined
-        ) {
-            const persons: IPerson[] = []
+//         if (
+//             username === undefined &&
+//             password === undefined &&
+//             id !== undefined
+//         ) {
+//             const persons: IPerson[] = []
 
-            for (const currentIterPerson of this.persons) {
-                if (currentIterPerson.getId() === id) {
-                    persons.push(currentIterPerson)
-                }
-            }
+//             for (const currentIterPerson of this.persons) {
+//                 if (currentIterPerson.getId() === id) {
+//                     persons.push(currentIterPerson)
+//                 }
+//             }
 
-            return persons
-        }
+//             return persons
+//         }
 
-        if (
-            username !== undefined &&
-            password === undefined &&
-            id !== undefined
-        ) {
-            return []
-        }
+//         if (
+//             username !== undefined &&
+//             password === undefined &&
+//             id !== undefined
+//         ) {
+//             return []
+//         }
 
-        return []
-    }
+//         return []
+//     }
 
-    checkIfIdExists(newId: string): boolean {
-        for (const person of this.persons) {
-            const id = person.getId()
+//     checkIfIdExists(newId: string): boolean {
+//         for (const person of this.persons) {
+//             const id = person.getId()
 
-            if ((newId = id)) {
-                return false
-            }
-        }
+//             if ((newId = id)) {
+//                 return false
+//             }
+//         }
 
-        return true
-    }
+//         return true
+//     }
 
-    geNerateNewPersonId(): string {
-        let maxIdValue = 0
+//     geNerateNewPersonId(): string {
+//         let maxIdValue = 0
 
-        this.persons.forEach((person) => {
-            const passwordAsNumber = Number.parseInt(person.getId())
+//         this.persons.forEach((person) => {
+//             const passwordAsNumber = Number.parseInt(person.getId())
 
-            if (passwordAsNumber > maxIdValue) {
-                maxIdValue = passwordAsNumber
-            }
-        })
+//             if (passwordAsNumber > maxIdValue) {
+//                 maxIdValue = passwordAsNumber
+//             }
+//         })
 
-        return (maxIdValue + 1).toLocaleString()
-    }
+//         return (maxIdValue + 1).toLocaleString()
+//     }
 
-    addPerson(person: IPerson): boolean {
-        for (const psn of this.persons) {
-            if (psn === person) {
-                alert('the Same PErson')
-                return false
-            }
+//     addPerson(person: IPerson): boolean {
+//         for (const psn of this.persons) {
+//             if (psn === person) {
+//                 alert('the Same PErson')
+//                 return false
+//             }
 
-            if (psn.getName() === person.getName()) {
-                alert('the Same Name')
-                return false
-            }
+//             if (psn.getName() === person.getName()) {
+//                 alert('the Same Name')
+//                 return false
+//             }
 
-            if (psn.getId() === person.getId()) {
-                const newId = this.geNerateNewPersonId()
-            }
-        }
+//             if (psn.getId() === person.getId()) {
+//                 const newId = this.geNerateNewPersonId()
+//             }
+//         }
 
-        this.persons.push(person)
+//         this.persons.push(person)
 
-        return true
-    }
+//         return true
+//     }
 
-    constructor() {
-        super()
-        this.persons = []
-    }
-}
+//     constructor() {
+//         super()
+//         this.persons = []
+//     }
+// }

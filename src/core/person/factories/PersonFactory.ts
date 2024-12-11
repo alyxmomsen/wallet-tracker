@@ -1,4 +1,3 @@
-import { PersonRegistry } from '../../../core-utils/core-utils'
 import { OrdinaryPerson } from '../Person'
 
 export class PersonFactory {

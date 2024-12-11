@@ -1,4 +1,4 @@
-import { PersonRegistry } from '../core-utils/core-utils'
+// import { PersonRegistry } from '../core-utils/core-utils'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
 import { IRequirementCommand } from './RequirementCommand'
@@ -17,26 +17,29 @@ export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
     private personFactory: PersonFactory
-    private personRegistryLocal: PersonRegistry // is temporary
-    // private persons: IPerson[]
+    // private personRegistryLocal: PersonRegistry // is temporary
+    private usersPool: IPerson[]
     private currentPerson: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
 
     setUser(): void {
+        if (this.currentPerson) {
+        }
+
         this.personFactory.execute('', 0)
     }
 
     setCurrentPersonBy(username: string, pass: string) {
-        const result = this.personRegistryLocal.getPersonsByUserNameAndPass(
-            username,
-            pass
-        )
+        // const result = this.personRegistryLocal.getPersonsByUserNameAndPass(
+        //     username,
+        //     pass
+        // )
 
-        if (result.length) {
-            this.currentPerson = result[0]
+        // if (result.length) {
+        //     this.currentPerson = result[0]
 
-            return true
-        }
+        //     return true
+        // }
 
         return false
     }
@@ -68,7 +71,7 @@ export class ApplicationSingletoneFacade
             // pass
         )
 
-        this.personRegistryLocal.addPerson(newPerson)
+        // this.personRegistryLocal.addPerson(newPerson)
 
         // this.persons.push(newPerson)
 
@@ -82,10 +85,10 @@ export class ApplicationSingletoneFacade
     update() {}
 
     /* private  */ constructor() {
-        this.personRegistryLocal = new PersonRegistry()
+        // this.personRegistryLocal = new PersonRegistry()
         this.personFactory = new PersonFactory()
 
-        // this.persons = []
+        this.usersPool = []
 
         this.currentPerson = null
     }
