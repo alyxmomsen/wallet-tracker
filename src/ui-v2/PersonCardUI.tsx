@@ -12,7 +12,12 @@ import GoPersonButton from './shared/GoPersonButtonUI'
 import TrackComponentUI from './track-component-ui/TrackComponentUI'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
-    const { curentWindow: curPage, setCurentWindow, update } = UseAppContext()
+    const {
+        curentWindow: curPage,
+        setCurentWindow,
+        update,
+        setLoginedPerson,
+    } = UseAppContext()
 
     let actualReqs = person.getActualRequirementCommands()
     const exec = person.getExecutedRequirementCommands()
@@ -75,7 +80,17 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     return (
         <div className="flex-box flex-dir-col">
             <h2>PersonCardUI</h2>
-
+            <div>
+                <button
+                    className="btn"
+                    onClick={() => {
+                        localStorage.removeItem('userId')
+                        setLoginedPerson(null)
+                    }}
+                >
+                    log out
+                </button>
+            </div>
             <div className="flex-box flex-dir-col bdr pdg">
                 <h3>{person.getName()}</h3>
                 <div>

@@ -6,6 +6,7 @@ import {
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI from '../PersonCardUI'
+import AuthorizationUI, { authRequest } from '../login-window/AuthorizationUI'
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
@@ -19,6 +20,8 @@ export type TAppCtx = {
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
 
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
+    const [authChecking, setAuthChecking] = useState(false)
+
     const [app] = useState<ApplicationSingletoneFacade>(
         new ApplicationSingletoneFacade()
     )
@@ -43,8 +46,44 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     useEffect(() => {
         if (loginedPerson) {
             setCurPage(<PersonCardUI person={loginedPerson} />)
+        } else {
+            setCurPage(<LoginWindowUI />)
         }
     }, [loginedPerson])
+
+    useEffect(() => {
+        if (authChecking) {
+            setCurPage(<div>auth...</div>)
+        }
+    }, [authChecking])
+
+    useEffect(() => {
+        const userId = localStorage.getItem('userId')
+
+        if (userId !== null) {
+            setAuthChecking(true)
+
+            fetch('http://localhost:3030/get-user', {
+                headers: {
+                    'x-auth': userId,
+                    'Content-Type': 'Application/json',
+                },
+                method: 'post',
+            })
+                .then((response) => {
+                    return response.json()
+                    // console.log({response});
+                })
+                .then((data) => {
+                    setLoginedPerson(
+                        new OrdinaryPerson(data.payload, 0, data.userId)
+                    )
+                    console.log({
+                        data,
+                    })
+                }) /* .catch(e => console.error(e)) */
+        }
+    }, [])
 
     return (
         <AppContext.Provider

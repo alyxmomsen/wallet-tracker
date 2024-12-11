@@ -40,7 +40,7 @@ const AuthorizationUI = () => {
             <div>
                 <button
                     onClick={async (e) => {
-                        const response = await AuthRequest(username, password)
+                        const response = await authRequest(username, password)
                             .catch((e) => {
                                 console.log({ e })
                             })
@@ -63,7 +63,7 @@ const AuthorizationUI = () => {
 
 export default AuthorizationUI
 
-async function AuthRequest(username: string, password: string) {
+export async function authRequest(username: string, password: string) {
     const response = await fetch('http://localhost:3030/auth', {
         method: 'post',
         body: JSON.stringify({
