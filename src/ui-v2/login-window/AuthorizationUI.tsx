@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
+import { OrdinaryPerson } from '../../core/person/Person'
 
 const AuthorizationUI = () => {
-    const { app } = UseAppContext()
+    const { app, setLoginedPerson, update } = UseAppContext()
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -49,33 +50,7 @@ const AuthorizationUI = () => {
 
                         window.localStorage.setItem('userId', token)
 
-                        console.log('holly molly', token, response)
-
-                        if (token) {
-                            console.log('test')
-
-                            fetch('http://localhost:3030/get-user', {
-                                method: 'post',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'x-auth': token,
-                                },
-                            })
-                                .then((res) => res.json())
-                                .then((json) => {
-                                    if ((json.status = true)) {
-                                        const username = json.payload.username
-                                        app.addPerson(username, 0, '')
-                                        app.setUser()
-                                    }
-
-                                    console.log({ json })
-                                })
-                                .catch((e) => {
-                                    console.log('something wrong', e)
-                                })
-                                .finally(() => {})
-                        }
+                        setLoginedPerson(new OrdinaryPerson(name, 0, token))
                     }}
                     className="btn"
                 >
