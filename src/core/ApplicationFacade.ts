@@ -1,7 +1,7 @@
 // import { PersonRegistry } from '../core-utils/core-utils'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
-import { IRequirementCommand } from './RequirementCommand'
+import { IRequirementCommand } from './requirement-command/RequirementCommand'
 
 import { ITask } from './Task'
 

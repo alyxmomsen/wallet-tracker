@@ -10,7 +10,7 @@ import { UseDateFormContext } from '../context/AddRequirementContextProvider'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
-import { IRequirementCommand } from '../../core/RequirementCommand'
+import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 
 const AddRequirementFormComponent = () => {
     const {

@@ -1,6 +1,6 @@
 import { networkInterfaces } from 'os'
 import { IWallet, Wallet } from '../Wallet'
-import { IRequirementCommand } from '../RequirementCommand'
+import { IRequirementCommand } from '../requirement-command/RequirementCommand'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
 
 export type TStatus = {
@@ -71,12 +71,7 @@ export abstract class Person implements IPerson {
                 value,
                 valueBefore,
                 valueAfter,
-                executionDate: Number.parseInt(
-                    requirement
-                        .getExecutionDate()
-                        .getTime() /* / 1000 */
-                        .toString()
-                ),
+                executionDate: requirement.getExecutionDate(),
                 transactionTypeCode: requirement.getTransactionTypeCode(),
             }
         })
@@ -116,7 +111,7 @@ export abstract class Person implements IPerson {
             const currDateObj = getDateUtil(new Date())
 
             const requirementDateObj = getDateUtil(
-                requirementCommand.getExecutionDate()
+                new Date(requirementCommand.getExecutionDate())
             )
 
             if (

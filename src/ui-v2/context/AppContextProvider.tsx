@@ -67,7 +67,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         if (userId !== null) {
             setAuthChecking(true)
 
-            fetch('http://localhost:3030/get-user', {
+            fetch('http://localhost:3030/get-user-protected', {
                 headers: {
                     'x-auth': userId,
                     'Content-Type': 'Application/json',
@@ -75,10 +75,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 method: 'post',
             })
                 .then((response) => {
+                    // console.log({response});
                     return response.json() as Promise<
                         TFetchRegistrationResponse<TFetchUserData>
                     >
-                    // console.log({response});
                 })
                 .then((data) => {
                     const { payload, status } = data

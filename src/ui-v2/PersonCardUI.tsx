@@ -10,6 +10,12 @@ import {
 } from '../core/person/PersonStatus'
 import GoPersonButton from './shared/GoPersonButtonUI'
 import TrackComponentUI from './track-component-ui/TrackComponentUI'
+import LoginWindowUI from './login-window/LoginWindowUI'
+import {
+    TFetchResponse,
+    TFetchUserRequirementStats,
+} from './login-window/RegistrationUI'
+import { IncrementMoneyRequirementCommand } from '../core/requirement-command/RequirementCommand'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const {
@@ -29,6 +35,49 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     const [statusStarted, setStatusStarted] = useState(0)
 
     let reqanfrid = 0
+
+    useEffect(() => {
+        const userId = localStorage.getItem('userId')
+
+        if (userId === null) {
+            alert('no token')
+            setCurentWindow(<LoginWindowUI />)
+            return
+        }
+
+        // 'get-user-requirements-protected'
+        fetch('http://127.0.0.1:3030/get-user-requirements-protected', {
+            headers: {
+                // 'content-type': 'application/json',
+                'Content-Type': 'Application/json',
+                'x-auth': 'EuzPeu34vWVDJroLSzoB',
+            },
+            method: 'post',
+        })
+            .then((response) => {
+                return response.json() as Promise<
+                    TFetchResponse<TFetchUserRequirementStats[]>
+                >
+            })
+            .then((data) => {
+                console.log({ data })
+
+                if (data.payload === null) {
+                    return
+                }
+
+                data.payload.forEach((requirementsStatsItem) => {
+                    // person.addRequirementCommand();
+                })
+
+                // data.forEach(userRequirementStatsItem => {
+                //     console.log({elem: userRequirementStatsItem})
+                // });
+            })
+            .catch((e) => {
+                console.log({ e })
+            })
+    }, [])
 
     useEffect(() => {
         ;(() => {
@@ -227,13 +276,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                                 </div>
                                             </div>
                                             <div className="flex-box">
-                                                <div>{execDate.getDate()}</div>
-                                                <div>
-                                                    {execDate.getMonth() + 1}
-                                                </div>
-                                                <div>
-                                                    {execDate.getFullYear()}
-                                                </div>
+                                                <div>{execDate}</div>
+                                                <div>{execDate}</div>
+                                                <div>{execDate}</div>
                                             </div>
                                         </div>
                                         {!requirement.checkIfExecuted() ? (

@@ -7,12 +7,12 @@ import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
 export type TDirection = 'increment' | 'decrement'
 
 export type TDateContext = {
-    dateObj: Date
+    dateObj: number
     direction: TDirection
     value: number
     title: string
     description: string
-    setDateObj: (dateObj: Date) => void
+    setDateObj: (dateObj: number) => void
     setDirection: (direction: TDirection) => void
     setValue: (value: number) => void
     setTitle: (title: string) => void
@@ -35,7 +35,7 @@ const AddDateFormContextProvider = ({
 }) => {
     const { loginedPerson: currentPerson } = UseAppContext()
 
-    const [dateObj, setDateObj] = useState<Date>(new Date())
+    const [dateObj, setDateObj] = useState<number>(Date.now())
     const [direction, setDirection] = useState<TDirection>('increment')
     const [value, setValue] = useState<number>(
         currentPerson ? averageValueUtil(currentPerson) : 0

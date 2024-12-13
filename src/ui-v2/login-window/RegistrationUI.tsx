@@ -98,6 +98,18 @@ export default RegistrationUI
 
 export type TFetchUserData = {
     userName: string
+    // requirements
+}
+
+// export type TFetchUserRequirements
+
+export type TFetchUserRequirementStats = {
+    title: string
+    value: number
+    description: string
+    date: number
+    isExecuted: boolean
+    transactionTypeCode: number
 }
 
 export type TFetchAuthorizationUserData = {
@@ -110,6 +122,14 @@ export type TFetchRegistrationResponse<T> = {
         details: string
     }
     payload: T | null
+}
+
+export type TFetchResponse<T> = {
+    status: {
+        code: number
+        details: string
+    }
+    payload: T
 }
 
 async function registrationRequest(

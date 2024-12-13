@@ -1,5 +1,5 @@
 import React from 'react'
-import { IRequirementCommand } from '../../core/RequirementCommand'
+import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
@@ -24,12 +24,7 @@ const RequirementUI = ({
                     {(() => {
                         const date = requirement.getExecutionDate()
 
-                        return (
-                            <div>
-                                {date.getDate()}-{date.getMonth() + 1}-
-                                {date.getFullYear()}
-                            </div>
-                        )
+                        return <div>{date}</div>
                     })()}
                 </div>
                 <div>
