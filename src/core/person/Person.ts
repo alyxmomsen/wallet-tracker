@@ -31,13 +31,10 @@ export interface IPerson {
     getWalletTrackForActualRequirements(): TWalletTrackValue[]
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
-    getId(): string
-    setId(id: string): string
     getPassword(): string
 }
 
 export abstract class Person implements IPerson {
-    private id: string
     // private password: string
     protected name: string
     protected wallet: IWallet
@@ -51,11 +48,6 @@ export abstract class Person implements IPerson {
     getPassword(): string {
         // return this.password
         return ''
-    }
-
-    setId(id: string): string {
-        this.id = id
-        return this.id
     }
 
     getStatusDescription(): string {
@@ -149,17 +141,7 @@ export abstract class Person implements IPerson {
         })
     }
 
-    getId() {
-        return this.id
-    }
-
-    constructor(
-        wallet: IWallet,
-        name: string,
-        id: string /* , password: string */
-    ) {
-        this.id = id
-        // this.password = password
+    constructor(wallet: IWallet, name: string) {
         this.wallet = wallet
         this.name = name
         this.requirementCommands = []
@@ -171,11 +153,10 @@ export abstract class Person implements IPerson {
 export class OrdinaryPerson extends Person {
     constructor(
         name: string,
-        walletInitValue: number,
-        id: string
+        walletInitValue: number
         /* pass: string */
     ) {
-        super(new Wallet(walletInitValue), name, id /* , pass */)
+        super(new Wallet(walletInitValue), name /* , pass */)
     }
 }
 

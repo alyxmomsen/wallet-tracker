@@ -50,7 +50,7 @@ const AuthorizationUI = () => {
 
                         window.localStorage.setItem('userId', token)
 
-                        setLoginedPerson(new OrdinaryPerson(name, 0, token))
+                        setLoginedPerson(new OrdinaryPerson(name, 0))
                     }}
                     className="btn"
                 >

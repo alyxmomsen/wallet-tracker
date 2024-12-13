@@ -6,7 +6,7 @@ export class PersonFactory {
             Date.now() + Math.floor(Math.random() * 1000)
         ).toLocaleString()
 
-        return new OrdinaryPerson(name, walletInitValue, newId /* , pass */)
+        return new OrdinaryPerson(name, walletInitValue)
     }
 
     constructor() {}

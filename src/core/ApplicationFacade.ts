@@ -75,7 +75,7 @@ export class ApplicationSingletoneFacade
 
         // this.persons.push(newPerson)
 
-        return newPerson.getId()
+        return 'string'
     }
 
     getPersons(): IPerson[] {

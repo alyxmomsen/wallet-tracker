@@ -1,11 +1,28 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
+import { UseFetch } from '../../utils/UseFetch'
 
 const RegistrationUI = () => {
     const [password, setPassword] = useState<string>('')
     const [username, setUserName] = useState<string>('')
 
+    const [isRequestStarted, setIsRequestStarted] = useState<boolean>(false)
+    const [responsedStatusDetails, setResponsedStatusDetails] = useState<
+        string | undefined
+    >(undefined)
+    const [statusCode, setStatusCode] = useState<number | undefined>(undefined)
+    const [isRequestDone, setIsRequestDone] = useState(false)
+    // const [] = useState();
+    // const [] = useState();
+
     const { app, loginedPerson, update } = UseAppContext()
+
+    // const [ifSend , setIfSend] = useState(false);
+
+    useEffect(() => {}, [])
+    // useEffect(() => {} , []);
+    // useEffect(() => {} , []);
+    // useEffect(() => {} , []);
 
     return (
         <div className="bdr pdg flex-box flex-dir-col flex-item">
@@ -42,10 +59,18 @@ const RegistrationUI = () => {
             <div>
                 <button
                     className="btn "
-                    onClick={() => {
+                    onClick={async () => {
+                        // setIfSend(true);
+                        setIsRequestStarted(true)
+                        setIsRequestDone(false)
                         registrationRequest(username, password)
                             .then((response) => {
+                                setIsRequestDone(true)
                                 console.log({ response })
+                                setResponsedStatusDetails(
+                                    response.status.details
+                                )
+                                setStatusCode(response.status.code)
                             })
                             .catch(() => {
                                 alert()
@@ -56,13 +81,41 @@ const RegistrationUI = () => {
                     registration
                 </button>
             </div>
+            <div>
+                {isRequestStarted ? (
+                    <div style={{ color: statusCode ? 'orange' : 'green' }}>
+                        {isRequestDone ? responsedStatusDetails : 'requesting'}
+                    </div>
+                ) : (
+                    ''
+                )}
+            </div>
         </div>
     )
 }
 
 export default RegistrationUI
 
-async function registrationRequest(username: string, password: string) {
+export type TFetchUserData = {
+    userName: string
+}
+
+export type TFetchAuthorizationUserData = {
+    userId: number
+}
+
+export type TFetchRegistrationResponse<T> = {
+    status: {
+        code: number
+        details: string
+    }
+    payload: T | null
+}
+
+async function registrationRequest(
+    username: string,
+    password: string
+): Promise<TFetchRegistrationResponse<TFetchAuthorizationUserData>> {
     console.log({ username, password })
 
     console.log(JSON.stringify({ username, password }))
@@ -81,4 +134,39 @@ async function registrationRequest(username: string, password: string) {
     const jsonData = await response.json()
 
     return jsonData
+}
+
+function UseRegistration(username: string, password: string) {
+    const [statusCode, setStatusCode] = useState<number | undefined>(undefined)
+    const [isRequesting, setIsRequesting] = useState(true)
+    const [endPoint, setEndponit] = useState<'registration' | 'auth'>(
+        'registration'
+    )
+
+    fetch(`http://localhost:3030/${endPoint}`, {
+        method: 'post',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password,
+        }),
+    })
+        .then(
+            (response) =>
+                response.json() as Promise<TFetchRegistrationResponse<null>>
+        )
+        .then((data) => {
+            setStatusCode(data.status.code)
+            setIsRequesting(false)
+        })
+        .catch((e) => {
+            alert('E-rrrrrrooooooooaaaarrrrrr')
+        })
+
+    return {
+        statusCode,
+        isRequesting,
+    }
 }

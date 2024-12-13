@@ -7,6 +7,10 @@ import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI from '../PersonCardUI'
 import AuthorizationUI, { authRequest } from '../login-window/AuthorizationUI'
+import {
+    TFetchRegistrationResponse,
+    TFetchUserData,
+} from '../login-window/RegistrationUI'
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
@@ -71,15 +75,27 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 method: 'post',
             })
                 .then((response) => {
-                    return response.json()
+                    return response.json() as Promise<
+                        TFetchRegistrationResponse<TFetchUserData>
+                    >
                     // console.log({response});
                 })
                 .then((data) => {
-                    setLoginedPerson(
-                        new OrdinaryPerson(data.payload, 0, data.userId)
-                    )
+                    const { payload, status } = data
+
+                    if (status.code > 0) {
+                        setCurPage(<LoginWindowUI />)
+                    } else {
+                        if (payload) {
+                            setLoginedPerson(
+                                new OrdinaryPerson(payload.userName, 0)
+                            )
+                        }
+                    }
+
                     console.log({
-                        data,
+                        payload,
+                        status,
                     })
                 }) /* .catch(e => console.error(e)) */
         }
