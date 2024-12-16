@@ -12,9 +12,15 @@ const AuthorizationUI = () => {
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
+    const [inProcess, setInProcess] = useState(false);
+    const [responseMessage, setResponseMessage] = useState('');
+
     return (
         <div className="flex-box flex-dir-col bdr pdg-x3 flex-item">
-            <h2>Authorization</h2>
+            <h2>Authorization</h2> {
+                responseMessage.length ? <div className='pdg' style={{backgroundColor:'orange' , color:'whitesmoke'}}>{responseMessage}</div> : <div></div>
+
+            }
             <div className="flex-box flex-jtf-btw">
                 <span>user name</span>
                 <input
@@ -42,13 +48,21 @@ const AuthorizationUI = () => {
             <div>
                 <button
                     onClick={async (e) => {
+
+                        setInProcess(true);
+                        setResponseMessage('in process...');
                         const response = await app.authUserAsync(
                             userName,
                             password,
                             new AuthUserService()
                         )
+
+
+
                         if (response.payload) {
-                            alert('check')
+
+                            setInProcess(false);
+
                             setCurentWindow(
                                 <PersonCardUI
                                     person={
@@ -63,6 +77,8 @@ const AuthorizationUI = () => {
 
                             // response.payload.userId;
                         }
+
+                        setResponseMessage(response.status.details);
                     }}
                     className="btn"
                 >
