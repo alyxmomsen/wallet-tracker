@@ -7,7 +7,6 @@ import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
-import { convertToObject } from 'typescript'
 import { LocalStorageManagementService } from '../../core/services/local-storage-service'
 
 const cashFlowApp = new ApplicationFacadeSingletone(
@@ -54,10 +53,13 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         const userId = localStorage.getItem('userId')
 
         if (userId === null) return
-
+        
+        // app.
+        
         const user = app.getUserData()
 
         if (user === null) return
+        alert('check this stuff');
 
         setCurrentWindow(<PersonCardUI person={user} />)
 

@@ -53,7 +53,14 @@ export class ApplicationSingletoneFacade
         password: string,
         authService: IAuthService
     ): Promise<IAuthUserResponseData> {
-        return authService.execute(userName, password)
+
+        const response = await authService.execute(userName, password)
+
+        if (response.payload) {
+            this.localStorageManagementSerice.setAuthData(response.payload.userId);
+        }
+
+        return response;
     }
 
     getUserData(): IPerson | null {
@@ -101,5 +108,14 @@ export class ApplicationSingletoneFacade
         this.user = null
 
         console.log('app constructor ran')
+
+
+        const authData = this.localStorageManagementSerice.getAuthData();
+
+        // this.createUser()
+        
+
+        
+
     }
 }
