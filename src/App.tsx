@@ -3,7 +3,7 @@ import './App.css'
 
 import AppContextProvider from './ui-v2/context/AppContextProvider'
 import AppComponent from './ui-v2/AppComponent'
-import { ApplicationSingletoneFacade } from './core/ApplicationFacade'
+import { ApplicationSingletoneFacade } from './core/App-facade'
 
 function App() {
     return (

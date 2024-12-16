@@ -3,7 +3,7 @@ import {
     TFetchResponse,
 } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
-import { ICreateUserResponseData } from '../ApplicationFacade'
+import { ICreateUserResponseData } from '../App-facade'
 
 export interface ICreateUserService {
     execute(

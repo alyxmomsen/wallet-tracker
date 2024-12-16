@@ -1,15 +1,13 @@
 import React, { createContext, useEffect, useState } from 'react'
-import {
-    ApplicationSingletoneFacade as ApplicationFacadeSingletone,
-    IApplicationSingletoneFacade,
-} from '../../core/ApplicationFacade'
+
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import { LocalStorageManagementService } from '../../core/services/local-storage-service'
+import { ApplicationSingletoneFacade, IApplicationSingletoneFacade } from '../../core/App-facade'
 
-const cashFlowApp = new ApplicationFacadeSingletone(
+const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService()
 )
 
@@ -32,7 +30,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const { data: updatedTokenData, inProcess: tokenUpdatingInProcessStatus } =
         UseCheckUserToken(localStorage.getItem('userId'))
 
-    const [app] = useState<ApplicationFacadeSingletone>(cashFlowApp)
+    const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
     const [user, setUser] = useState<IPerson | null>(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <div className="flex-box flex-center vh vw">
@@ -174,7 +172,7 @@ function UseCheckUserToken(tokenString: string | null) {
 function UseMyApp() {
     console.log('use my app hook')
 
-    const [app, setApp] = useState<ApplicationFacadeSingletone>(cashFlowApp)
+    const [app, setApp] = useState<ApplicationSingletoneFacade>(cashFlowApp)
 
     useEffect(() => {}, [app])
 

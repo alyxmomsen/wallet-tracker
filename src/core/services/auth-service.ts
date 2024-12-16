@@ -3,7 +3,7 @@ import {
     TFetchResponse,
 } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
-import { IAuthUserResponseData } from '../ApplicationFacade'
+import { IAuthUserResponseData } from '../App-facade'
 
 export interface IAuthService {
     execute(userName: string, password: string): Promise<IAuthUserResponseData>
