@@ -1,3 +1,4 @@
+import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
@@ -11,19 +12,20 @@ import { ITask } from './Task'
 export interface IApplicationSingletoneFacade {
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
-    setUserLocally(user:IPerson): void
+    setUserLocally(user: IPerson): void
     createUserRemote(
         userName: string,
         password: string,
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
-    getUser(): void
+    getLocalUser(): void
     authUserAsync(
         userName: string,
         password: string,
         authService: IAuthService
     ): Promise<IAuthUserResponseData>
-    onUpdated(cb:()=> void):void
+    onAppUpdated(cb: () => void): void
+    onUserIsSet(cb:()=> void):void
 }
 
 export interface IResponseData<T> {
@@ -44,17 +46,24 @@ export interface IAuthUserResponseData extends ICreateUserResponseData {}
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
-    private updatingStatus: boolean;
+    private updatingStatus: boolean
     private personFactory: PersonFactory
     // private otherUsers: IPerson[];
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
     private localStorageManagementSerice: ILocalStorageManagementService
-    private serverConnector: IServerConnector;
-    private callbackPull: (() => void)[];
+    private eventServise: IEventService;
+    private serverConnector: IServerConnector
+    private callbackPull: (() => void)[]
 
-    onUpdated(cb: () => void): void {
+    onAppUpdated(cb: () => void): void {
         this.callbackPull.push(() => cb())
+    }
+
+    onUserIsSet(cb: () => void): void {
+        
+        // this.
+
     }
 
     async authUserAsync(
@@ -68,12 +77,26 @@ export class ApplicationSingletoneFacade
             this.localStorageManagementSerice.setAuthData(
                 response.payload.userId
             )
+
+            const userData = await this.serverConnector.getUserById(
+                response.payload.userId
+            )
+
+            if (userData.payload) {
+                const person = this.personFactory.create(
+                    response.payload.userId,
+                    userData.payload.userName,
+                    userData.payload.wallet
+                )
+
+                this.setUserLocally(person);
+            }
         }
 
         return response
     }
 
-    getUser(): IPerson | null {
+    getLocalUser(): IPerson | null {
         if (this.user === null) {
             return null
         }
@@ -89,14 +112,22 @@ export class ApplicationSingletoneFacade
         return createUserService.execute(userName, password)
     }
 
-    setUserLocally(user:IPerson): void {
-        this.user = user;
+    setUserLocally(user: IPerson): void {
+        this.user = user
     }
 
-    static Instance(localStorageService: ILocalStorageManagementService ,serverConnector:IServerConnector) {
+    static Instance(
+        localStorageService: ILocalStorageManagementService,
+        serverConnector: IServerConnector,
+        eventService:IEventService,
+    ) {
         if (ApplicationSingletoneFacade.instance === null) {
             ApplicationSingletoneFacade.instance =
-                new ApplicationSingletoneFacade(localStorageService ,serverConnector)
+                new ApplicationSingletoneFacade(
+                    localStorageService,
+                    serverConnector,
+                    eventService ,
+                )
         }
 
         console.log({ instance: ApplicationSingletoneFacade.instance })
@@ -105,18 +136,22 @@ export class ApplicationSingletoneFacade
 
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {}
 
-    update() {}
+    update() {
+
+    }
 
     /* private  */ constructor(
-        localStorageService: ILocalStorageManagementService ,
-        serverConnector: IServerConnector
+        localStorageService: ILocalStorageManagementService,
+        serverConnector: IServerConnector,
+        eventService:IEventService,
     ) {
-        // this.personRegistryLocal = new PersonRegistry()
-        this.callbackPull = [];
-        this.updatingStatus = false;
+        
+        this.eventServise = eventService;
+        this.callbackPull = []
+        this.updatingStatus = false
         this.personFactory = new PersonFactory()
         this.localStorageManagementSerice = localStorageService
-        this.serverConnector = serverConnector;
+        this.serverConnector = serverConnector
         // this.users = []
 
         this.user = null
@@ -126,24 +161,24 @@ export class ApplicationSingletoneFacade
         const authData = this.localStorageManagementSerice.getAuthData()
 
         if (authData) {
-            this.updatingStatus = true;
-            this.serverConnector.getUserById(authData).then(response => {
-
-                const { payload , status } = response;
+            this.updatingStatus = true
+            this.serverConnector.getUserById(authData).then((response) => {
+                const { payload, status } = response
 
                 if (payload) {
-                    
-                    const user = this.personFactory.create(authData, payload.userName, payload.wallet,);
-                    
-                    this.setUserLocally(user);
+                    const user = this.personFactory.create(
+                        authData,
+                        payload.userName,
+                        payload.wallet
+                    )
+
+                    this.setUserLocally(user)
                 }
 
-                this.callbackPull.forEach(cb => cb())
-                this.updatingStatus = false;
-            });
-
+                this.callbackPull.forEach((cb) => cb())
+                this.updatingStatus = false
+            })
         }
-
 
         // this.createUser()
     }

@@ -18,10 +18,10 @@ export class GetUserService implements IGetUserService {
             method: 'post',
         })
 
-        const data = await response.json() as TFetchResponse<TFetchUserData>
+        const data = (await response.json()) as TFetchResponse<TFetchUserData>
 
-        const { payload, status } = data;
-        
-        return data;
+        const { payload, status } = data
+
+        return data
     }
 }

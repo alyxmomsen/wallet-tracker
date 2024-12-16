@@ -10,10 +10,12 @@ import {
     IApplicationSingletoneFacade,
 } from '../../core/App-facade'
 import { ServerConnector } from '../../core/services/server-connector-service-facade'
+import { EventService } from '../../core/events/App-event'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
-    new LocalStorageManagementService(),
+    new LocalStorageManagementService() ,
     new ServerConnector() ,
+    new EventService() ,
 )
 
 export type TAppCtx = {
@@ -53,16 +55,13 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     )
 
     useEffect(() => {
-        
-        app.onUpdated(() => {
-            const user = app.getUser();
-            if (user === null) return 
-            setCurrentWindow(<PersonCardUI person={user} />);
+        app.onAppUpdated(() => {
+            const user = app.getLocalUser()
+            if (user === null) return
+            setCurrentWindow(<PersonCardUI person={user} />)
         })
 
-        console.log('app effect' , {app});
-
-        
+        console.log('app effect', { app })
     }, [app])
 
     return (

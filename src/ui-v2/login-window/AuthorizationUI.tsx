@@ -66,17 +66,9 @@ const AuthorizationUI = () => {
                         if (response.payload) {
                             setInProcess(false)
 
-                            setCurentWindow(
-                                <PersonCardUI
-                                    person={
-                                        new OrdinaryPerson(
-                                            response.payload.userId,
-                                            'Alex',
-                                            0
-                                        )
-                                    }
-                                />
-                            )
+                            // app.setUserLocally();
+
+                            setCurentWindow(<div>u aftorized</div>)
 
                             // response.payload.userId;
                         }
