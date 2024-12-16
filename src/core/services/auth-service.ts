@@ -17,6 +17,9 @@ export class AuthUserService implements IAuthService {
         const response = await fetch(ServerBaseURL + '/auth', {
             method: 'post',
             body: JSON.stringify({ userName, password }),
+            headers: {
+                'content-type': 'application/json',
+            },
         })
 
         const data =
@@ -24,7 +27,6 @@ export class AuthUserService implements IAuthService {
 
         const { payload, status } = data
 
-        alert()
         if (payload && status.code < 1) {
             // payload
             localStorage.setItem('userId', payload.userId)
@@ -39,6 +41,7 @@ export class AuthUserService implements IAuthService {
                 },
             }
         } else {
+            console.log({ payload, service: 'service' })
             return {
                 payload: payload ? { userId: payload.userId } : payload,
                 status: {

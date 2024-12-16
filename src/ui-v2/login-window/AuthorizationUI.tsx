@@ -7,7 +7,7 @@ import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { AuthUserService } from '../../core/services/auth-service'
 
 const AuthorizationUI = () => {
-    const { setUser, user, setCurentWindow, app } = UseAppContext()
+    const { setCurentWindow, app } = UseAppContext()
 
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -47,8 +47,8 @@ const AuthorizationUI = () => {
                             password,
                             new AuthUserService()
                         )
-
                         if (response.payload) {
+                            alert('check')
                             setCurentWindow(
                                 <PersonCardUI
                                     person={
