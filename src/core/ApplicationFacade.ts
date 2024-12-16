@@ -3,6 +3,7 @@ import { IPerson } from './person/Person'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
 import { IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
+import { ILocalStorageManagementService } from './services/local-storage-service'
 
 import { ITask } from './Task'
 
@@ -45,6 +46,7 @@ export class ApplicationSingletoneFacade
     // private otherUsers: IPerson[];
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
+    private localStorageManagementSerice: ILocalStorageManagementService
 
     async authUserAsync(
         userName: string,
@@ -74,10 +76,10 @@ export class ApplicationSingletoneFacade
         this.personFactory.create('', 0)
     }
 
-    static Instance() {
+    static Instance(localStorageService: ILocalStorageManagementService) {
         if (ApplicationSingletoneFacade.instance === null) {
             ApplicationSingletoneFacade.instance =
-                new ApplicationSingletoneFacade()
+                new ApplicationSingletoneFacade(localStorageService)
         }
 
         console.log({ instance: ApplicationSingletoneFacade.instance })
@@ -88,10 +90,12 @@ export class ApplicationSingletoneFacade
 
     update() {}
 
-    /* private  */ constructor() {
+    /* private  */ constructor(
+        localStorageService: ILocalStorageManagementService
+    ) {
         // this.personRegistryLocal = new PersonRegistry()
         this.personFactory = new PersonFactory()
-
+        this.localStorageManagementSerice = localStorageService
         // this.users = []
 
         this.user = null

@@ -8,8 +8,11 @@ import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import { convertToObject } from 'typescript'
+import { LocalStorageManagementService } from '../../core/services/local-storage-service'
 
-const cashFlowApp = new ApplicationFacadeSingletone()
+const cashFlowApp = new ApplicationFacadeSingletone(
+    new LocalStorageManagementService()
+)
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
