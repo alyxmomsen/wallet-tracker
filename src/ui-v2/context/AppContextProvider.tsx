@@ -5,10 +5,15 @@ import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import { LocalStorageManagementService } from '../../core/services/local-storage-service'
-import { ApplicationSingletoneFacade, IApplicationSingletoneFacade } from '../../core/App-facade'
+import {
+    ApplicationSingletoneFacade,
+    IApplicationSingletoneFacade,
+} from '../../core/App-facade'
+import { ServerConnector } from '../../core/services/server-connector-service-facade'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
-    new LocalStorageManagementService()
+    new LocalStorageManagementService(),
+    new ServerConnector() ,
 )
 
 export type TAppCtx = {
@@ -48,33 +53,17 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     )
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId')
-
-        if (userId === null) return
         
-        // app.
-        
-        const user = app.getUserData()
-
-        if (user === null) return
-        alert('check this stuff');
-
-        setCurrentWindow(<PersonCardUI person={user} />)
-
-        requestUserData(userId).then((data) => {
-            console.log({ data })
-
-            const { payload, status } = data
-
-            if (payload !== null) {
-                app.setUser()
-                const newUser = new OrdinaryPerson(userId, payload.userName, 0)
-
-                setUser(newUser)
-                setCurrentWindow(<PersonCardUI person={newUser} />)
-            }
+        app.onUpdated(() => {
+            const user = app.getUser();
+            if (user === null) return 
+            setCurrentWindow(<PersonCardUI person={user} />);
         })
-    }, [])
+
+        console.log('app effect' , {app});
+
+        
+    }, [app])
 
     return (
         <AppContext.Provider

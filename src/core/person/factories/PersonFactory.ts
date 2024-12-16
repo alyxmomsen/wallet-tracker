@@ -1,12 +1,10 @@
 import { OrdinaryPerson } from '../Person'
 
 export class PersonFactory {
-    create(name: string, walletInitValue: number /* , pass: string */) {
-        const newId = (
-            Date.now() + Math.floor(Math.random() * 1000)
-        ).toLocaleString()
+    create(id:string ,name: string, walletInitValue: number) {
+        
 
-        return new OrdinaryPerson('', name, walletInitValue)
+        return new OrdinaryPerson(id, name, walletInitValue)
     }
 
     constructor() {}

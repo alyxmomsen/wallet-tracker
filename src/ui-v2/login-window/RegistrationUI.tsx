@@ -49,7 +49,7 @@ const RegistrationUI = () => {
                     className="btn "
                     onClick={async () => {
                         setResponseMessage('requesting...')
-                        const response = await app.createUser(
+                        const response = await app.createUserRemote(
                             userName,
                             password,
                             new CreateUserService()
