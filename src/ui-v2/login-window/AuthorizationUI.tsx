@@ -57,23 +57,23 @@ const AuthorizationUI = () => {
                     onClick={async (e) => {
                         setInProcess(true)
                         setResponseMessage('in process...')
-                        const response = await app.authUserAsync(
+                        const person = await app.authUserAsync(
                             userName,
                             password,
                             new AuthUserService()
                         )
 
-                        if (response.payload) {
+                        if (person) {
                             setInProcess(false)
 
-                            // app.setUserLocally();
+                            // app.authUserAsync();
 
-                            setCurentWindow(<div>u aftorized</div>)
+                            setCurentWindow(<PersonCardUI person={person} />)
 
                             // response.payload.userId;
                         }
 
-                        setResponseMessage(response.status.details)
+                        setResponseMessage('bla bla')
                     }}
                     className="btn"
                 >

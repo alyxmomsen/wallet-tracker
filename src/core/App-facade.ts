@@ -23,7 +23,7 @@ export interface IApplicationSingletoneFacade {
         userName: string,
         password: string,
         authService: IAuthService
-    ): Promise<IAuthUserResponseData>
+    ): Promise<IPerson | null> 
     onAppUpdated(cb: () => void): void
     onUserIsSet(cb:()=> void):void
 }
@@ -70,7 +70,7 @@ export class ApplicationSingletoneFacade
         userName: string,
         password: string,
         authService: IAuthService
-    ): Promise<IAuthUserResponseData> {
+    ): Promise<IPerson | null> {
         const response = await authService.execute(userName, password)
 
         if (response.payload) {
@@ -90,10 +90,14 @@ export class ApplicationSingletoneFacade
                 )
 
                 this.setUserLocally(person);
+
+                console.log(this.user, 'tada');
+                
+                return person;
             }
         }
 
-        return response
+        return null;
     }
 
     getLocalUser(): IPerson | null {
