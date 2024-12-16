@@ -3,8 +3,7 @@ import { UseAppContext } from '../../context/UseAppContext'
 import PersonCardUI from '../../PersonCardUI'
 
 const CurrentPersonTabUI = () => {
-    const { loginedPerson: currentPerson, setCurentWindow: setCurPage } =
-        UseAppContext()
+    const { user: currentPerson, setCurentWindow: setCurPage } = UseAppContext()
 
     return (
         <button

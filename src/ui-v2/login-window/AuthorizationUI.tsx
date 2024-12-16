@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import { OrdinaryPerson } from '../../core/person/Person'
+import { TFetchAuthResponseData, TFetchResponse } from './RegistrationUI'
+import { requestUserData } from '../context/AppContextProvider'
+import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
+import { AuthUserService } from '../../core/services/auth-service'
 
 const AuthorizationUI = () => {
-    const { app, setLoginedPerson, update } = UseAppContext()
+    const { setUser, user, setCurentWindow, app } = UseAppContext()
 
-    const [username, setUsername] = useState('')
+    const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
-
-    // app.setUser()
 
     return (
         <div className="flex-box flex-dir-col bdr pdg-x3 flex-item">
@@ -22,7 +24,7 @@ const AuthorizationUI = () => {
                     }}
                     placeholder={'tape you first name'}
                     type="text"
-                    value={username}
+                    value={userName}
                 />
             </div>
             <div className="flex-box flex-jtf-btw">
@@ -40,17 +42,27 @@ const AuthorizationUI = () => {
             <div>
                 <button
                     onClick={async (e) => {
-                        const response = await authRequest(username, password)
-                            .catch((e) => {
-                                console.log({ e })
-                            })
-                            .finally()
+                        const response = await app.authUserAsync(
+                            userName,
+                            password,
+                            new AuthUserService()
+                        )
 
-                        const { username: name, userId: token } = response
+                        if (response.payload) {
+                            setCurentWindow(
+                                <PersonCardUI
+                                    person={
+                                        new OrdinaryPerson(
+                                            response.payload.userId,
+                                            'Alex',
+                                            0
+                                        )
+                                    }
+                                />
+                            )
 
-                        window.localStorage.setItem('userId', token)
-
-                        setLoginedPerson(new OrdinaryPerson(name, 0))
+                            // response.payload.userId;
+                        }
                     }}
                     className="btn"
                 >
@@ -63,19 +75,33 @@ const AuthorizationUI = () => {
 
 export default AuthorizationUI
 
-export async function authRequest(username: string, password: string) {
-    const response = await fetch('http://localhost:3030/auth', {
+type TFetchRequestInit = {
+    method: 'post'
+    body: string
+    headers: {
+        'Content-Type': 'Application/JSON'
+    }
+}
+
+type TFetchRequestBody = {
+    username: string
+    password: string
+}
+
+export async function requestAuthorization(username: string, password: string) {
+    const response = await fetch(ServerBaseURL + '/auth', {
         method: 'post',
         body: JSON.stringify({
             username,
             password,
-        }),
+        } as TFetchRequestBody),
         headers: {
             'Content-Type': 'Application/JSON',
         },
-    })
+    } as TFetchRequestInit)
 
-    const data = await response.json()
+    const data =
+        (await response.json()) as TFetchResponse<TFetchAuthResponseData>
 
     return data
 }

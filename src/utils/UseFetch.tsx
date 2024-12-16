@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { ServerBaseURL } from '../ui-v2/PersonCardUI'
 
 export const UseFetch = () => {
     const [data, setData] = useState<any>()
 
     const [fetchFn] = useState(() =>
-        fetch('http://localhost:3030')
+        fetch(ServerBaseURL)
             .then((response) => {
                 setData(response)
                 return 0

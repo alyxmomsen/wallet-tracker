@@ -2,7 +2,11 @@ import { UseAppContext } from '../context/UseAppContext'
 import PersonCardUI from '../PersonCardUI'
 
 const GoPersonButton = () => {
-    const { setCurentWindow, curentWindow, loginedPerson } = UseAppContext()
+    const {
+        setCurentWindow,
+        curentWindow,
+        user: loginedPerson,
+    } = UseAppContext()
 
     return (
         <div>

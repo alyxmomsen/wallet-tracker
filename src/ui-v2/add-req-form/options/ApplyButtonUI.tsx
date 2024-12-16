@@ -8,7 +8,7 @@ import {
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const ApplyButtonUI = () => {
-    const { loginedPerson: currentPerson, update } = UseAppContext()
+    const { user: currentPerson, update } = UseAppContext()
 
     const {
         title,
@@ -27,27 +27,25 @@ const ApplyButtonUI = () => {
                 className="btn"
                 onClick={() => {
                     if (currentPerson) {
-                        const newReq =
-                            direction === 'increment'
-                                ? new IncrementMoneyRequirementCommand(
-                                      value,
-                                      title,
-                                      description,
-                                      dateObj
-                                  )
-                                : new DecrementMoneyRequirementCommand(
-                                      value,
-                                      title,
-                                      description,
-                                      dateObj
-                                  )
-
-                        console.log({ newReq })
-
-                        currentPerson.addRequirementCommand(newReq)
-                        setIsRequirementAddedSuccessfully(true)
-                        setIsNewRequirementBeingWritten(false)
-                        update()
+                        // const newReq =
+                        //     direction === 'increment'
+                        //         ? new IncrementMoneyRequirementCommand(
+                        //               value,
+                        //               title,
+                        //               description,
+                        //               dateObj
+                        //           )
+                        //         : new DecrementMoneyRequirementCommand(
+                        //               value,
+                        //               title,
+                        //               description,
+                        //               dateObj
+                        //           )
+                        // console.log({ newReq })
+                        // currentPerson.addRequirementCommand(newReq)
+                        // setIsRequirementAddedSuccessfully(true)
+                        // setIsNewRequirementBeingWritten(false)
+                        // update()
                     }
                 }}
             >

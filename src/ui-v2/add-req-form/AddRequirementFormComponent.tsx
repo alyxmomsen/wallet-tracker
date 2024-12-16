@@ -21,7 +21,7 @@ const AddRequirementFormComponent = () => {
         optionalFields,
     } = UseDateFormContext()
 
-    const { setCurentWindow, loginedPerson } = UseAppContext()
+    const { setCurentWindow, user: loginedPerson } = UseAppContext()
 
     return (
         <div className="element-type--1 flex-box flex-dir-col gap">
@@ -69,7 +69,7 @@ export default AddRequirementFormComponent
 
 const ThankYouMessageUI = () => {
     const { setIsNewRequirementBeingWritten } = UseDateFormContext()
-    const { loginedPerson, setCurentWindow } = UseAppContext()
+    const { user: loginedPerson, setCurentWindow } = UseAppContext()
 
     const [logPersActReqCommands, setThat] = useState<IRequirementCommand[]>(
         loginedPerson ? loginedPerson.getActualRequirementCommands() : []

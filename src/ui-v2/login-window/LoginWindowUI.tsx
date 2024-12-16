@@ -30,15 +30,15 @@ const LoginWindowUI = () => {
     const [state, setState] = useState(false)
 
     const {
-        loginedPerson,
-        setLoginedPerson,
+        user: loginedPerson,
+        setUser: setLoginedPerson,
         setCurentWindow: setCurPage,
+        app,
     } = UseAppContext()
 
     return (
         <div>
             <h2>loggin window</h2>
-            {loginedPerson && <PersonCardUI person={loginedPerson} />}
             <div className="pdg">
                 <button
                     onClick={() => {

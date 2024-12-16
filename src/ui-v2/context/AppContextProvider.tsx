@@ -1,21 +1,20 @@
 import React, { createContext, useEffect, useState } from 'react'
 import {
-    ApplicationSingletoneFacade,
+    ApplicationSingletoneFacade as ApplicationFacadeSingletone,
     IApplicationSingletoneFacade,
 } from '../../core/ApplicationFacade'
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import PersonCardUI from '../PersonCardUI'
-import AuthorizationUI, { authRequest } from '../login-window/AuthorizationUI'
-import {
-    TFetchRegistrationResponse,
-    TFetchUserData,
-} from '../login-window/RegistrationUI'
+import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
+import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
+import { convertToObject } from 'typescript'
+
+const cashFlowApp = new ApplicationFacadeSingletone()
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
-    loginedPerson: IPerson | null
-    setLoginedPerson: (person: IPerson | null) => void
+    user: IPerson | null
+    setUser: (person: IPerson | null) => void
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
     update: () => void
@@ -24,18 +23,21 @@ export type TAppCtx = {
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
 
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
-    const [authChecking, setAuthChecking] = useState(false)
+    // const { app } = UseMyApp()
 
-    const [app] = useState<ApplicationSingletoneFacade>(
-        new ApplicationSingletoneFacade()
-    )
-    const [loginedPerson, setLoginedPerson] = useState<IPerson | null>(null)
-    const [curPage, setCurPage] = useState<JSX.Element>(
+    console.log('app_context_provider')
+
+    const { data: updatedTokenData, inProcess: tokenUpdatingInProcessStatus } =
+        UseCheckUserToken(localStorage.getItem('userId'))
+
+    const [app] = useState<ApplicationFacadeSingletone>(cashFlowApp)
+    const [user, setUser] = useState<IPerson | null>(null)
+    const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <div className="flex-box flex-center vh vw">
             <div className="flex-item">
                 <button
                     onClick={() => {
-                        setCurPage(<LoginWindowUI />)
+                        setCurrentWindow(<LoginWindowUI />)
                     }}
                     className="btn"
                 >
@@ -45,71 +47,41 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         </div>
     )
 
-    const [s, update] = useState(0)
-
-    useEffect(() => {
-        if (loginedPerson) {
-            setCurPage(<PersonCardUI person={loginedPerson} />)
-        } else {
-            setCurPage(<LoginWindowUI />)
-        }
-    }, [loginedPerson])
-
-    useEffect(() => {
-        if (authChecking) {
-            setCurPage(<div>auth...</div>)
-        }
-    }, [authChecking])
-
     useEffect(() => {
         const userId = localStorage.getItem('userId')
 
-        if (userId !== null) {
-            setAuthChecking(true)
+        if (userId === null) return
 
-            fetch('http://localhost:3030/get-user-protected', {
-                headers: {
-                    'x-auth': userId,
-                    'Content-Type': 'Application/json',
-                },
-                method: 'post',
-            })
-                .then((response) => {
-                    // console.log({response});
-                    return response.json() as Promise<
-                        TFetchRegistrationResponse<TFetchUserData>
-                    >
-                })
-                .then((data) => {
-                    const { payload, status } = data
+        const user = app.getUserData()
 
-                    if (status.code > 0) {
-                        setCurPage(<LoginWindowUI />)
-                    } else {
-                        if (payload) {
-                            setLoginedPerson(
-                                new OrdinaryPerson(payload.userName, 0)
-                            )
-                        }
-                    }
+        if (user === null) return
 
-                    console.log({
-                        payload,
-                        status,
-                    })
-                }) /* .catch(e => console.error(e)) */
-        }
+        setCurrentWindow(<PersonCardUI person={user} />)
+
+        requestUserData(userId).then((data) => {
+            console.log({ data })
+
+            const { payload, status } = data
+
+            if (payload !== null) {
+                app.setUser()
+                const newUser = new OrdinaryPerson(userId, payload.userName, 0)
+
+                setUser(newUser)
+                setCurrentWindow(<PersonCardUI person={newUser} />)
+            }
+        })
     }, [])
 
     return (
         <AppContext.Provider
             value={{
                 app,
-                loginedPerson,
-                setLoginedPerson,
-                curentWindow: curPage,
-                setCurentWindow: (elem: JSX.Element) => setCurPage(elem),
-                update: () => update((cur) => cur + 1),
+                user,
+                setUser,
+                curentWindow,
+                setCurentWindow: (elem: JSX.Element) => setCurrentWindow(elem),
+                update: () => {},
             }}
         >
             {children}
@@ -118,3 +90,90 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
 }
 
 export default AppContextProvider
+
+export async function requestUserData(
+    userId: string
+): Promise<TFetchResponse<TFetchUserData>> {
+    try {
+        const response = await fetch(ServerBaseURL + '/get-user-protected', {
+            headers: {
+                'x-auth': userId,
+                'Content-Type': 'Application/json',
+            },
+            method: 'post',
+        })
+
+        const data = (await response.json()) as TFetchResponse<TFetchUserData>
+
+        return data
+    } catch (e) {
+        return {
+            payload: null,
+            status: {
+                code: 1,
+                details: 'fetch error',
+            },
+        }
+    }
+}
+
+type TUseCheckUserTokenResponseData = {
+    status: {
+        code: number
+        details: 'token updated'
+    }
+    payload: {
+        token: string
+    } | null
+}
+
+function UseCheckUserToken(tokenString: string | null) {
+    const [token, setToken] = useState<string | null>(tokenString)
+
+    const [data, setData] = useState<TUseCheckUserTokenResponseData | null>(
+        null
+    )
+
+    const [inProcess, setInProcess] = useState(false)
+
+    useEffect(() => {
+        if (token) {
+            setInProcess(true)
+
+            fetch('http://localhost:3030/check-user-auth-protected-ep', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth': token,
+                },
+            })
+                .then((response) => {
+                    return response.json() as Promise<TUseCheckUserTokenResponseData>
+                })
+                .then((data) => {
+                    setData(data)
+                    setInProcess(false)
+                    console.log({ data })
+                })
+                .catch((e) => {
+                    alert({ e })
+                    setInProcess(false)
+                })
+                .finally(() => {})
+        }
+    }, [token])
+
+    return { data, inProcess }
+}
+
+function UseMyApp() {
+    console.log('use my app hook')
+
+    const [app, setApp] = useState<ApplicationFacadeSingletone>(cashFlowApp)
+
+    useEffect(() => {}, [app])
+
+    return {
+        app,
+    }
+}

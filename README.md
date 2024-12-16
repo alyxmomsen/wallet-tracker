@@ -15,6 +15,7 @@
     - [ ] useEffect
     - [ ] useMemo
 - [ ] custom css styles that is the "tailwind" principle alternative
+- [ ] interface inheritance
 
 issue:
 

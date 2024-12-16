@@ -22,6 +22,7 @@ export interface IPerson {
     addRequirementCommand(
         requirementCommand: IRequirementCommand
     ): IRequirementCommand | null
+    getRequirementCommandById(id: string): IRequirementCommand[]
     getActualRequirementCommands(): IRequirementCommand[]
     getAllReauirementCommands(): IRequirementCommand[]
     getExecutedRequirementCommands(): IRequirementCommand[]
@@ -36,14 +37,23 @@ export interface IPerson {
 
 export abstract class Person implements IPerson {
     // private password: string
+    protected id: string
     protected name: string
     protected wallet: IWallet
-    protected requirementCommands: IRequirementCommand[]
+    protected requirementCommandsPool: IRequirementCommand[]
     // protected hungerLevel: number;
     // protected tiredLevel: number;
     // protected sleepLevel: number;
     protected averageSpending: number
     protected status: IPersonStatusSystem
+
+    getRequirementCommandById(id: string): IRequirementCommand[] {
+        const requirements = this.requirementCommandsPool.filter((elem) => {
+            return elem.getId() === id
+        })
+
+        return requirements
+    }
 
     getPassword(): string {
         // return this.password
@@ -91,7 +101,13 @@ export abstract class Person implements IPerson {
     addRequirementCommand(
         requirementCommand: IRequirementCommand
     ): IRequirementCommand | null {
-        this.requirementCommands.push(requirementCommand)
+        for (const requirement of this.requirementCommandsPool) {
+            const id = requirement.getId()
+
+            requirementCommand.getId()
+        }
+
+        this.requirementCommandsPool.push(requirementCommand)
 
         return requirementCommand
     }
@@ -103,7 +119,7 @@ export abstract class Person implements IPerson {
     update() {}
 
     getActualRequirementCommands(): IRequirementCommand[] {
-        return this.requirementCommands.filter((requirementCommand) => {
+        return this.requirementCommandsPool.filter((requirementCommand) => {
             if (requirementCommand.checkIfExecuted()) {
                 return false
             }
@@ -127,31 +143,28 @@ export abstract class Person implements IPerson {
     }
 
     getAllReauirementCommands(): IRequirementCommand[] {
-        return this.requirementCommands
+        return this.requirementCommandsPool
     }
 
     getExecutedRequirementCommands(): IRequirementCommand[] {
-        return this.requirementCommands.filter((elem) => {
+        return this.requirementCommandsPool.filter((elem) => {
             return !elem.checkIfExecuted()
         })
     }
 
-    constructor(wallet: IWallet, name: string) {
+    constructor(id: string, wallet: IWallet, name: string) {
         this.wallet = wallet
         this.name = name
-        this.requirementCommands = []
+        this.requirementCommandsPool = []
         this.averageSpending = 700
         this.status = new GoingSleepStatus()
+        this.id = ''
     }
 }
 
 export class OrdinaryPerson extends Person {
-    constructor(
-        name: string,
-        walletInitValue: number
-        /* pass: string */
-    ) {
-        super(new Wallet(walletInitValue), name /* , pass */)
+    constructor(id: string, name: string, walletInitValue: number) {
+        super(id, new Wallet(walletInitValue), name)
     }
 }
 

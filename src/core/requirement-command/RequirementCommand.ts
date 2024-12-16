@@ -2,6 +2,7 @@ import { IPerson } from '../person/Person'
 
 export interface IRequirementCommand {
     execute(person: IPerson): boolean
+    getId(): string
     getDescription(): string
     getTitle(): string
     getValue(): number
@@ -12,6 +13,7 @@ export interface IRequirementCommand {
 }
 
 abstract class RequirementCommand implements IRequirementCommand {
+    protected id: string
     protected title: string
     protected value: number
     protected description: string
@@ -22,6 +24,10 @@ abstract class RequirementCommand implements IRequirementCommand {
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
+
+    getId(): string {
+        return this.id
+    }
 
     getTitle(): string {
         return this.title
@@ -48,12 +54,14 @@ abstract class RequirementCommand implements IRequirementCommand {
     }
 
     constructor(
+        id: string,
         value: number,
         title: string,
         description: string,
         date: number,
         transactionTypeCode: number
     ) {
+        this.id = id
         this.value = value
         this.description = description
         this.date = date
@@ -81,12 +89,13 @@ export class IncrementMoneyRequirementCommand extends RequirementCommand {
     }
 
     constructor(
+        id: string,
         value: number,
         title: string,
         description: string,
         date: number
     ) {
-        super(value, title, description, date, 0)
+        super(id, value, title, description, date, 0)
     }
 }
 
@@ -116,11 +125,12 @@ export class DecrementMoneyRequirementCommand extends RequirementCommand {
     }
 
     constructor(
+        id: string,
         value: number,
         title: string,
         description: string,
         date: number
     ) {
-        super(value, title, description, date, 1)
+        super(id, value, title, description, date, 1)
     }
 }

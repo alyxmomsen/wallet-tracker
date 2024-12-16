@@ -1,82 +1,120 @@
 import React, { useEffect, useState } from 'react'
 import { IPerson } from '../core/person/Person'
 import { UseAppContext } from './context/UseAppContext'
-import RequirementUI from './requirement-ui/RequirementUI'
 import AddRequirementForm from './add-req-form/AddRequirementFormWindow'
 import {
     AwakenStatusFactory,
     PersonStatusFactory,
     SlepStatusFactory,
 } from '../core/person/PersonStatus'
-import GoPersonButton from './shared/GoPersonButtonUI'
 import TrackComponentUI from './track-component-ui/TrackComponentUI'
 import LoginWindowUI from './login-window/LoginWindowUI'
 import {
     TFetchResponse,
     TFetchUserRequirementStats,
 } from './login-window/RegistrationUI'
-import { IncrementMoneyRequirementCommand } from '../core/requirement-command/RequirementCommand'
+import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
+
+// export const ServerBaseURL = 'http://94.241.139.88:3030';
+export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
+    console.log('person card ui')
     const {
         curentWindow: curPage,
         setCurentWindow,
         update,
-        setLoginedPerson,
+        setUser,
     } = UseAppContext()
-
-    let actualReqs = person.getActualRequirementCommands()
-    const exec = person.getExecutedRequirementCommands()
-
-    const [actReqs, setAR] = useState(actualReqs)
 
     const [updated, setUpdated] = useState(0)
 
     const [statusStarted, setStatusStarted] = useState(0)
 
+    const [requirements, setRequirements] = useState<
+        TFetchUserRequirementStats[]
+    >([])
+
     let reqanfrid = 0
 
     useEffect(() => {
+        console.log('person card init effect')
         const userId = localStorage.getItem('userId')
-
         if (userId === null) {
             alert('no token')
             setCurentWindow(<LoginWindowUI />)
             return
         }
 
-        // 'get-user-requirements-protected'
-        fetch('http://127.0.0.1:3030/get-user-requirements-protected', {
-            headers: {
-                // 'content-type': 'application/json',
-                'Content-Type': 'Application/json',
-                'x-auth': 'EuzPeu34vWVDJroLSzoB',
-            },
-            method: 'post',
-        })
-            .then((response) => {
-                return response.json() as Promise<
-                    TFetchResponse<TFetchUserRequirementStats[]>
-                >
-            })
-            .then((data) => {
-                console.log({ data })
+        fetchUserRequirements(userId).then((data) => {
+            if (data.payload === null) {
+                return
+            }
 
-                if (data.payload === null) {
+            const requirementFactory = new RequirementFactory()
+
+            data.payload.forEach((requirementsStatsItem) => {
+                // console.log('data payload' , person , data.payload);
+
+                const {
+                    id,
+                    value,
+                    title,
+                    date,
+                    description,
+                    isExecuted,
+                    transactionTypeCode,
+                } = requirementsStatsItem
+
+                if (person.getRequirementCommandById(id).length) {
                     return
                 }
 
-                data.payload.forEach((requirementsStatsItem) => {
-                    // person.addRequirementCommand();
+                const newRequirement = requirementFactory.create(
+                    id,
+                    value,
+                    title,
+                    description,
+                    date,
+                    transactionTypeCode
+                )
+
+                if (newRequirement) {
+                    console.log('add requirment')
+
+                    person.addRequirementCommand(newRequirement)
+                }
+            })
+
+            const actualRequirements = person
+                .getAllReauirementCommands()
+                .map((requirement) => {
+                    const isExecuted = requirement.checkIfExecuted()
+                    const description = requirement.getDescription()
+                    const title = requirement.getTitle()
+                    const transactionTypeCode =
+                        requirement.getTransactionTypeCode()
+                    const value = requirement.getValue()
+                    const date = requirement.getExecutionDate()
+                    const id = requirement.getId()
+
+                    const requiremntFilds: TFetchUserRequirementStats = {
+                        id,
+                        date,
+                        description,
+                        isExecuted,
+                        title,
+                        transactionTypeCode,
+                        value,
+                    }
+
+                    return requiremntFilds
                 })
 
-                // data.forEach(userRequirementStatsItem => {
-                //     console.log({elem: userRequirementStatsItem})
-                // });
-            })
-            .catch((e) => {
-                console.log({ e })
-            })
+            setRequirements(actualRequirements)
+        })
+
+        // 'get-user-requirements-protected'
     }, [])
 
     useEffect(() => {
@@ -134,7 +172,8 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     className="btn"
                     onClick={() => {
                         localStorage.removeItem('userId')
-                        setLoginedPerson(null)
+                        setUser(null)
+                        setCurentWindow(<LoginWindowUI />)
                     }}
                 >
                     log out
@@ -228,74 +267,68 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                         </div>
                     </div>
                     <div className="flex-box">
-                        {person
-                            .getActualRequirementCommands()
-                            .map((requirement, i) => {
-                                const execDate = requirement.getExecutionDate()
+                        {requirements.map((requirement, i) => {
+                            const execDate = requirement.date
 
-                                return (
-                                    <div
-                                        onClick={() => {
-                                            setCurentWindow(
-                                                <RequirementUI
-                                                    requirement={requirement}
-                                                    person={person}
-                                                    key={i}
-                                                />
-                                            )
-                                        }}
-                                        className={
-                                            'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                                            (requirement.checkIfExecuted()
-                                                ? ' requirement--executed'
-                                                : '')
-                                        }
-                                    >
-                                        <div className="flex-box flex-dir-col flex-center">
-                                            <div>
-                                                {' '}
-                                                == {requirement.getTitle()} =={' '}
-                                            </div>
-                                            {/* <div>
+                            return (
+                                <div
+                                    onClick={() => {
+                                        // setCurentWindow(
+                                        //     <RequirementUI
+                                        //         requirement={requirement}
+                                        //         person={person}
+                                        //         key={i}
+                                        //     />
+                                        // )
+                                    }}
+                                    className={
+                                        'bdr pdg btn  hover--parent flex-box flex-dir-col' +
+                                        (requirement.isExecuted
+                                            ? ' requirement--executed'
+                                            : '')
+                                    }
+                                >
+                                    <div className="flex-box flex-dir-col flex-center">
+                                        <div> == {requirement.title} == </div>
+                                        {/* <div>
                                                 = {requirement.getDescription()}{' '}
                                                 =
                                             </div> */}
-                                            <div className="flex-box">
-                                                <div className="value-color--txt flex-item">
-                                                    {
-                                                        [' ADD ', ' REMOVE '][
-                                                            requirement.getTransactionTypeCode()
-                                                        ]
-                                                    }
-                                                </div>
-                                                <div className="flex-item">
-                                                    :
-                                                </div>
-                                                <div className="value-color--txt flex-item">
-                                                    {requirement.getValue()}
-                                                </div>
+                                        <div className="flex-box">
+                                            <div className="value-color--txt flex-item">
+                                                {
+                                                    [' ADD ', ' REMOVE '][
+                                                        requirement
+                                                            .transactionTypeCode
+                                                    ]
+                                                }
                                             </div>
-                                            <div className="flex-box">
-                                                <div>{execDate}</div>
-                                                <div>{execDate}</div>
-                                                <div>{execDate}</div>
+                                            <div className="flex-item">:</div>
+                                            <div className="value-color--txt flex-item">
+                                                {requirement.value}
                                             </div>
                                         </div>
-                                        {!requirement.checkIfExecuted() ? (
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    requirement.execute(person)
-                                                    update()
-                                                }}
-                                                className="hover--child btn"
-                                            >
-                                                execute
-                                            </button>
-                                        ) : null}
+                                        <div className="flex-box">
+                                            <div>{execDate}</div>
+                                            <div>{execDate}</div>
+                                            <div>{execDate}</div>
+                                        </div>
                                     </div>
-                                )
-                            })}
+                                    {!requirement.isExecuted ? (
+                                        <button
+                                            // onClick={(e) => {
+                                            //     e.stopPropagation()
+                                            //     requirement.execute(person)
+                                            //     update()
+                                            // }}
+                                            className="hover--child btn"
+                                        >
+                                            execute
+                                        </button>
+                                    ) : null}
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
             </div>
@@ -304,3 +337,53 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 }
 
 export default PersonCardUI
+
+export async function checkUserAuth(userId: string) {
+    try {
+        const response = await fetch(
+            ServerBaseURL + '/get-user-requirements-protected',
+            {
+                headers: {
+                    // 'content-type': 'application/json',
+                    'Content-Type': 'Application/json',
+                    'x-auth': userId,
+                },
+                method: 'post',
+            }
+        )
+
+        return response.json() as Promise<
+            TFetchResponse<TFetchUserRequirementStats[]>
+        >
+    } catch (e) {}
+}
+
+export async function fetchUserRequirements(
+    userId: string
+): Promise<TFetchResponse<TFetchUserRequirementStats[]>> {
+    try {
+        const response = await fetch(
+            ServerBaseURL + '/get-user-requirements-protected',
+            {
+                headers: {
+                    // 'content-type': 'application/json',
+                    'Content-Type': 'Application/json',
+                    'x-auth': userId,
+                },
+                method: 'post',
+            }
+        )
+
+        return response.json() as Promise<
+            TFetchResponse<TFetchUserRequirementStats[]>
+        >
+    } catch (e) {
+        return {
+            payload: null,
+            status: {
+                code: 1,
+                details: 'fetch error',
+            },
+        }
+    }
+}

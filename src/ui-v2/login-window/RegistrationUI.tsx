@@ -1,28 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { ServerBaseURL } from '../PersonCardUI'
 import { UseAppContext } from '../context/UseAppContext'
-import { UseFetch } from '../../utils/UseFetch'
+import { CreateUserService } from '../../core/services/create-user-service'
 
 const RegistrationUI = () => {
+    const { app } = UseAppContext()
+
     const [password, setPassword] = useState<string>('')
-    const [username, setUserName] = useState<string>('')
-
-    const [isRequestStarted, setIsRequestStarted] = useState<boolean>(false)
-    const [responsedStatusDetails, setResponsedStatusDetails] = useState<
-        string | undefined
-    >(undefined)
-    const [statusCode, setStatusCode] = useState<number | undefined>(undefined)
-    const [isRequestDone, setIsRequestDone] = useState(false)
-    // const [] = useState();
-    // const [] = useState();
-
-    const { app, loginedPerson, update } = UseAppContext()
-
-    // const [ifSend , setIfSend] = useState(false);
+    const [userName, setUserName] = useState<string>('')
+    const [responseMessage, setResponseMessage] = useState('')
 
     useEffect(() => {}, [])
-    // useEffect(() => {} , []);
-    // useEffect(() => {} , []);
-    // useEffect(() => {} , []);
 
     return (
         <div className="bdr pdg flex-box flex-dir-col flex-item">
@@ -36,7 +24,7 @@ const RegistrationUI = () => {
                             setUserName(value)
                         }}
                         type="text"
-                        value={username}
+                        value={userName}
                         placeholder="username"
                     />
                 </div>
@@ -60,36 +48,26 @@ const RegistrationUI = () => {
                 <button
                     className="btn "
                     onClick={async () => {
-                        // setIfSend(true);
-                        setIsRequestStarted(true)
-                        setIsRequestDone(false)
-                        registrationRequest(username, password)
-                            .then((response) => {
-                                setIsRequestDone(true)
-                                console.log({ response })
-                                setResponsedStatusDetails(
-                                    response.status.details
-                                )
-                                setStatusCode(response.status.code)
-                            })
-                            .catch(() => {
-                                alert()
-                            })
-                            .finally()
+                        setResponseMessage('requesting...')
+                        const response = await app.createUser(
+                            userName,
+                            password,
+                            new CreateUserService()
+                        )
+
+                        const { payload, status } = response
+                        const responseStatusCode = status.code
+
+                        const userId = payload ? payload.userId : undefined
+
+                        setResponseMessage(status.details)
+                        console.log({ userId })
                     }}
                 >
                     registration
                 </button>
             </div>
-            <div>
-                {isRequestStarted ? (
-                    <div style={{ color: statusCode ? 'orange' : 'green' }}>
-                        {isRequestDone ? responsedStatusDetails : 'requesting'}
-                    </div>
-                ) : (
-                    ''
-                )}
-            </div>
+            <div>{responseMessage}</div>
         </div>
     )
 }
@@ -98,12 +76,13 @@ export default RegistrationUI
 
 export type TFetchUserData = {
     userName: string
-    // requirements
+    wallet: number
 }
 
 // export type TFetchUserRequirements
 
 export type TFetchUserRequirementStats = {
+    id: string
     title: string
     value: number
     description: string
@@ -112,16 +91,8 @@ export type TFetchUserRequirementStats = {
     transactionTypeCode: number
 }
 
-export type TFetchAuthorizationUserData = {
-    userId: number
-}
-
-export type TFetchRegistrationResponse<T> = {
-    status: {
-        code: number
-        details: string
-    }
-    payload: T | null
+export type TFetchAuthResponseData = {
+    userId: string
 }
 
 export type TFetchResponse<T> = {
@@ -129,18 +100,18 @@ export type TFetchResponse<T> = {
         code: number
         details: string
     }
-    payload: T
+    payload: T | null
 }
 
 async function registrationRequest(
     username: string,
     password: string
-): Promise<TFetchRegistrationResponse<TFetchAuthorizationUserData>> {
+): Promise<TFetchResponse<TFetchAuthResponseData>> {
     console.log({ username, password })
 
     console.log(JSON.stringify({ username, password }))
 
-    const response = await fetch('http://localhost:3030/registration', {
+    const response = await fetch(ServerBaseURL + '/registration', {
         method: 'post',
         body: JSON.stringify({
             username,
@@ -163,7 +134,7 @@ function UseRegistration(username: string, password: string) {
         'registration'
     )
 
-    fetch(`http://localhost:3030/${endPoint}`, {
+    fetch(ServerBaseURL + `/${endPoint}`, {
         method: 'post',
         headers: {
             'content-type': 'application/json',
@@ -173,10 +144,7 @@ function UseRegistration(username: string, password: string) {
             password: password,
         }),
     })
-        .then(
-            (response) =>
-                response.json() as Promise<TFetchRegistrationResponse<null>>
-        )
+        .then((response) => response.json() as Promise<TFetchResponse<null>>)
         .then((data) => {
             setStatusCode(data.status.code)
             setIsRequesting(false)

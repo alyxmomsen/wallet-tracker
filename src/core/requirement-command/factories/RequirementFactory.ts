@@ -1,19 +1,22 @@
 import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
+    IRequirementCommand,
 } from '../RequirementCommand'
 
-class RequirementFactory {
+export class RequirementFactory {
     create(
+        id: string,
         value: number,
         title: string,
         description: string,
         date: number,
         flowDirectionCode: number
-    ) {
+    ): IRequirementCommand | null {
         switch (flowDirectionCode) {
             case 0:
                 return new IncrementMoneyRequirementCommand(
+                    id,
                     value,
                     title,
                     description,
@@ -22,6 +25,7 @@ class RequirementFactory {
                 break
             case 1:
                 return new DecrementMoneyRequirementCommand(
+                    id,
                     value,
                     title,
                     description,
@@ -30,6 +34,7 @@ class RequirementFactory {
                 break
 
             default:
+                return null
                 break
         }
     }

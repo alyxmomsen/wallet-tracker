@@ -4,8 +4,8 @@ import LoginWindowUI from '../../login-window/LoginWindowUI'
 
 const LoginButtonTabUI = () => {
     const {
-        loginedPerson: currentPerson,
-        setLoginedPerson: setCurrentPerson,
+        user: currentPerson,
+        setUser: setCurrentPerson,
         setCurentWindow: setCurPage,
     } = UseAppContext()
     return (

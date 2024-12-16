@@ -1,55 +1,77 @@
-// import { PersonRegistry } from '../core-utils/core-utils'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
+import { IAuthService } from './services/auth-service'
+import { ICreateUserService } from './services/create-user-service'
 
 import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
-    addPerson(name: string, walletInitialValue: number, pass: string): string
-    getPersons(): IPerson[]
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUser(): void
+    createUser(
+        userName: string,
+        password: string,
+        createUserService: ICreateUserService
+    ): Promise<ICreateUserResponseData>
+    getUserData(): void
+    authUserAsync(
+        userName: string,
+        password: string,
+        authService: IAuthService
+    ): Promise<IAuthUserResponseData>
 }
+
+export interface IResponseData<T> {
+    payload: T | null
+    status: {
+        code: number
+        details: string
+    }
+}
+
+export interface ICreateUserResponseData
+    extends IResponseData<{
+        userId: string
+    }> {}
+
+export interface IAuthUserResponseData extends ICreateUserResponseData {}
 
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
     private personFactory: PersonFactory
-    // private personRegistryLocal: PersonRegistry // is temporary
-    private usersPool: IPerson[]
-    private currentPerson: IPerson | null
+    // private otherUsers: IPerson[];
+    private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
 
-    setUser(): void {
-        if (this.currentPerson) {
+    async authUserAsync(
+        userName: string,
+        password: string,
+        authService: IAuthService
+    ): Promise<IAuthUserResponseData> {
+        return authService.execute(userName, password)
+    }
+
+    getUserData(): IPerson | null {
+        if (this.user === null) {
+            return null
         }
 
-        this.personFactory.execute('', 0)
+        return this.user
     }
 
-    setCurrentPersonBy(username: string, pass: string) {
-        // const result = this.personRegistryLocal.getPersonsByUserNameAndPass(
-        //     username,
-        //     pass
-        // )
-
-        // if (result.length) {
-        //     this.currentPerson = result[0]
-
-        //     return true
-        // }
-
-        return false
+    async createUser(
+        userName: string,
+        password: string,
+        createUserService: ICreateUserService
+    ): Promise<ICreateUserResponseData> {
+        return createUserService.execute(userName, password)
     }
 
-    setCurrentPerson(person: IPerson) {
-        this.currentPerson = person
-    }
-
-    getPersonById() {
-        // this.k
+    setUser(): void {
+        this.personFactory.create('', 0)
     }
 
     static Instance() {
@@ -64,32 +86,16 @@ export class ApplicationSingletoneFacade
 
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {}
 
-    addPerson(name: string, walletInitialValue: number, pass: string): string {
-        const newPerson = this.personFactory.execute(
-            name,
-            walletInitialValue
-            // pass
-        )
-
-        // this.personRegistryLocal.addPerson(newPerson)
-
-        // this.persons.push(newPerson)
-
-        return 'string'
-    }
-
-    getPersons(): IPerson[] {
-        return []
-    }
-
     update() {}
 
     /* private  */ constructor() {
         // this.personRegistryLocal = new PersonRegistry()
         this.personFactory = new PersonFactory()
 
-        this.usersPool = []
+        // this.users = []
 
-        this.currentPerson = null
+        this.user = null
+
+        console.log('app constructor ran')
     }
 }
