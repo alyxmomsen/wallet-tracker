@@ -32,7 +32,6 @@ export interface IPerson {
     getWalletTrackForActualRequirements(): TWalletTrackValue[]
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
-    getPassword(): string
 }
 
 export abstract class Person implements IPerson {
@@ -53,11 +52,6 @@ export abstract class Person implements IPerson {
         })
 
         return requirements
-    }
-
-    getPassword(): string {
-        // return this.password
-        return ''
     }
 
     getStatusDescription(): string {

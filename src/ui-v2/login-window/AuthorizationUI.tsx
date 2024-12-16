@@ -65,12 +65,7 @@ const AuthorizationUI = () => {
 
                         if (person) {
                             setInProcess(false)
-
-                            // app.authUserAsync();
-
                             setCurentWindow(<PersonCardUI person={person} />)
-
-                            // response.payload.userId;
                         }
 
                         setResponseMessage('bla bla')

@@ -10,6 +10,7 @@ import { IServerConnector } from './services/server-connector-service-facade'
 import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
+    addRequirement(): void;
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -55,6 +56,10 @@ export class ApplicationSingletoneFacade
     private eventServise: IEventService;
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
+
+    addRequirement(): void {
+        // this.
+    }
 
     onAppUpdated(cb: () => void): void {
         this.callbackPull.push(() => cb())

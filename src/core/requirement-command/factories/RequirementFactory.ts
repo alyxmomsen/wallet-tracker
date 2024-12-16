@@ -4,7 +4,19 @@ import {
     IRequirementCommand,
 } from '../RequirementCommand'
 
-export class RequirementFactory {
+
+export interface IRequirementFactory {
+    create(
+        id: string,
+        value: number,
+        title: string,
+        description: string,
+        date: number,
+        flowDirectionCode: number
+    ): IRequirementCommand | null
+}
+
+export class RequirementFactory implements IRequirementFactory {
     create(
         id: string,
         value: number,
