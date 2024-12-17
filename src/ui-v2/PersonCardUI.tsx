@@ -31,9 +31,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     const [statusStarted, setStatusStarted] = useState(0)
 
-    const [requirements, setRequirements] = useState<
-        TUserRequirementStats[]
-    >([])
+    const [requirements, setRequirements] = useState<TUserRequirementStats[]>(
+        []
+    )
 
     let reqanfrid = 0
 

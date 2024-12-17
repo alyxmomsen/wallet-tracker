@@ -1,4 +1,4 @@
-import { TFetchUserRequirementStats } from "../../ui-v2/login-window/RegistrationUI"
+import { TFetchUserRequirementStats } from '../../ui-v2/login-window/RegistrationUI'
 
 export interface IUserData {
     userName: string
