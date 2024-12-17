@@ -15,7 +15,7 @@ export interface IRequirementManagementService {
             value,
         }: Omit<IRequirementFields, 'userId'>,
         authToken: string
-    ): Promise<void>
+    ): Promise<any>
 }
 
 export class RequrementManagementService
@@ -35,7 +35,7 @@ export class RequrementManagementService
             value,
         }: Omit<IRequirementFields, 'userId'>,
         authToken: string
-    ): Promise<void> {
+    ): Promise<any> {
         try {
             const body = {
                 cashFlowDirectionCode,

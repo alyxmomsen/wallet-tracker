@@ -11,7 +11,7 @@ import TrackComponentUI from './track-component-ui/TrackComponentUI'
 import LoginWindowUI from './login-window/LoginWindowUI'
 import {
     TFetchResponse,
-    TFetchUserRequirementStats as TUserRequirementStats,
+    TUserRequirementStats as TUserRequirementStats,
 } from './login-window/RegistrationUI'
 import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
 

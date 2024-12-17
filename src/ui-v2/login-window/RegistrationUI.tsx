@@ -81,7 +81,7 @@ export type TFetchUserData = {
 
 // export type TFetchUserRequirements
 
-export type TFetchUserRequirementStats = {
+export type TUserRequirementStats = {
     id: string
     title: string
     value: number

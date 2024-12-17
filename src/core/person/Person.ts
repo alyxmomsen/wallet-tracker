@@ -2,6 +2,8 @@ import { networkInterfaces } from 'os'
 import { IWallet, Wallet } from '../Wallet'
 import { IRequirementCommand } from '../requirement-command/RequirementCommand'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
+import { IUserData } from '../types/common'
+import { RequirementFactory } from '../requirement-command/factories/RequirementFactory'
 
 export type TStatus = {
     id: number
@@ -17,7 +19,6 @@ export type TWalletTrackValue = {
 }
 
 export interface IPerson {
-    update(): void
     getWalletBalance(): number
     addRequirementCommand(
         requirementCommand: IRequirementCommand
@@ -45,6 +46,39 @@ export abstract class Person implements IPerson {
     // protected sleepLevel: number;
     protected averageSpending: number
     protected status: IPersonStatusSystem
+
+    private observers: IPersonObserver[];
+
+    private updateRequirements(requirements: IRequirementCommand[]): void {}
+
+    private update(newData: IUserData): any {
+        this.name = newData.userName
+        this.wallet.setValue(newData.wallet);
+
+        const requirements = newData.requirements
+        const requirementFactory = new RequirementFactory()
+        const newRequirementPool:IRequirementCommand[] = []
+
+        requirements.forEach((requirement) => {
+            const newRequirement = requirementFactory.create(
+                requirement.id,
+                requirement.value,
+                requirement.title,
+                requirement.description,
+                requirement.date,
+                requirement.transactionTypeCode
+            )
+
+            if (newRequirement) {
+                newRequirementPool.push(newRequirement);
+            }
+        })
+
+        this.requirementCommandsPool = newRequirementPool;
+
+
+
+    }
 
     getRequirementCommandById(id: string): IRequirementCommand[] {
         const requirements = this.requirementCommandsPool.filter((elem) => {
@@ -110,8 +144,6 @@ export abstract class Person implements IPerson {
         return this.wallet.getBalance()
     }
 
-    update() {}
-
     getActualRequirementCommands(): IRequirementCommand[] {
         return this.requirementCommandsPool.filter((requirementCommand) => {
             if (requirementCommand.checkIfExecuted()) {
@@ -147,6 +179,7 @@ export abstract class Person implements IPerson {
     }
 
     constructor(id: string, wallet: IWallet, name: string) {
+        this.observers = [];
         this.wallet = wallet
         this.name = name
         this.requirementCommandsPool = []

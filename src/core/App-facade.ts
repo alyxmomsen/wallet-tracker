@@ -23,7 +23,7 @@ export interface IApplicationSingletoneFacade {
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId'>): void
+    }: Omit<IRequirementFields, 'userId'>): Promise<any>
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -71,18 +71,20 @@ export class ApplicationSingletoneFacade
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
 
-    addRequirement({
+    private updateRequirements(): void {}
+
+    async addRequirement({
         cashFlowDirectionCode,
         dateToExecute,
         description,
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId'>): void {
+    }: Omit<IRequirementFields, 'userId'>): Promise<any> {
         const authData = this.localStorageManagementSerice.getAuthData()
 
         if (authData) {
-            this.requriementManagementService.create(
+            const data = await this.requriementManagementService.create(
                 {
                     cashFlowDirectionCode,
                     dateToExecute,
