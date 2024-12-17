@@ -1,9 +1,5 @@
 import React from 'react'
 import { UseAppContext } from '../../context/UseAppContext'
-import {
-    DecrementMoneyRequirementCommand,
-    IncrementMoneyRequirementCommand,
-} from '../../../core/requirement-command/RequirementCommand'
 
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 

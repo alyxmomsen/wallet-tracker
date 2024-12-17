@@ -11,7 +11,7 @@ import TrackComponentUI from './track-component-ui/TrackComponentUI'
 import LoginWindowUI from './login-window/LoginWindowUI'
 import {
     TFetchResponse,
-    TFetchUserRequirementStats,
+    TFetchUserRequirementStats as TUserRequirementStats,
 } from './login-window/RegistrationUI'
 import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
 
@@ -32,7 +32,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     const [statusStarted, setStatusStarted] = useState(0)
 
     const [requirements, setRequirements] = useState<
-        TFetchUserRequirementStats[]
+        TUserRequirementStats[]
     >([])
 
     let reqanfrid = 0
@@ -98,7 +98,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     const date = requirement.getExecutionDate()
                     const id = requirement.getId()
 
-                    const requiremntFilds: TFetchUserRequirementStats = {
+                    const requiremntFilds: TUserRequirementStats = {
                         id,
                         date,
                         description,
@@ -353,14 +353,14 @@ export async function checkUserAuth(userId: string) {
         )
 
         return response.json() as Promise<
-            TFetchResponse<TFetchUserRequirementStats[]>
+            TFetchResponse<TUserRequirementStats[]>
         >
     } catch (e) {}
 }
 
 export async function fetchUserRequirements(
     userId: string
-): Promise<TFetchResponse<TFetchUserRequirementStats[]>> {
+): Promise<TFetchResponse<TUserRequirementStats[]>> {
     try {
         const response = await fetch(
             ServerBaseURL + '/get-user-requirements-protected',
@@ -375,7 +375,7 @@ export async function fetchUserRequirements(
         )
 
         return response.json() as Promise<
-            TFetchResponse<TFetchUserRequirementStats[]>
+            TFetchResponse<TUserRequirementStats[]>
         >
     } catch (e) {
         return {

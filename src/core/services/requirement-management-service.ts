@@ -1,6 +1,8 @@
+import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
 import { IRequirementFactory } from '../requirement-command/factories/RequirementFactory'
 import { IRequirementFields } from '../requirement-command/interfaces'
+import { IUserData } from '../types/common'
 
 export interface IRequirementManagementService {
     create(
@@ -62,7 +64,12 @@ export class RequrementManagementService
                     method: 'post',
                 }
             )
-            const data = await response.json()
+            const data = await response.json() as TFetchResponse<{
+                userName: string
+                wallet: number
+                id: string
+                requirements: IUserData[]
+            }>
             console.log('requrement data response', data)
         } catch (e) {
             console.error(e)
