@@ -4,6 +4,7 @@ import { IRequirementCommand } from '../requirement-command/RequirementCommand'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
 import { IUserData } from '../types/common'
 import { RequirementFactory } from '../requirement-command/factories/RequirementFactory'
+import { IPersonObserver, PersonObserver } from './observers/person-observer'
 
 export type TStatus = {
     id: number
@@ -33,6 +34,7 @@ export interface IPerson {
     getWalletTrackForActualRequirements(): TWalletTrackValue[]
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
+    onUpdate(cb: () => any): any
 }
 
 export abstract class Person implements IPerson {
@@ -46,38 +48,36 @@ export abstract class Person implements IPerson {
     // protected sleepLevel: number;
     protected averageSpending: number
     protected status: IPersonStatusSystem
-
-    private observers: IPersonObserver[];
+    private onUpdateObserver: IPersonObserver
 
     private updateRequirements(requirements: IRequirementCommand[]): void {}
 
     private update(newData: IUserData): any {
         this.name = newData.userName
-        this.wallet.setValue(newData.wallet);
+        this.wallet.setValue(newData.wallet)
 
         const requirements = newData.requirements
         const requirementFactory = new RequirementFactory()
-        const newRequirementPool:IRequirementCommand[] = []
+        const newRequirementPool: IRequirementCommand[] = []
 
         requirements.forEach((requirement) => {
-            const newRequirement = requirementFactory.create(
-                requirement.id,
-                requirement.value,
-                requirement.title,
-                requirement.description,
-                requirement.date,
-                requirement.transactionTypeCode
-            )
+            const newRequirement = requirementFactory.create({
+                ...requirement,
+                flowDirectionCode: requirement.transactionTypeCode,
+            })
 
             if (newRequirement) {
-                newRequirementPool.push(newRequirement);
+                newRequirementPool.push(newRequirement)
             }
         })
 
-        this.requirementCommandsPool = newRequirementPool;
+        this.requirementCommandsPool = newRequirementPool
 
+        this.onUpdateObserver.execute()
+    }
 
-
+    onUpdate(cb: () => any): any {
+        this.onUpdateObserver.addObserveable(cb)
     }
 
     getRequirementCommandById(id: string): IRequirementCommand[] {
@@ -179,7 +179,7 @@ export abstract class Person implements IPerson {
     }
 
     constructor(id: string, wallet: IWallet, name: string) {
-        this.observers = [];
+        this.onUpdateObserver = new PersonObserver()
         this.wallet = wallet
         this.name = name
         this.requirementCommandsPool = []
