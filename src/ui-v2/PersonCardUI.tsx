@@ -70,14 +70,14 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     return
                 }
 
-                const newRequirement = requirementFactory.create(
+                const newRequirement = requirementFactory.create({
                     id,
                     value,
                     title,
                     description,
                     date,
-                    transactionTypeCode
-                )
+                    flowDirectionCode: transactionTypeCode,
+                })
 
                 if (newRequirement) {
                     console.log('add requirment')

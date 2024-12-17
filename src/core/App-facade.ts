@@ -1,3 +1,4 @@
+import { TUserRequirementStats } from '../ui-v2/login-window/RegistrationUI'
 import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
@@ -40,6 +41,7 @@ export interface IApplicationSingletoneFacade {
     ): Promise<IPerson | null>
     onAppUpdated(cb: () => void): void
     onUserIsSet(cb: () => void): void
+    onUserUpdated(cb: () => any): any
 }
 
 export interface IResponseData<T> {
@@ -70,8 +72,14 @@ export class ApplicationSingletoneFacade
     private requriementManagementService: IRequirementManagementService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
+    private userIsSetCallBackPull: ((user:IPerson) => any)[]
 
     private updateRequirements(): void {}
+
+    onUserUpdated(cb: () => any) {
+        // if(this.user)
+        // this.onUserIsSet(() => alert());
+    }
 
     async addRequirement({
         cashFlowDirectionCode,
@@ -95,6 +103,29 @@ export class ApplicationSingletoneFacade
                 },
                 authData
             )
+
+            if (data.payload) {
+                const newUser = this.personFactory.create(
+                    data.payload.id,
+                    data.payload.userName,
+                    data.payload.wallet
+                )
+
+                if (newUser) {
+                    data.payload.requirements.forEach((requirement) => {
+                        const newRequirement = new RequirementFactory().create({
+                            ...requirement,
+                            flowDirectionCode: requirement.transactionTypeCode,
+                        })
+
+                        if (newRequirement) {
+                            newUser.addRequirementCommand(newRequirement)
+                        }
+                    })
+
+                    this.setUserLocally(newUser)
+                }
+            }
         }
     }
 
@@ -102,8 +133,8 @@ export class ApplicationSingletoneFacade
         this.callbackPull.push(() => cb())
     }
 
-    onUserIsSet(cb: () => void): void {
-        // this.
+    onUserIsSet(cb: (user:IPerson) => void): any {
+        this.userIsSetCallBackPull.push(cb)
     }
 
     async authUserAsync(
@@ -158,6 +189,12 @@ export class ApplicationSingletoneFacade
 
     setUserLocally(user: IPerson): void {
         this.user = user
+
+        // ---------
+
+        this.userIsSetCallBackPull.forEach((callBack) => {
+            callBack(user)
+        })
     }
 
     static Instance(
@@ -187,6 +224,7 @@ export class ApplicationSingletoneFacade
         serverConnector: IServerConnector,
         eventService: IEventService
     ) {
+        this.userIsSetCallBackPull = []
         this.personFactory = new PersonFactory()
         this.requriementManagementService = new RequrementManagementService(
             new RequirementFactory()

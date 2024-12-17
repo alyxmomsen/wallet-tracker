@@ -5,25 +5,39 @@ import {
 } from '../RequirementCommand'
 
 export interface IRequirementFactory {
-    create(
-        id: string,
-        value: number,
-        title: string,
-        description: string,
-        date: number,
+    create({
+        id,
+        value,
+        title,
+        description,
+        date,
+        flowDirectionCode,
+    }: {
+        id: string
+        value: number
+        title: string
+        description: string
+        date: number
         flowDirectionCode: number
-    ): IRequirementCommand | null
+    }): IRequirementCommand | null
 }
 
 export class RequirementFactory implements IRequirementFactory {
-    create(
-        id: string,
-        value: number,
-        title: string,
-        description: string,
-        date: number,
+    create({
+        id,
+        value,
+        title,
+        description,
+        date,
+        flowDirectionCode,
+    }: {
+        id: string
+        value: number
+        title: string
+        description: string
+        date: number
         flowDirectionCode: number
-    ): IRequirementCommand | null {
+    }): IRequirementCommand | null {
         switch (flowDirectionCode) {
             case 0:
                 return new IncrementMoneyRequirementCommand(

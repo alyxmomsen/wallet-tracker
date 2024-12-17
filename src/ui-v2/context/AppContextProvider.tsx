@@ -24,6 +24,8 @@ export type TAppCtx = {
     setUser: (person: IPerson | null) => void
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
+    popUpWindow: JSX.Element | null
+    setPopUpWindow:(elem:JSX.Element) => any
     update: () => void
 }
 
@@ -36,7 +38,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
 
     const { data: updatedTokenData, inProcess: tokenUpdatingInProcessStatus } =
         UseCheckUserToken(localStorage.getItem('userId'))
-
+    const [popUp, setPopUp] = useState<JSX.Element | null>(null);
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
     const [user, setUser] = useState<IPerson | null>(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
@@ -61,6 +63,28 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             setCurrentWindow(<PersonCardUI person={user} />)
         })
 
+        app.onUserIsSet((user: IPerson) => {
+
+            
+
+            let timeOutId = setTimeout(() => setPopUp(null) , 3000);
+            setPopUp(<div onMouseLeave={() => {
+                timeOutId = setTimeout(() => setPopUp(null) , 3000);
+            }} onMouseEnter={() => {
+                clearTimeout(timeOutId);
+                
+            }} className='modal--notyf pdg flex-box flex-dir-col'>
+                <div>PERSON IS UPDATED</div>
+                <div><button onClick={() => {
+                    setCurrentWindow(<PersonCardUI person={user} />);
+                }} className='btn'>Go Person</button></div>
+                <div><button className='btn' onClick={() => {
+                    setPopUp(null);
+                }}>X</button></div>
+            </div>);
+            // setCurrentWindow(<PersonCardUI person={user} />)
+        })
+
         console.log('app effect', { app })
     }, [app])
 
@@ -72,10 +96,14 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 setUser,
                 curentWindow,
                 setCurentWindow: (elem: JSX.Element) => setCurrentWindow(elem),
-                update: () => {},
+                update: () => { },
+                popUpWindow: null,
+                setPopUpWindow:(elem:JSX.Element | null) => setPopUp(elem)
             }}
         >
+            <div>{popUp}</div>
             {children}
+            
         </AppContext.Provider>
     )
 }

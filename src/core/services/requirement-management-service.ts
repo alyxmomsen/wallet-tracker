@@ -15,7 +15,7 @@ export interface IRequirementManagementService {
             value,
         }: Omit<IRequirementFields, 'userId'>,
         authToken: string
-    ): Promise<any>
+    ): Promise<TFetchResponse<IUserData>>
 }
 
 export class RequrementManagementService
@@ -35,7 +35,7 @@ export class RequrementManagementService
             value,
         }: Omit<IRequirementFields, 'userId'>,
         authToken: string
-    ): Promise<any> {
+    ): Promise<TFetchResponse<IUserData>> {
         try {
             const body = {
                 cashFlowDirectionCode,
@@ -64,14 +64,18 @@ export class RequrementManagementService
                     method: 'post',
                 }
             )
-            const data = (await response.json()) as TFetchResponse<{
-                userName: string
-                wallet: number
-                id: string
-                requirements: IUserData[]
-            }>
+            const data = (await response.json()) as TFetchResponse<IUserData>
+
+            return data
             console.log('requrement data response', data)
         } catch (e) {
+            return {
+                payload: null,
+                status: {
+                    code: 343,
+                    details: 'bad mood',
+                },
+            }
             console.error(e)
         }
 
