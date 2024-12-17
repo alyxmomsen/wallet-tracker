@@ -10,9 +10,8 @@ export interface IRequirementManagementService {
             description,
             isExecuted,
             title,
-            userId,
             value,
-        }: IRequirementFields,
+        }: Omit<IRequirementFields, 'userId'>,
         authToken: string
     ): Promise<void>
 }
@@ -31,30 +30,32 @@ export class RequrementManagementService
             description,
             isExecuted,
             title,
-            userId,
             value,
-        }: IRequirementFields,
+        }: Omit<IRequirementFields, 'userId'>,
         authToken: string
     ): Promise<void> {
-        const response = await fetch(
-            ServerBaseURL + '/add-requirement-protected-ep',
-            {
-                headers: {
-                    'content-type': 'application/json',
-                    'x-auth': authToken,
-                },
-                body: JSON.stringify({
-                    cashFlowDirectionCode,
-                    dateToExecute,
-                    description,
-                    isExecuted,
-                    title,
-                    userId,
-                    value,
-                }),
-                method: 'post',
-            }
-        )
+        try {
+            const response = await fetch(
+                ServerBaseURL + '/add-user-requirements-protected',
+                {
+                    headers: {
+                        'content-type': 'application/json',
+                        'x-auth': authToken,
+                    },
+                    body: JSON.stringify({
+                        cashFlowDirectionCode,
+                        dateToExecute,
+                        description,
+                        isExecuted,
+                        title,
+                        value,
+                    }),
+                    method: 'post',
+                }
+            )
+            const data = await response.json()
+            console.log('requrement data response', data)
+        } catch (e) {}
 
         // this.requirementFactory.create('' ,);
     }

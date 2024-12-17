@@ -23,7 +23,7 @@ export interface IApplicationSingletoneFacade {
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields , 'userId'>): void
+    }: Omit<IRequirementFields, 'userId'>): void
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -78,7 +78,7 @@ export class ApplicationSingletoneFacade
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields , 'userId'>): void {
+    }: Omit<IRequirementFields, 'userId'>): void {
         const authData = this.localStorageManagementSerice.getAuthData()
 
         if (authData) {
@@ -89,7 +89,6 @@ export class ApplicationSingletoneFacade
                     description,
                     isExecuted,
                     title,
-                    userId: authData,
                     value,
                 },
                 authData
