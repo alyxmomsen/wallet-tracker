@@ -35,6 +35,15 @@ export class RequrementManagementService
         authToken: string
     ): Promise<void> {
         try {
+            const body = {
+                cashFlowDirectionCode,
+                dateToExecute,
+                description,
+                isExecuted,
+                title,
+                value,
+            }
+
             const response = await fetch(
                 ServerBaseURL + '/add-user-requirements-protected',
                 {
@@ -55,7 +64,9 @@ export class RequrementManagementService
             )
             const data = await response.json()
             console.log('requrement data response', data)
-        } catch (e) {}
+        } catch (e) {
+            console.error(e)
+        }
 
         // this.requirementFactory.create('' ,);
     }
