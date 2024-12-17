@@ -13,9 +13,9 @@ import { ServerConnector } from '../../core/services/server-connector-service-fa
 import { EventService } from '../../core/events/App-event'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
-    new LocalStorageManagementService() ,
-    new ServerConnector() ,
-    new EventService() ,
+    new LocalStorageManagementService(),
+    new ServerConnector(),
+    new EventService()
 )
 
 export type TAppCtx = {

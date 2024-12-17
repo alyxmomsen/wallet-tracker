@@ -4,7 +4,6 @@ import {
     IRequirementCommand,
 } from '../RequirementCommand'
 
-
 export interface IRequirementFactory {
     create(
         id: string,

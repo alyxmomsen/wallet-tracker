@@ -8,16 +8,23 @@ import {
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const ApplyButtonUI = () => {
-    const { user: currentPerson , app } = UseAppContext()
+    const { user: currentPerson, app } = UseAppContext()
 
-    const {  } = UseDateFormContext();
+    const {description , title , value , dateObj:dateToExecute , direction:cashFlowDirectionCode ,  } = UseDateFormContext()
 
     return (
         <div className="flex-box">
             <button
                 className="btn"
                 onClick={() => {
-                    
+                    app.addRequirement({
+                        cashFlowDirectionCode:cashFlowDirectionCode === 'increment' ? 0 : 1,
+                        dateToExecute,
+                        description,
+                        isExecuted:false,
+                        title, 
+                        value
+                    })
                 }}
             >
                 Apply

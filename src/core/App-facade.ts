@@ -1,16 +1,29 @@
 import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
+import { RequirementFactory } from './requirement-command/factories/RequirementFactory'
+import { IRequirementFields } from './requirement-command/interfaces'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
 import { IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
 import { ILocalStorageManagementService } from './services/local-storage-service'
+import {
+    IRequirementManagementService,
+    RequrementManagementService,
+} from './services/requirement-management-service'
 import { IServerConnector } from './services/server-connector-service-facade'
 
 import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
-    addRequirement(): void;
+    addRequirement({
+        cashFlowDirectionCode,
+        dateToExecute,
+        description,
+        isExecuted,
+        title,
+        value,
+    }: Omit<IRequirementFields , 'userId'>): void
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -24,9 +37,9 @@ export interface IApplicationSingletoneFacade {
         userName: string,
         password: string,
         authService: IAuthService
-    ): Promise<IPerson | null> 
+    ): Promise<IPerson | null>
     onAppUpdated(cb: () => void): void
-    onUserIsSet(cb:()=> void):void
+    onUserIsSet(cb: () => void): void
 }
 
 export interface IResponseData<T> {
@@ -53,12 +66,35 @@ export class ApplicationSingletoneFacade
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
     private localStorageManagementSerice: ILocalStorageManagementService
-    private eventServise: IEventService;
+    private eventServise: IEventService
+    private requriementManagementService: IRequirementManagementService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
 
-    addRequirement(): void {
-        // this.
+    addRequirement({
+        cashFlowDirectionCode,
+        dateToExecute,
+        description,
+        isExecuted,
+        title,
+        value,
+    }: Omit<IRequirementFields , 'userId'>): void {
+        const authData = this.localStorageManagementSerice.getAuthData()
+
+        if (authData) {
+            this.requriementManagementService.create(
+                {
+                    cashFlowDirectionCode,
+                    dateToExecute,
+                    description,
+                    isExecuted,
+                    title,
+                    userId: authData,
+                    value,
+                },
+                authData
+            )
+        }
     }
 
     onAppUpdated(cb: () => void): void {
@@ -66,9 +102,7 @@ export class ApplicationSingletoneFacade
     }
 
     onUserIsSet(cb: () => void): void {
-        
         // this.
-
     }
 
     async authUserAsync(
@@ -94,15 +128,15 @@ export class ApplicationSingletoneFacade
                     userData.payload.wallet
                 )
 
-                this.setUserLocally(person);
+                this.setUserLocally(person)
 
-                console.log(this.user, 'tada');
-                
-                return person;
+                console.log(this.user, 'tada')
+
+                return person
             }
         }
 
-        return null;
+        return null
     }
 
     getLocalUser(): IPerson | null {
@@ -128,14 +162,14 @@ export class ApplicationSingletoneFacade
     static Instance(
         localStorageService: ILocalStorageManagementService,
         serverConnector: IServerConnector,
-        eventService:IEventService,
+        eventService: IEventService
     ) {
         if (ApplicationSingletoneFacade.instance === null) {
             ApplicationSingletoneFacade.instance =
                 new ApplicationSingletoneFacade(
                     localStorageService,
                     serverConnector,
-                    eventService ,
+                    eventService
                 )
         }
 
@@ -145,20 +179,21 @@ export class ApplicationSingletoneFacade
 
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {}
 
-    update() {
-
-    }
+    update() {}
 
     /* private  */ constructor(
         localStorageService: ILocalStorageManagementService,
         serverConnector: IServerConnector,
-        eventService:IEventService,
+        eventService: IEventService
     ) {
-        
-        this.eventServise = eventService;
+        this.personFactory = new PersonFactory()
+        this.requriementManagementService = new RequrementManagementService(
+            new RequirementFactory()
+        )
+
+        this.eventServise = eventService
         this.callbackPull = []
         this.updatingStatus = false
-        this.personFactory = new PersonFactory()
         this.localStorageManagementSerice = localStorageService
         this.serverConnector = serverConnector
         // this.users = []
