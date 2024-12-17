@@ -15,8 +15,9 @@ import {
 } from './login-window/RegistrationUI'
 import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
 
-// export const ServerBaseURL = 'http://94.241.139.88:3030';
-export const ServerBaseURL = 'http://127.0.0.1:3030'
+// http://94.241.139.88:3000/
+export const ServerBaseURL = 'http://94.241.139.88:3030';
+// export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     console.log('person card ui')
