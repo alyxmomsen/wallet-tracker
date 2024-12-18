@@ -72,7 +72,7 @@ export class ApplicationSingletoneFacade
     private requriementManagementService: IRequirementManagementService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
-    private userIsSetCallBackPull: ((user:IPerson) => any)[]
+    private userIsSetCallBackPull: ((user: IPerson) => any)[]
 
     private updateRequirements(): void {}
 
@@ -133,7 +133,7 @@ export class ApplicationSingletoneFacade
         this.callbackPull.push(() => cb())
     }
 
-    onUserIsSet(cb: (user:IPerson) => void): any {
+    onUserIsSet(cb: (user: IPerson) => void): any {
         this.userIsSetCallBackPull.push(cb)
     }
 
