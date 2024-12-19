@@ -5,7 +5,6 @@ import { TFetchAuthResponseData, TFetchResponse } from './RegistrationUI'
 import { requestUserData } from '../context/AppContextProvider'
 import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
 import { AuthUserService } from '../../core/services/auth-service'
-import { compose } from 'redux'
 
 const AuthorizationUI = () => {
     const { setCurentWindow, app } = UseAppContext()
