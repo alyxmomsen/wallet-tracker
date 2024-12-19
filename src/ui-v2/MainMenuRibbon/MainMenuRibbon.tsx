@@ -10,7 +10,7 @@ import LoginButtonTabUI from './tabs/LoginButtonTabUI'
 
 const MainMenuRibbon = () => {
     const {
-        user: currentPerson,
+        loginedPerson: currentPerson,
         setUser: setCurrentPerson,
         setCurentWindow: setCurPage,
     } = UseAppContext()

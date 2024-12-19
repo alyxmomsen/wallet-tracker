@@ -5,7 +5,7 @@ const GoPersonButton = () => {
     const {
         setCurentWindow,
         curentWindow,
-        user: loginedPerson,
+        loginedPerson: loginedPerson,
     } = UseAppContext()
 
     return (

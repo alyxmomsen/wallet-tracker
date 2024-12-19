@@ -13,7 +13,7 @@ const RegistrationUI = () => {
     useEffect(() => {}, [])
 
     return (
-        <div className="bdr pdg flex-box flex-dir-col flex-item">
+        <div className="bdr pdg-x3 flex-box flex-dir-col flex-item">
             <h2>Registration</h2>
             <div className="flex-box">
                 <div>username</div>

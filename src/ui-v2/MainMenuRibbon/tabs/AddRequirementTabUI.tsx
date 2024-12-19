@@ -4,7 +4,7 @@ import AddRequirementForm from '../../add-req-form/AddRequirementFormWindow'
 
 const AddRequirementTabUI = () => {
     const {
-        user: currentPerson,
+        loginedPerson: currentPerson,
         setUser: setCurrentPerson,
         setCurentWindow: setCurPage,
     } = UseAppContext()

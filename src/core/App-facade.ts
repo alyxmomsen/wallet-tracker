@@ -81,7 +81,7 @@ export class ApplicationSingletoneFacade
 
     onUserUpdated(cb: () => any) {
         // if(this.user)
-        // this.onUserIsSet(() => alert());
+        // this.onUserIsSet(() =>
     }
 
     async addRequirement({
@@ -260,7 +260,7 @@ export class ApplicationSingletoneFacade
                     }
 
                     p.requirements.forEach((elem) => {
-                        // alert();
+                        //
                     })
 
                     const reqFactory = new RequirementFactory()
@@ -281,10 +281,6 @@ export class ApplicationSingletoneFacade
                     })
 
                     this.setUserLocally(newUser)
-
-                    console.log('set user constructor', {
-                        userlocally: newUser,
-                    })
                 }
 
                 this.callbackPull.forEach((cb) => cb())

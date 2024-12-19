@@ -13,6 +13,7 @@ import { ServerConnector } from '../../core/services/server-connector-service-fa
 import { EventService } from '../../core/events/App-event'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import OnAuthorizedPopUp from '../pop-up-windows/OnAuthorizedPopUp'
+import { UseAppContext } from './UseAppContext'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
@@ -22,7 +23,7 @@ const cashFlowApp = new ApplicationSingletoneFacade(
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
-    user: IPerson | null
+    loginedPerson: IPerson | null
     setUser: (person: IPerson | null) => void
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
@@ -40,20 +41,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         UseCheckUserToken(localStorage.getItem('userId'))
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
-    const [user, setUser] = useState<IPerson | null>(null)
+    const [loginedUser, setLoginedUser] = useState<IPerson | null>(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
-        <div className="flex-box flex-center vh vw">
-            <div className="flex-item">
-                <button
-                    onClick={() => {
-                        setCurrentWindow(<LoginWindowUI />)
-                    }}
-                    className="btn"
-                >
-                    {'Login, please'.toUpperCase()}
-                </button>
-            </div>
-        </div>
+        <StartWindow />
     )
     let timeOutId: NodeJS.Timeout | null = null
 
@@ -71,7 +61,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 clearTimeout(timeOutId)
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
-
+            setLoginedUser(user)
             setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
 
@@ -86,8 +76,8 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         <AppContext.Provider
             value={{
                 app,
-                user,
-                setUser,
+                loginedPerson: loginedUser,
+                setUser: setLoginedUser,
                 curentWindow,
                 setCurentWindow: (elem: JSX.Element) => setCurrentWindow(elem),
                 update: () => {},
@@ -185,4 +175,41 @@ function UseMyApp() {
     return {
         app,
     }
+}
+
+export function StartWindow(): JSX.Element {
+    const { setCurentWindow, loginedPerson } = UseAppContext()
+
+    return (
+        <div className="flex-box flex-center vh vw">
+            <div className="flex-item">
+                <button
+                    onClick={() => {
+                        setCurentWindow(<LoginWindowUI />)
+                    }}
+                    className="btn"
+                >
+                    {'Login / Auth'.toUpperCase()}
+                </button>
+            </div>
+            {loginedPerson && (
+                <div className="flex-item">
+                    <button
+                        style={{
+                            backgroundColor: '#aeae41',
+                            borderColor: '#aeae41',
+                        }}
+                        onClick={() => {
+                            setCurentWindow(
+                                <PersonCardUI person={loginedPerson} />
+                            )
+                        }}
+                        className="btn"
+                    >
+                        {`go to person card`}
+                    </button>
+                </div>
+            )}
+        </div>
+    )
 }

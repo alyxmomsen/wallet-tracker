@@ -30,7 +30,7 @@ const LoginWindowUI = () => {
     const [state, setState] = useState(false)
 
     const {
-        user: loginedPerson,
+        loginedPerson,
         setUser: setLoginedPerson,
         setCurentWindow: setCurPage,
         app,
@@ -39,15 +39,28 @@ const LoginWindowUI = () => {
     return (
         <div>
             <h2>loggin window</h2>
-            <div className="pdg">
-                <button
-                    onClick={() => {
-                        setState((state) => !state)
-                    }}
-                    className="btn"
-                >
-                    swap
-                </button>
+
+            <div className="pdg flex-box">
+                <div>
+                    <button
+                        onClick={() => {
+                            setState((state) => !state)
+                        }}
+                        className="btn"
+                    >
+                        swap
+                    </button>
+                </div>
+                {loginedPerson && (
+                    <div>
+                        <button
+                            style={{ backgroundColor: 'orange' }}
+                            className="btn"
+                        >
+                            go to user card
+                        </button>
+                    </div>
+                )}
             </div>
             {state ? <AuthorizationUI /> : <RegistrationUI />}
         </div>
