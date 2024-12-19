@@ -66,7 +66,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         })
 
         app.onUserIsUnset(() => {
-            alert()
+            setPopUp(<div>hello world</div>)
         })
 
         return () => {

@@ -11,7 +11,7 @@ import {
 } from './requirement-command/factories/RequirementFactory'
 import { IRequirementFields } from './requirement-command/interfaces'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
-import { IAuthService } from './services/auth-service'
+import { AuthUserService, IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
 import { ILocalStorageManagementService } from './services/local-storage-service'
 import {
@@ -34,7 +34,7 @@ export interface IApplicationSingletoneFacade {
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
-    unsetUser(): any
+    // unsetUser(): any
     createUserRemote(
         userName: string,
         password: string,
@@ -46,6 +46,8 @@ export interface IApplicationSingletoneFacade {
         password: string,
         authService: IAuthService
     ): Promise<IPerson | null>
+    userLogin(userName: string, password: string): Promise<IPerson |null>
+    userLogout(): any
     onAppUpdated(cb: () => void): void
     onUserIsSet(cb: () => void): void
     onUserUpdated(cb: () => any): any
@@ -69,15 +71,16 @@ export interface IAuthUserResponseData extends ICreateUserResponseData {}
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
+    private localStorageManagementSerice: ILocalStorageManagementService
+    private requriementManagementService: IRequirementManagementService
+    private authUserService: IAuthService
     private updatingStatus: boolean
     private personFactory: PersonFactory
     private requirementFactory: IRequirementFactory
     // private otherUsers: IPerson[];
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
-    private localStorageManagementSerice: ILocalStorageManagementService
     private eventServise: IEventService
-    private requriementManagementService: IRequirementManagementService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
     private userIsSetCallBackPull: ((user: IPerson) => any)[]
@@ -85,7 +88,7 @@ export class ApplicationSingletoneFacade
 
     private updateRequirements(): void {}
 
-    unsetUser() {
+    private unsetUser(): void {
         this.localStorageManagementSerice.unsetAuthData()
 
         this.user = null
@@ -95,12 +98,26 @@ export class ApplicationSingletoneFacade
         })
     }
 
-    onUserIsUnset(cb: () => any) {}
+    async userLogin(userName: string, password: string): Promise<IPerson |null> {
+        const person = await this.authUserAsync(
+            userName,
+            password,
+            this.authUserService
+        )
 
-    onUserUpdated(cb: () => any) {
-        // if(this.user)
-        // this.onUserIsSet(() =>
+        return person;
     }
+
+    userLogout() {
+        this.unsetUser()
+        return true
+    }
+
+    onUserIsUnset(cb: () => any) {
+        this.userUnsetCallBackPull.push(cb)
+    }
+
+    onUserUpdated(cb: () => any) {}
 
     async addRequirement({
         cashFlowDirectionCode,
@@ -268,6 +285,7 @@ export class ApplicationSingletoneFacade
         this.requriementManagementService = new RequrementManagementService(
             new RequirementFactory()
         )
+        this.authUserService = new AuthUserService()
 
         this.eventServise = eventService
         this.callbackPull = []

@@ -48,14 +48,24 @@ const LoginWindowUI = () => {
                         }}
                         className="btn"
                     >
-                        swap
+                        {'Go to ' + (state ? 'registration' : 'authorization')}
                     </button>
                 </div>
-                {loginedPerson && (
+                {app.getLocalUser() && (
                     <div>
                         <button
                             style={{ backgroundColor: 'orange' }}
                             className="btn"
+                            onClick={() => {
+                                const user = app.getLocalUser();
+
+                                if (user) {
+                                    
+                                    setCurPage(
+                                        <PersonCardUI person={user} />
+                                    )
+                                }
+                            }}
                         >
                             go to user card
                         </button>

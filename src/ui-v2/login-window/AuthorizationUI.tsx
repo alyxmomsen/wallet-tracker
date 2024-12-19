@@ -12,6 +12,7 @@ const AuthorizationUI = () => {
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
+    const [messageColor , setMessageColor] = useState<string>('');
     const [inProcess, setInProcess] = useState(false)
     const [responseMessage, setResponseMessage] = useState('')
 
@@ -21,7 +22,7 @@ const AuthorizationUI = () => {
             {responseMessage.length ? (
                 <div
                     className="pdg"
-                    style={{ backgroundColor: 'orange', color: 'whitesmoke' }}
+                    style={{ backgroundColor: messageColor, color: 'whitesmoke' }}
                 >
                     {responseMessage}
                 </div>
@@ -57,19 +58,23 @@ const AuthorizationUI = () => {
                     onClick={async (e) => {
                         setInProcess(true)
                         setResponseMessage('in process...')
-                        const person = await app.authUserAsync(
-                            userName,
-                            password,
-                            new AuthUserService()
-                        )
+                        setMessageColor('grey')
 
-                        if (person) {
-                            // app.setUserLocally(person);
+                        /* ----------------------------- */
 
+                        await app.userLogin(userName, password).then(person => {
+
+                            if (!person) {
+                                setMessageColor('red');
+                                return setResponseMessage('fail')
+                            }
+                            
+                            setResponseMessage('user authorized')
+                            setMessageColor('green');
+
+                        }).finally(() => {
                             setInProcess(false)
-                        }
-
-                        setResponseMessage('bla bla')
+                        })
                     }}
                     className="btn"
                 >
@@ -80,7 +85,7 @@ const AuthorizationUI = () => {
     )
 }
 
-// 
+//
 
 export default AuthorizationUI
 

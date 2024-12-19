@@ -20,8 +20,8 @@ import { application } from 'express'
 import { IRequirementCommand } from '../core/requirement-command/RequirementCommand'
 
 // http://94.241.139.88:3000/
-export const ServerBaseURL = 'http://94.241.139.88:3030'
-// export const ServerBaseURL = 'http://127.0.0.1:3030'
+// export const ServerBaseURL = 'http://94.241.139.88:3030'
+export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const {
@@ -41,20 +41,14 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     let reqanfrid = 0
 
-    console.log(
-        'requirements check 1',
-        requirements,
-        person,
-        person.getAllReauirementCommands().length
-    )
-
     useEffect(() => {
         const user = app.getLocalUser()
 
         if (user) {
             setUser(user)
-
             setRequirements(user.getAllReauirementCommands())
+        } else {
+            setCurentWindow(<LoginWindowUI />)
         }
     }, [])
 
@@ -111,9 +105,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <button
                     className="btn"
                     onClick={() => {
-                        app.unsetUser()
-
-                        setCurentWindow(<LoginWindowUI />)
+                        if (app.userLogout()) setCurentWindow(<LoginWindowUI />)
                     }}
                 >
                     log out
