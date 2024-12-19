@@ -1,6 +1,7 @@
 export interface IPopUpService {
     push(elem: IPopUpElement): any
     getElems(): JSX.Element[]
+    onUpdated(cb: () => void): void
 }
 
 export interface IPopUpElement {
@@ -20,6 +21,7 @@ export class PopUpElement {
     }
     terminate(cb: () => void): void {
         this.ifTerminated = true
+        cb()
     }
 
     constructor(elem: () => JSX.Element) {
@@ -30,13 +32,19 @@ export class PopUpElement {
 
 export class PopUpService implements IPopUpService {
     private popUpPool: IPopUpElement[]
+    private onUpdatedCB: (() => void) | undefined
 
     push(elem: IPopUpElement): any {
         this.popUpPool.push(elem)
+        this.update()
     }
 
     private update() {
+        // alert('update');
         this.popUpPool = this.popUpPool.filter((elem) => !elem.isTerminated())
+        if (this.onUpdatedCB) {
+            this.onUpdatedCB()
+        }
     }
 
     getElems(): JSX.Element[] {
@@ -53,7 +61,12 @@ export class PopUpService implements IPopUpService {
         })
     }
 
+    onUpdated(cb: () => void): void {
+        this.onUpdatedCB = cb
+    }
+
     constructor() {
         this.popUpPool = []
+        this.onUpdatedCB = undefined
     }
 }

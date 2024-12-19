@@ -5,6 +5,7 @@ import PersonCardUI from '../PersonCardUI'
 import { PersonFactory } from '../../core/person/factories/PersonFactory'
 import AuthorizationUI from './AuthorizationUI'
 import RegistrationUI from './RegistrationUI'
+import { PopUpElement } from '../services/PopUpServise'
 
 class NavigationElementFactory {
     protected links: NavigationElementFactory[]
@@ -34,6 +35,7 @@ const LoginWindowUI = () => {
         setUser: setLoginedPerson,
         setCurentWindow: setCurPage,
         app,
+        popUpService,
     } = UseAppContext()
 
     return (
@@ -70,6 +72,25 @@ const LoginWindowUI = () => {
                 )}
             </div>
             {state ? <AuthorizationUI /> : <RegistrationUI />}
+            {
+                <div
+                    onClick={() =>
+                        popUpService.push(
+                            new PopUpElement(() => (
+                                <div
+                                    className="pdg btn"
+                                    style={{
+                                        backgroundColor: 'black',
+                                        color: 'whitesmoke',
+                                    }}
+                                >
+                                    NOTIFICATION (CLICK ME)
+                                </div>
+                            ))
+                        )
+                    }
+                >{`click me`}</div>
+            }
         </div>
     )
 }

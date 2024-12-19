@@ -15,12 +15,19 @@ import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import OnAuthorizedPopUp from '../pop-up-windows/OnAuthorizedPopUp'
 import { UseAppContext } from './UseAppContext'
 import PopUpFrame from '../pop-up-windows/PopUpFrame'
+import {
+    IPopUpService,
+    PopUpElement,
+    PopUpService,
+} from '../services/PopUpServise'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
     new ServerConnector(),
     new EventService()
 )
+
+const popUpService = new PopUpService()
 
 export interface IPopUpItem {
     exec(): JSX.Element
@@ -48,6 +55,7 @@ export type TAppCtx = {
     setPopUpWindow: (elem: JSX.Element | null) => any
     update: () => void
     popUpItems: Map<number, PopUpItem>
+    popUpService: IPopUpService
 }
 
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
@@ -65,6 +73,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     )
     const [popUpItems, setPopUpItems] = useState<Map<number, PopUpItem>>(
         new Map()
+    )
+
+    const [popUpPool, setPopUpPool] = useState<JSX.Element[]>(
+        popUpService.getElems()
     )
 
     let timeOutId: NodeJS.Timeout | null = null
@@ -91,6 +103,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             setPopUp(<div>hello world</div>)
         })
 
+        // popUpService.push(new PopUpElement(() => <div>hello world</div>));
+
+        popUpService.onUpdated(() => setPopUpPool(popUpService.getElems()))
+
         return () => {
             if (timeOutId) {
                 clearTimeout(timeOutId)
@@ -110,19 +126,33 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 popUpWindow: null,
                 setPopUpWindow: (elem: JSX.Element | null) => setPopUp(elem),
                 popUpItems,
+                popUpService,
             }}
         >
             {children}
             <div>{popUp}</div>
-            <PopUpFrame>
-                <div>
-                    {Array.from(popUpItems.entries()).map((elem) => {
-                        const [key, popUpElem] = elem
-
-                        return popUpElem.exec()
-                    })}
-                </div>
-            </PopUpFrame>
+            {popUpPool.length && (
+                <PopUpFrame>
+                    <>
+                        {popUpPool}
+                        <div>
+                            <button
+                                onClick={() =>
+                                    popUpService.push(
+                                        new PopUpElement(() => (
+                                            <div className="btn bdg">
+                                                hello guy , click me, please
+                                            </div>
+                                        ))
+                                    )
+                                }
+                            >
+                                push
+                            </button>
+                        </div>
+                    </>
+                </PopUpFrame>
+            )}
         </AppContext.Provider>
     )
 }
