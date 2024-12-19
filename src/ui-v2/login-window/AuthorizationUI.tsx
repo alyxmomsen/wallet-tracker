@@ -12,7 +12,7 @@ const AuthorizationUI = () => {
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const [messageColor , setMessageColor] = useState<string>('');
+    const [messageColor, setMessageColor] = useState<string>('')
     const [inProcess, setInProcess] = useState(false)
     const [responseMessage, setResponseMessage] = useState('')
 
@@ -22,7 +22,10 @@ const AuthorizationUI = () => {
             {responseMessage.length ? (
                 <div
                     className="pdg"
-                    style={{ backgroundColor: messageColor, color: 'whitesmoke' }}
+                    style={{
+                        backgroundColor: messageColor,
+                        color: 'whitesmoke',
+                    }}
                 >
                     {responseMessage}
                 </div>
@@ -62,19 +65,20 @@ const AuthorizationUI = () => {
 
                         /* ----------------------------- */
 
-                        await app.userLogin(userName, password).then(person => {
+                        await app
+                            .userLogin(userName, password)
+                            .then((person) => {
+                                if (!person) {
+                                    setMessageColor('red')
+                                    return setResponseMessage('fail')
+                                }
 
-                            if (!person) {
-                                setMessageColor('red');
-                                return setResponseMessage('fail')
-                            }
-                            
-                            setResponseMessage('user authorized')
-                            setMessageColor('green');
-
-                        }).finally(() => {
-                            setInProcess(false)
-                        })
+                                setResponseMessage('user authorized')
+                                setMessageColor('green')
+                            })
+                            .finally(() => {
+                                setInProcess(false)
+                            })
                     }}
                     className="btn"
                 >

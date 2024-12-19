@@ -46,7 +46,7 @@ export interface IApplicationSingletoneFacade {
         password: string,
         authService: IAuthService
     ): Promise<IPerson | null>
-    userLogin(userName: string, password: string): Promise<IPerson |null>
+    userLogin(userName: string, password: string): Promise<IPerson | null>
     userLogout(): any
     onAppUpdated(cb: () => void): void
     onUserIsSet(cb: () => void): void
@@ -98,14 +98,17 @@ export class ApplicationSingletoneFacade
         })
     }
 
-    async userLogin(userName: string, password: string): Promise<IPerson |null> {
+    async userLogin(
+        userName: string,
+        password: string
+    ): Promise<IPerson | null> {
         const person = await this.authUserAsync(
             userName,
             password,
             this.authUserService
         )
 
-        return person;
+        return person
     }
 
     userLogout() {

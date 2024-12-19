@@ -14,12 +14,29 @@ import { EventService } from '../../core/events/App-event'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import OnAuthorizedPopUp from '../pop-up-windows/OnAuthorizedPopUp'
 import { UseAppContext } from './UseAppContext'
+import PopUpFrame from '../pop-up-windows/PopUpFrame'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
     new ServerConnector(),
     new EventService()
 )
+
+export interface IPopUpItem {
+    exec(): JSX.Element
+}
+
+export class PopUpItem implements IPopUpItem {
+    private elem: () => JSX.Element
+
+    exec(): JSX.Element {
+        return this.elem()
+    }
+
+    constructor(elem: () => JSX.Element) {
+        this.elem = elem
+    }
+}
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
@@ -30,6 +47,7 @@ export type TAppCtx = {
     popUpWindow: JSX.Element | null
     setPopUpWindow: (elem: JSX.Element | null) => any
     update: () => void
+    popUpItems: Map<number, PopUpItem>
 }
 
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
@@ -45,6 +63,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <StartWindow />
     )
+    const [popUpItems, setPopUpItems] = useState<Map<number, PopUpItem>>(
+        new Map()
+    )
+
     let timeOutId: NodeJS.Timeout | null = null
 
     useEffect(() => {
@@ -87,10 +109,20 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 update: () => {},
                 popUpWindow: null,
                 setPopUpWindow: (elem: JSX.Element | null) => setPopUp(elem),
+                popUpItems,
             }}
         >
-            <div>{popUp}</div>
             {children}
+            <div>{popUp}</div>
+            <PopUpFrame>
+                <div>
+                    {Array.from(popUpItems.entries()).map((elem) => {
+                        const [key, popUpElem] = elem
+
+                        return popUpElem.exec()
+                    })}
+                </div>
+            </PopUpFrame>
         </AppContext.Provider>
     )
 }

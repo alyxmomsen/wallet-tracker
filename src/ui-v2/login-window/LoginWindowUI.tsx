@@ -57,13 +57,10 @@ const LoginWindowUI = () => {
                             style={{ backgroundColor: 'orange' }}
                             className="btn"
                             onClick={() => {
-                                const user = app.getLocalUser();
+                                const user = app.getLocalUser()
 
                                 if (user) {
-                                    
-                                    setCurPage(
-                                        <PersonCardUI person={user} />
-                                    )
+                                    setCurPage(<PersonCardUI person={user} />)
                                 }
                             }}
                         >
