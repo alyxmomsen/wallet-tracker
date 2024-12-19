@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 
 import PersonCardUI from '../PersonCardUI'
-import { PersonFactory } from '../../core/person/factories/PersonFactory'
 import AuthorizationUI from './AuthorizationUI'
 import RegistrationUI from './RegistrationUI'
 import { PopUpElement } from '../services/PopUpServise'
