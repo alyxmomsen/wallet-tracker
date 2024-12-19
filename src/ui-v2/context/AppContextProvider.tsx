@@ -88,7 +88,6 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             if (user === null) return
             // setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
             // setCurrentWindow(<PersonCardUI person={user} />)
-
         })
 
         app.onUserIsSet((user: IPerson) => {
@@ -97,7 +96,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
             setLoginedUser(user)
-            popUpService.addNotification(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />);
+            popUpService.addNotification(
+                <PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />
+            )
             // setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
 
