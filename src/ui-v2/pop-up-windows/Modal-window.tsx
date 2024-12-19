@@ -20,9 +20,9 @@ const PersonIsUpdatedPopUpWindow = ({
                     clearTimeout(timeoutId)
                 }
             }}
-            className="modal--notyf pdg "
+            className="modal--notyf__elem pdg  "
         >
-            <div className="flex-box flex-dir-col modal--notyf__elem">
+            <div className="flex-box flex-dir-col ">
                 <div>PERSON IS UPDATED</div>
                 <div className="flex-box">
                     <div>

@@ -74,18 +74,16 @@ const LoginWindowUI = () => {
             {
                 <div
                     onClick={() =>
-                        popUpService.push(
-                            new PopUpElement(() => (
-                                <div
-                                    className="pdg btn"
-                                    style={{
-                                        backgroundColor: 'black',
-                                        color: 'whitesmoke',
-                                    }}
-                                >
-                                    NOTIFICATION (CLICK ME)
-                                </div>
-                            ))
+                        popUpService.addNotification(
+                            <div
+                                className="pdg btn"
+                                style={{
+                                    backgroundColor: 'black',
+                                    color: 'whitesmoke',
+                                }}
+                            >
+                                NOTIFICATION (CLICK ME)
+                            </div>
                         )
                     }
                 >{`click me`}</div>

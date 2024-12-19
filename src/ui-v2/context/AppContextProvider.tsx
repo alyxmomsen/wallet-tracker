@@ -86,8 +86,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             if (timeOutId) clearTimeout(timeOutId)
             const user = app.getLocalUser()
             if (user === null) return
-            setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
+            // setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
             // setCurrentWindow(<PersonCardUI person={user} />)
+
         })
 
         app.onUserIsSet((user: IPerson) => {
@@ -96,14 +97,13 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
             setLoginedUser(user)
-            setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
+            popUpService.addNotification(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />);
+            // setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
 
         app.onUserIsUnset(() => {
-            setPopUp(<div>hello world</div>)
+            // setPopUp(<div>hello world</div>)
         })
-
-        // popUpService.push(new PopUpElement(() => <div>hello world</div>));
 
         popUpService.onUpdated(() => setPopUpPool(popUpService.getElems()))
 
@@ -138,12 +138,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                         <div>
                             <button
                                 onClick={() =>
-                                    popUpService.push(
-                                        new PopUpElement(() => (
-                                            <div className="btn bdg">
-                                                hello guy , click me, please
-                                            </div>
-                                        ))
+                                    popUpService.addNotification(
+                                        <div className="btn bdg">
+                                            hello guy , click me, please
+                                        </div>
                                     )
                                 }
                             >
