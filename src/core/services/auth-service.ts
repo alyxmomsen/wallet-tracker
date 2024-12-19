@@ -41,7 +41,6 @@ export class AuthUserService implements IAuthService {
                 },
             }
         } else {
-            console.log({ payload, service: 'service' })
             return {
                 payload: payload ? { userId: payload.userId } : payload,
                 status: {

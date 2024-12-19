@@ -61,7 +61,6 @@ const RegistrationUI = () => {
                         const userId = payload ? payload.userId : undefined
 
                         setResponseMessage(status.details)
-                        console.log({ userId })
                     }}
                 >
                     registration
@@ -107,10 +106,6 @@ async function registrationRequest(
     username: string,
     password: string
 ): Promise<TFetchResponse<TFetchAuthResponseData>> {
-    console.log({ username, password })
-
-    console.log(JSON.stringify({ username, password }))
-
     const response = await fetch(ServerBaseURL + '/registration', {
         method: 'post',
         body: JSON.stringify({

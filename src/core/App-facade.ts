@@ -106,7 +106,6 @@ export class ApplicationSingletoneFacade
                 },
                 authData
             )
-            console.log(data.payload, 'add requirement check')
 
             if (data.payload) {
                 const newUser = this.personFactory.create(
@@ -152,6 +151,9 @@ export class ApplicationSingletoneFacade
                 response.payload.userId
             )
 
+            // если установка данных авторизации прошло успешно,
+            // запрашиваем пользователя у бэк энд сервера
+
             const userData = await this.serverConnector.getUserById(
                 response.payload.userId
             )
@@ -164,8 +166,6 @@ export class ApplicationSingletoneFacade
                 )
 
                 this.setUserLocally(person)
-
-                console.log(this.user, 'tada')
 
                 return person
             }
@@ -198,8 +198,6 @@ export class ApplicationSingletoneFacade
         this.userIsSetCallBackPull.forEach((callBack) => {
             callBack(user)
         })
-
-        console.log('set user')
     }
 
     static Instance(
@@ -216,7 +214,6 @@ export class ApplicationSingletoneFacade
                 )
         }
 
-        console.log({ instance: ApplicationSingletoneFacade.instance })
         return ApplicationSingletoneFacade.instance
     }
 
@@ -229,7 +226,6 @@ export class ApplicationSingletoneFacade
         serverConnector: IServerConnector,
         eventService: IEventService
     ) {
-        console.log('constructor check')
         this.userIsSetCallBackPull = []
         this.personFactory = new PersonFactory()
         this.requriementManagementService = new RequrementManagementService(
@@ -245,8 +241,6 @@ export class ApplicationSingletoneFacade
 
         this.user = null
 
-        console.log('app constructor ran')
-
         const authData = this.localStorageManagementSerice.getAuthData()
 
         if (authData) {
@@ -255,8 +249,6 @@ export class ApplicationSingletoneFacade
                 const { payload, status } = response
 
                 if (payload) {
-                    console.log('app constructor', payload)
-
                     const newUser: IPerson = this.personFactory.create(
                         authData,
                         payload.userName,
@@ -267,11 +259,8 @@ export class ApplicationSingletoneFacade
                         requirements: IRequirementFields[]
                     }
 
-                    console.log(payload, 'check the staff')
-
                     p.requirements.forEach((elem) => {
                         // alert();
-                        console.log({ elem, foobar: 'foobar' })
                     })
 
                     const reqFactory = new RequirementFactory()
@@ -286,8 +275,6 @@ export class ApplicationSingletoneFacade
                         const requirement = reqFactory.create({
                             ...req,
                         })
-
-                        console.log('requirement', requirement)
 
                         if (requirement)
                             newUser.addRequirementCommand(requirement)

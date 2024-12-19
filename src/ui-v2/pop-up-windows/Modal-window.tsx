@@ -13,12 +13,9 @@ const PersonIsUpdatedPopUpWindow = ({
     return (
         <div
             onMouseLeave={() => {
-                // console.log({timeOutId, details:'started'});
                 // timeOutId = setTimeout(() => setPopUp(null) , 3000);
             }}
             onMouseEnter={() => {
-                console.log({ timeoutId })
-
                 if (timeoutId) {
                     clearTimeout(timeoutId)
                 }

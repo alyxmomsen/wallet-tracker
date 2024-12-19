@@ -14,9 +14,7 @@ export const UseFetch = () => {
             .catch((e) => {
                 alert('Error')
             })
-            .finally(() => {
-                console.log('fetch end')
-            })
+            .finally(() => {})
     )
 
     useEffect(() => {}, [])

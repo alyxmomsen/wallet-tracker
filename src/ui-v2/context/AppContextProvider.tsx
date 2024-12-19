@@ -36,8 +36,6 @@ export const AppContext = createContext<TAppCtx | undefined>(undefined)
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     // const { app } = UseMyApp()
 
-    console.log('app_context_provider')
-
     const { data: updatedTokenData, inProcess: tokenUpdatingInProcessStatus } =
         UseCheckUserToken(localStorage.getItem('userId'))
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
@@ -73,11 +71,9 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 clearTimeout(timeOutId)
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
-            console.log({ timeOutId, details: 'started' })
+
             setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
-
-        console.log('app effect', { app })
 
         return () => {
             if (timeOutId) {
@@ -169,7 +165,6 @@ function UseCheckUserToken(tokenString: string | null) {
                 .then((data) => {
                     setData(data)
                     setInProcess(false)
-                    console.log({ data })
                 })
                 .catch((e) => {
                     alert({ e })
@@ -183,8 +178,6 @@ function UseCheckUserToken(tokenString: string | null) {
 }
 
 function UseMyApp() {
-    console.log('use my app hook')
-
     const [app, setApp] = useState<ApplicationSingletoneFacade>(cashFlowApp)
 
     useEffect(() => {}, [app])

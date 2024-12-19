@@ -52,13 +52,9 @@ const AddDateFormContextProvider = ({
         new OptionElement('DESK Creep SHon', () => <DescriptionOptionUI />),
     ])
 
-    useEffect(() => {
-        console.log({ direction })
-    }, [direction])
+    useEffect(() => {}, [direction])
 
-    useEffect(() => {
-        console.log({ dateObj })
-    }, [dateObj])
+    useEffect(() => {}, [dateObj])
 
     return (
         <DateContext.Provider

@@ -11,7 +11,7 @@ export class LocalStorageManagementService
     }
     getAuthData(): string | null {
         const value = window.localStorage.getItem('userId')
-        console.log('localstrorage data: ' + value)
+
         return value
     }
 }

@@ -21,7 +21,6 @@ import { IRequirementFields } from '../core/requirement-command/interfaces'
 export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
-    console.log('person card ui')
     const {
         curentWindow: curPage,
         setCurentWindow,
@@ -47,7 +46,6 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     )
 
     useEffect(() => {
-        console.log('person card init effect')
         const userId = localStorage.getItem('userId')
         if (userId === null) {
             alert('no token')
@@ -60,23 +58,15 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 return
             }
 
-            console.log('requirements check', data.payload)
-
             const requirementFactory = new RequirementFactory()
 
             data.payload.forEach((requirementsStatsItem) => {
-                // console.log('data payload' , person , data.payload);
-
                 if (person.getRequirementCommandById(userId).length === 0) {
-                    console.log('requirements check', 'length > 0')
-
                     const newRequirement = requirementFactory.create({
                         ...requirementsStatsItem,
                     })
 
                     if (newRequirement) {
-                        console.log('add requirment')
-
                         person.addRequirementCommand(newRequirement)
                     }
                 }
@@ -130,7 +120,6 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     if (updatedDiff >= 1000) {
                         setUpdated(now)
                         //
-                        console.log('time updated')
                     }
                 }
 

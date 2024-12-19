@@ -65,7 +65,6 @@ const AuthorizationUI = () => {
 
                         if (person) {
                             setInProcess(false)
-                            setCurentWindow(<PersonCardUI person={person} />)
                         }
 
                         setResponseMessage('bla bla')
