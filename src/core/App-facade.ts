@@ -1,4 +1,7 @@
-import { TUserRequirementStats } from '../ui-v2/login-window/RegistrationUI'
+import {
+    TFetchUserData,
+    TUserRequirementStats,
+} from '../ui-v2/login-window/RegistrationUI'
 import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
@@ -24,7 +27,7 @@ export interface IApplicationSingletoneFacade {
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId'>): Promise<any>
+    }: Omit<IRequirementFields, 'userId' | 'id'>): Promise<any>
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -33,7 +36,7 @@ export interface IApplicationSingletoneFacade {
         password: string,
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
-    getLocalUser(): void
+    getLocalUser(): IPerson | null
     authUserAsync(
         userName: string,
         password: string,
@@ -88,7 +91,7 @@ export class ApplicationSingletoneFacade
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId'>): Promise<any> {
+    }: Omit<IRequirementFields, 'userId' | 'id'>): Promise<any> {
         const authData = this.localStorageManagementSerice.getAuthData()
 
         if (authData) {
@@ -103,6 +106,7 @@ export class ApplicationSingletoneFacade
                 },
                 authData
             )
+            console.log(data.payload, 'add requirement check')
 
             if (data.payload) {
                 const newUser = this.personFactory.create(
@@ -115,7 +119,6 @@ export class ApplicationSingletoneFacade
                     data.payload.requirements.forEach((requirement) => {
                         const newRequirement = new RequirementFactory().create({
                             ...requirement,
-                            flowDirectionCode: requirement.transactionTypeCode,
                         })
 
                         if (newRequirement) {
@@ -130,7 +133,7 @@ export class ApplicationSingletoneFacade
     }
 
     onAppUpdated(cb: () => void): void {
-        this.callbackPull.push(() => cb())
+        this.callbackPull.push(cb)
     }
 
     onUserIsSet(cb: (user: IPerson) => void): any {
@@ -195,6 +198,8 @@ export class ApplicationSingletoneFacade
         this.userIsSetCallBackPull.forEach((callBack) => {
             callBack(user)
         })
+
+        console.log('set user')
     }
 
     static Instance(
@@ -224,6 +229,7 @@ export class ApplicationSingletoneFacade
         serverConnector: IServerConnector,
         eventService: IEventService
     ) {
+        console.log('constructor check')
         this.userIsSetCallBackPull = []
         this.personFactory = new PersonFactory()
         this.requriementManagementService = new RequrementManagementService(
@@ -249,13 +255,49 @@ export class ApplicationSingletoneFacade
                 const { payload, status } = response
 
                 if (payload) {
-                    const user = this.personFactory.create(
+                    console.log('app constructor', payload)
+
+                    const newUser: IPerson = this.personFactory.create(
                         authData,
                         payload.userName,
                         payload.wallet
                     )
 
-                    this.setUserLocally(user)
+                    const p = payload as TFetchUserData & {
+                        requirements: IRequirementFields[]
+                    }
+
+                    console.log(payload, 'check the staff')
+
+                    p.requirements.forEach((elem) => {
+                        // alert();
+                        console.log({ elem, foobar: 'foobar' })
+                    })
+
+                    const reqFactory = new RequirementFactory()
+
+                    console.log(
+                        'constructor requirements',
+                        p.requirements,
+                        payload
+                    )
+
+                    p.requirements.forEach((req) => {
+                        const requirement = reqFactory.create({
+                            ...req,
+                        })
+
+                        console.log('requirement', requirement)
+
+                        if (requirement)
+                            newUser.addRequirementCommand(requirement)
+                    })
+
+                    this.setUserLocally(newUser)
+
+                    console.log('set user constructor', {
+                        userlocally: newUser,
+                    })
                 }
 
                 this.callbackPull.forEach((cb) => cb())

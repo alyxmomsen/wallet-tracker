@@ -13,7 +13,7 @@ export interface IRequirementManagementService {
             isExecuted,
             title,
             value,
-        }: Omit<IRequirementFields, 'userId'>,
+        }: Omit<IRequirementFields, 'userId' | 'id'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>>
 }
@@ -36,6 +36,7 @@ export class RequrementManagementService
         }: Omit<IRequirementFields, 'userId'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>> {
+        console.log('add requirement check', 'requirement service')
         try {
             const body = {
                 cashFlowDirectionCode,
@@ -66,8 +67,8 @@ export class RequrementManagementService
             )
             const data = (await response.json()) as TFetchResponse<IUserData>
 
-            return data
             console.log('requrement data response', data)
+            return data
         } catch (e) {
             return {
                 payload: null,

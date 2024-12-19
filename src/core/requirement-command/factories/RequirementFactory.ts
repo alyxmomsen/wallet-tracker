@@ -1,3 +1,4 @@
+import { IRequirementFields } from '../interfaces'
 import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
@@ -10,16 +11,12 @@ export interface IRequirementFactory {
         value,
         title,
         description,
-        date,
-        flowDirectionCode,
-    }: {
-        id: string
-        value: number
-        title: string
-        description: string
-        date: number
-        flowDirectionCode: number
-    }): IRequirementCommand | null
+        dateToExecute,
+        cashFlowDirectionCode,
+    }: Omit<
+        IRequirementFields,
+        'isExecuted' | 'userId'
+    >): IRequirementCommand | null
 }
 
 export class RequirementFactory implements IRequirementFactory {
@@ -28,24 +25,20 @@ export class RequirementFactory implements IRequirementFactory {
         value,
         title,
         description,
-        date,
-        flowDirectionCode,
-    }: {
-        id: string
-        value: number
-        title: string
-        description: string
-        date: number
-        flowDirectionCode: number
-    }): IRequirementCommand | null {
-        switch (flowDirectionCode) {
+        dateToExecute,
+        cashFlowDirectionCode,
+    }: Omit<
+        IRequirementFields,
+        'isExecuted' | 'userId'
+    >): IRequirementCommand | null {
+        switch (cashFlowDirectionCode) {
             case 0:
                 return new IncrementMoneyRequirementCommand(
                     id,
                     value,
                     title,
                     description,
-                    date
+                    dateToExecute
                 )
                 break
             case 1:
@@ -54,7 +47,7 @@ export class RequirementFactory implements IRequirementFactory {
                     value,
                     title,
                     description,
-                    date
+                    dateToExecute
                 )
                 break
 

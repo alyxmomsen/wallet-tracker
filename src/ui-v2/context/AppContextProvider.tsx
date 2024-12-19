@@ -11,6 +11,8 @@ import {
 } from '../../core/App-facade'
 import { ServerConnector } from '../../core/services/server-connector-service-facade'
 import { EventService } from '../../core/events/App-event'
+import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
+import OnAuthorizedPopUp from '../pop-up-windows/OnAuthorizedPopUp'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
@@ -25,7 +27,7 @@ export type TAppCtx = {
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
     popUpWindow: JSX.Element | null
-    setPopUpWindow: (elem: JSX.Element) => any
+    setPopUpWindow: (elem: JSX.Element | null) => any
     update: () => void
 }
 
@@ -62,43 +64,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             if (timeOutId) clearTimeout(timeOutId)
             const user = app.getLocalUser()
             if (user === null) return
-            setPopUp(
-                <div className="modal--notyf pdg flex-box flex-dir-col">
-                    <div className="modal--notyf__elem flex-box flex-dir-col">
-                        <div>you authorized</div>
-                        <div>Do you want to go to the user's page?</div>
-                        <div className="flex-box">
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        const user = app.getLocalUser()
-                                        if (!user) return
-                                        setCurrentWindow(
-                                            <PersonCardUI person={user} />
-                                        )
-                                        if (timeOutId) clearTimeout(timeOutId)
-                                        setPopUp(null)
-                                    }}
-                                    className="btn"
-                                >
-                                    my profile
-                                </button>
-                            </div>
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        if (timeOutId) clearTimeout(timeOutId)
-                                        setPopUp(null)
-                                    }}
-                                    className="btn"
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
+            setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
             // setCurrentWindow(<PersonCardUI person={user} />)
         })
 
@@ -108,58 +74,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
             console.log({ timeOutId, details: 'started' })
-            setPopUp(
-                <div
-                    onMouseLeave={() => {
-                        // console.log({timeOutId, details:'started'});
-                        // timeOutId = setTimeout(() => setPopUp(null) , 3000);
-                    }}
-                    onMouseEnter={() => {
-                        console.log({ timeOutId })
-
-                        if (timeOutId) {
-                            clearTimeout(timeOutId)
-                        }
-                    }}
-                    className="modal--notyf pdg "
-                >
-                    <div className="flex-box flex-dir-col modal--notyf__elem">
-                        <div>PERSON IS UPDATED</div>
-                        <div className="flex-box">
-                            <div>
-                                <button
-                                    onClick={() => {
-                                        setCurrentWindow(
-                                            <PersonCardUI person={user} />
-                                        )
-                                    }}
-                                    className="btn"
-                                >
-                                    Go Person
-                                </button>
-                            </div>
-                            <div>
-                                <button
-                                    className="btn"
-                                    onClick={() => {
-                                        console.log({
-                                            timeOutId,
-                                            details: 'clear',
-                                        })
-                                        if (timeOutId) {
-                                            clearTimeout(timeOutId)
-                                            setPopUp(null)
-                                        }
-                                    }}
-                                >
-                                    X
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-            // setCurrentWindow(<PersonCardUI person={user} />)
+            setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
 
         console.log('app effect', { app })

@@ -14,10 +14,11 @@ import {
     TUserRequirementStats as TUserRequirementStats,
 } from './login-window/RegistrationUI'
 import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
+import { IRequirementFields } from '../core/requirement-command/interfaces'
 
 // http://94.241.139.88:3000/
-export const ServerBaseURL = 'http://94.241.139.88:3030'
-// export const ServerBaseURL = 'http://127.0.0.1:3030'
+// export const ServerBaseURL = 'http://94.241.139.88:3030'
+export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     console.log('person card ui')
@@ -38,6 +39,13 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     let reqanfrid = 0
 
+    console.log(
+        'requirements check 1',
+        requirements,
+        person,
+        person.getAllReauirementCommands().length
+    )
+
     useEffect(() => {
         console.log('person card init effect')
         const userId = localStorage.getItem('userId')
@@ -52,38 +60,25 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 return
             }
 
+            console.log('requirements check', data.payload)
+
             const requirementFactory = new RequirementFactory()
 
             data.payload.forEach((requirementsStatsItem) => {
                 // console.log('data payload' , person , data.payload);
 
-                const {
-                    id,
-                    value,
-                    title,
-                    date,
-                    description,
-                    isExecuted,
-                    transactionTypeCode,
-                } = requirementsStatsItem
+                if (person.getRequirementCommandById(userId).length === 0) {
+                    console.log('requirements check', 'length > 0')
 
-                if (person.getRequirementCommandById(id).length) {
-                    return
-                }
+                    const newRequirement = requirementFactory.create({
+                        ...requirementsStatsItem,
+                    })
 
-                const newRequirement = requirementFactory.create({
-                    id,
-                    value,
-                    title,
-                    description,
-                    date,
-                    flowDirectionCode: transactionTypeCode,
-                })
+                    if (newRequirement) {
+                        console.log('add requirment')
 
-                if (newRequirement) {
-                    console.log('add requirment')
-
-                    person.addRequirementCommand(newRequirement)
+                        person.addRequirementCommand(newRequirement)
+                    }
                 }
             })
 
@@ -361,7 +356,7 @@ export async function checkUserAuth(userId: string) {
 
 export async function fetchUserRequirements(
     userId: string
-): Promise<TFetchResponse<TUserRequirementStats[]>> {
+): Promise<TFetchResponse<IRequirementFields[]>> {
     try {
         const response = await fetch(
             ServerBaseURL + '/get-user-requirements-protected',
@@ -375,9 +370,7 @@ export async function fetchUserRequirements(
             }
         )
 
-        return response.json() as Promise<
-            TFetchResponse<TUserRequirementStats[]>
-        >
+        return response.json() as Promise<TFetchResponse<IRequirementFields[]>>
     } catch (e) {
         return {
             payload: null,

@@ -63,7 +63,6 @@ export abstract class Person implements IPerson {
         requirements.forEach((requirement) => {
             const newRequirement = requirementFactory.create({
                 ...requirement,
-                flowDirectionCode: requirement.transactionTypeCode,
             })
 
             if (newRequirement) {
