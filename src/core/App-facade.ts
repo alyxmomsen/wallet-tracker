@@ -5,7 +5,10 @@ import {
 import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
-import { RequirementFactory } from './requirement-command/factories/RequirementFactory'
+import {
+    IRequirementFactory,
+    RequirementFactory,
+} from './requirement-command/factories/RequirementFactory'
 import { IRequirementFields } from './requirement-command/interfaces'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
 import { IAuthService } from './services/auth-service'
@@ -31,6 +34,7 @@ export interface IApplicationSingletoneFacade {
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
+    unsetUser(): any
     createUserRemote(
         userName: string,
         password: string,
@@ -67,6 +71,7 @@ export class ApplicationSingletoneFacade
 {
     private updatingStatus: boolean
     private personFactory: PersonFactory
+    private requirementFactory: IRequirementFactory
     // private otherUsers: IPerson[];
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
@@ -76,8 +81,21 @@ export class ApplicationSingletoneFacade
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
     private userIsSetCallBackPull: ((user: IPerson) => any)[]
+    private userUnsetCallBackPull: (() => any)[]
 
     private updateRequirements(): void {}
+
+    unsetUser() {
+        this.localStorageManagementSerice.unsetAuthData()
+
+        this.user = null
+
+        this.userUnsetCallBackPull.forEach((callback) => {
+            callback()
+        })
+    }
+
+    onUserIsUnset(cb: () => any) {}
 
     onUserUpdated(cb: () => any) {
         // if(this.user)
@@ -93,19 +111,19 @@ export class ApplicationSingletoneFacade
         value,
     }: Omit<IRequirementFields, 'userId' | 'id'>): Promise<any> {
         const authData = this.localStorageManagementSerice.getAuthData()
-
         if (authData) {
-            const data = await this.requriementManagementService.create(
-                {
-                    cashFlowDirectionCode,
-                    dateToExecute,
-                    description,
-                    isExecuted,
-                    title,
-                    value,
-                },
-                authData
-            )
+            const data =
+                await this.requriementManagementService.createRequirement(
+                    {
+                        cashFlowDirectionCode,
+                        dateToExecute,
+                        description,
+                        isExecuted,
+                        title,
+                        value,
+                    },
+                    authData
+                )
 
             if (data.payload) {
                 const newUser = this.personFactory.create(
@@ -164,6 +182,18 @@ export class ApplicationSingletoneFacade
                     userData.payload.userName,
                     userData.payload.wallet
                 )
+
+                const requirementsData = userData.payload.requirements
+
+                requirementsData.forEach((elem) => {
+                    const requirementObject = this.requirementFactory.create({
+                        ...elem,
+                    })
+
+                    if (requirementObject) {
+                        person.addRequirementCommand(requirementObject)
+                    }
+                })
 
                 this.setUserLocally(person)
 
@@ -226,8 +256,15 @@ export class ApplicationSingletoneFacade
         serverConnector: IServerConnector,
         eventService: IEventService
     ) {
+        // observer pulls
+
         this.userIsSetCallBackPull = []
+        this.userUnsetCallBackPull = []
+
+        // --
+
         this.personFactory = new PersonFactory()
+        this.requirementFactory = new RequirementFactory()
         this.requriementManagementService = new RequrementManagementService(
             new RequirementFactory()
         )

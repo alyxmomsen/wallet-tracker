@@ -15,6 +15,9 @@ import {
 } from './login-window/RegistrationUI'
 import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
 import { IRequirementFields } from '../core/requirement-command/interfaces'
+import { IUserData } from '../core/types/common'
+import { application } from 'express'
+import { IRequirementCommand } from '../core/requirement-command/RequirementCommand'
 
 // http://94.241.139.88:3000/
 // export const ServerBaseURL = 'http://94.241.139.88:3030'
@@ -25,16 +28,16 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
         curentWindow: curPage,
         setCurentWindow,
         update,
-        setUser,
+        app,
     } = UseAppContext()
+
+    const [user, setUser] = useState<IPerson | null>(null)
 
     const [updated, setUpdated] = useState(0)
 
     const [statusStarted, setStatusStarted] = useState(0)
 
-    const [requirements, setRequirements] = useState<TUserRequirementStats[]>(
-        []
-    )
+    const [requirements, setRequirements] = useState<IRequirementCommand[]>([])
 
     let reqanfrid = 0
 
@@ -46,61 +49,13 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     )
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId')
-        if (userId === null) {
-            alert('no token')
-            setCurentWindow(<LoginWindowUI />)
-            return
+        const user = app.getLocalUser()
+
+        if (user) {
+            setUser(user)
+
+            setRequirements(user.getAllReauirementCommands())
         }
-
-        fetchUserRequirements(userId).then((data) => {
-            if (data.payload === null) {
-                return
-            }
-
-            const requirementFactory = new RequirementFactory()
-
-            data.payload.forEach((requirementsStatsItem) => {
-                if (person.getRequirementCommandById(userId).length === 0) {
-                    const newRequirement = requirementFactory.create({
-                        ...requirementsStatsItem,
-                    })
-
-                    if (newRequirement) {
-                        person.addRequirementCommand(newRequirement)
-                    }
-                }
-            })
-
-            const actualRequirements = person
-                .getAllReauirementCommands()
-                .map((requirement) => {
-                    const isExecuted = requirement.checkIfExecuted()
-                    const description = requirement.getDescription()
-                    const title = requirement.getTitle()
-                    const transactionTypeCode =
-                        requirement.getTransactionTypeCode()
-                    const value = requirement.getValue()
-                    const date = requirement.getExecutionDate()
-                    const id = requirement.getId()
-
-                    const requiremntFilds: TUserRequirementStats = {
-                        id,
-                        date,
-                        description,
-                        isExecuted,
-                        title,
-                        transactionTypeCode,
-                        value,
-                    }
-
-                    return requiremntFilds
-                })
-
-            setRequirements(actualRequirements)
-        })
-
-        // 'get-user-requirements-protected'
     }, [])
 
     useEffect(() => {
@@ -156,8 +111,8 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <button
                     className="btn"
                     onClick={() => {
-                        localStorage.removeItem('userId')
-                        setUser(null)
+                        app.unsetUser()
+
                         setCurentWindow(<LoginWindowUI />)
                     }}
                 >
@@ -165,12 +120,12 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 </button>
             </div>
             <div className="flex-box flex-dir-col bdr pdg">
-                <h3>{person.getName()}</h3>
+                <h3>{user?.getName()}</h3>
                 <div>
                     <div className="flex-box">
                         <span>Wallet: </span>
                         <span className="value-color--txt">
-                            {person.getWalletBalance()}
+                            {user?.getWalletBalance()}
                         </span>
                     </div>
                 </div>
@@ -217,7 +172,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                               )
                           })}
                 </div>
-                <div>{person.getStatusDescription()}</div>
+                <div>{user?.getStatusDescription()}</div>
                 <div className="flex-box flex-dir-col">
                     <h3>{'REQUIREMENTS:'}</h3>
 
@@ -253,7 +208,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                     </div>
                     <div className="flex-box">
                         {requirements.map((requirement, i) => {
-                            const execDate = requirement.date
+                            const execDate = requirement.getExecutionDate()
 
                             return (
                                 <div
@@ -268,13 +223,16 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                     }}
                                     className={
                                         'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                                        (requirement.isExecuted
+                                        (requirement.checkIfExecuted()
                                             ? ' requirement--executed'
                                             : '')
                                     }
                                 >
                                     <div className="flex-box flex-dir-col flex-center">
-                                        <div> == {requirement.title} == </div>
+                                        <div>
+                                            {' '}
+                                            == {requirement.getTitle()} =={' '}
+                                        </div>
                                         {/* <div>
                                                 = {requirement.getDescription()}{' '}
                                                 =
@@ -283,14 +241,13 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                             <div className="value-color--txt flex-item">
                                                 {
                                                     [' ADD ', ' REMOVE '][
-                                                        requirement
-                                                            .transactionTypeCode
+                                                        requirement.getTransactionTypeCode()
                                                     ]
                                                 }
                                             </div>
                                             <div className="flex-item">:</div>
                                             <div className="value-color--txt flex-item">
-                                                {requirement.value}
+                                                {requirement.getValue()}
                                             </div>
                                         </div>
                                         <div className="flex-box">
@@ -299,7 +256,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                             <div>{execDate}</div>
                                         </div>
                                     </div>
-                                    {!requirement.isExecuted ? (
+                                    {!requirement.checkIfExecuted() ? (
                                         <button
                                             // onClick={(e) => {
                                             //     e.stopPropagation()

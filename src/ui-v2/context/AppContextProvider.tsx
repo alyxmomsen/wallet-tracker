@@ -65,6 +65,10 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
         })
 
+        app.onUserIsUnset(() => {
+            alert()
+        })
+
         return () => {
             if (timeOutId) {
                 clearTimeout(timeOutId)

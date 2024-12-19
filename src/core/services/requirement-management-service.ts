@@ -5,15 +5,8 @@ import { IRequirementFields } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'
 
 export interface IRequirementManagementService {
-    create(
-        {
-            cashFlowDirectionCode,
-            dateToExecute,
-            description,
-            isExecuted,
-            title,
-            value,
-        }: Omit<IRequirementFields, 'userId' | 'id'>,
+    createRequirement(
+        fields: Omit<IRequirementFields, 'userId' | 'id'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>>
 }
@@ -25,25 +18,13 @@ export class RequrementManagementService
 
     // private che
 
-    async create(
-        {
-            cashFlowDirectionCode,
-            dateToExecute,
-            description,
-            isExecuted,
-            title,
-            value,
-        }: Omit<IRequirementFields, 'userId'>,
+    async createRequirement(
+        fields: Omit<IRequirementFields, 'userId'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>> {
         try {
-            const body = {
-                cashFlowDirectionCode,
-                dateToExecute,
-                description,
-                isExecuted,
-                title,
-                value,
+            const body: Omit<IRequirementFields, 'userId'> = {
+                ...fields,
             }
 
             const response = await fetch(
@@ -54,12 +35,7 @@ export class RequrementManagementService
                         'x-auth': authToken,
                     },
                     body: JSON.stringify({
-                        cashFlowDirectionCode,
-                        dateToExecute,
-                        description,
-                        isExecuted,
-                        title,
-                        value,
+                        ...body,
                     }),
                     method: 'post',
                 }

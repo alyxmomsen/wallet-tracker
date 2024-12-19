@@ -1,6 +1,7 @@
 export interface ILocalStorageManagementService {
     setAuthData(value: string): any
     getAuthData(): string | null
+    unsetAuthData(): any
 }
 
 export class LocalStorageManagementService
@@ -13,5 +14,9 @@ export class LocalStorageManagementService
         const value = window.localStorage.getItem('userId')
 
         return value
+    }
+
+    unsetAuthData(): any {
+        window.localStorage.removeItem('userId')
     }
 }
