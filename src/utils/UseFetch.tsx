@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ServerBaseURL } from '../ui-v2/PersonCardUI'
+import { ServerBaseURL } from '../ui-v2/user-card/PersonCardUI'
 
 export const UseFetch = () => {
     const [data, setData] = useState<any>()

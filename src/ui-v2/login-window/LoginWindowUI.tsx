@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 
-import PersonCardUI from '../PersonCardUI'
+import PersonCardUI from '../user-card/PersonCardUI'
 import AuthorizationUI from './AuthorizationUI'
 import RegistrationUI from './RegistrationUI'
 import { PopUpElement } from '../services/PopUpServise'
@@ -55,7 +55,10 @@ const LoginWindowUI = () => {
                 {app.getLocalUser() && (
                     <div>
                         <button
-                            style={{ backgroundColor: 'orange' }}
+                            style={{
+                                backgroundColor: '#BF9748',
+                                color: '#2B7272',
+                            }}
                             className="btn"
                             onClick={() => {
                                 const user = app.getLocalUser()

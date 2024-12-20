@@ -2,7 +2,7 @@ import {
     TFetchAuthResponseData,
     TFetchResponse,
 } from '../../ui-v2/login-window/RegistrationUI'
-import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
+import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
 import { ICreateUserResponseData } from '../App-facade'
 
 export interface ICreateUserService {

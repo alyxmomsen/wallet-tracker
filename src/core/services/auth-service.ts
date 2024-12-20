@@ -2,14 +2,39 @@ import {
     TFetchAuthResponseData,
     TFetchResponse,
 } from '../../ui-v2/login-window/RegistrationUI'
-import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
-import { IAuthUserResponseData } from '../App-facade'
+import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
+import {
+    IAuthUserResponseData,
+    ICheckAuthTokenResponseData,
+} from '../App-facade'
 
 export interface IAuthService {
     execute(userName: string, password: string): Promise<IAuthUserResponseData>
+    checkAuth(
+        token: string
+    ): Promise<TFetchResponse<ICheckAuthTokenResponseData>>
 }
 
 export class AuthUserService implements IAuthService {
+    async checkAuth(
+        token: string
+    ): Promise<TFetchResponse<ICheckAuthTokenResponseData>> {
+        const response = await fetch(
+            ServerBaseURL + '/check-user-auth-protected-ep',
+            {
+                headers: {
+                    'content-type': 'application/json',
+                    'x-auth': token,
+                },
+                method: 'post',
+            }
+        )
+
+        const data =
+            (await response.json()) as TFetchResponse<ICheckAuthTokenResponseData>
+
+        return data
+    }
     async execute(
         userName: string,
         password: string

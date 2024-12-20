@@ -20,6 +20,7 @@ abstract class RequirementCommand implements IRequirementCommand {
     protected date: number
     protected isExecuted: boolean
     protected transactionTypeCode: number
+    // protected userId:
 
     abstract executeWithValue(value: number): number
 

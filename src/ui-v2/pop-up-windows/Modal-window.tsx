@@ -1,6 +1,6 @@
 import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import PersonCardUI from '../PersonCardUI'
+import PersonCardUI from '../user-card/PersonCardUI'
 
 const PersonIsUpdatedPopUpWindow = ({
     timeoutId,

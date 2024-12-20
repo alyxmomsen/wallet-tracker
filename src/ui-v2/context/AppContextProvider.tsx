@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 
 import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
+import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import { LocalStorageManagementService } from '../../core/services/local-storage-service'
 import {
@@ -12,7 +12,6 @@ import {
 import { ServerConnector } from '../../core/services/server-connector-service-facade'
 import { EventService } from '../../core/events/App-event'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
-import OnAuthorizedPopUp from '../pop-up-windows/OnAuthorizedPopUp'
 import { UseAppContext } from './UseAppContext'
 import PopUpFrame from '../pop-up-windows/PopUpFrame'
 import {
@@ -246,7 +245,7 @@ export function StartWindow(): JSX.Element {
     const { setCurentWindow, loginedPerson } = UseAppContext()
 
     return (
-        <div className="flex-box flex-center vh vw">
+        <div className="flex-box flex-center vh vw anim--faidIn">
             <div className="flex-item">
                 <button
                     onClick={() => {
@@ -261,8 +260,9 @@ export function StartWindow(): JSX.Element {
                 <div className="flex-item">
                     <button
                         style={{
-                            backgroundColor: '#aeae41',
-                            borderColor: '#aeae41',
+                            backgroundColor: '#BF9748',
+                            color: '#2B7272',
+                            borderColor: '',
                         }}
                         onClick={() => {
                             setCurentWindow(

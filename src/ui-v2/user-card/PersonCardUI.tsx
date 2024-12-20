@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react'
-import { IPerson } from '../core/person/Person'
-import { UseAppContext } from './context/UseAppContext'
-import AddRequirementForm from './add-req-form/AddRequirementFormWindow'
+import { IPerson } from '../../core/person/Person'
+import { UseAppContext } from '../context/UseAppContext'
+import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import {
     AwakenStatusFactory,
     PersonStatusFactory,
     SlepStatusFactory,
-} from '../core/person/PersonStatus'
-import TrackComponentUI from './track-component-ui/TrackComponentUI'
-import LoginWindowUI from './login-window/LoginWindowUI'
+} from '../../core/person/PersonStatus'
+import TrackComponentUI from '../track-component-ui/TrackComponentUI'
+import LoginWindowUI from '../login-window/LoginWindowUI'
 import {
     TFetchResponse,
     TUserRequirementStats as TUserRequirementStats,
-} from './login-window/RegistrationUI'
-import { RequirementFactory } from '../core/requirement-command/factories/RequirementFactory'
-import { IRequirementFields } from '../core/requirement-command/interfaces'
-import { IUserData } from '../core/types/common'
+} from '../login-window/RegistrationUI'
+import { RequirementFactory } from '../../core/requirement-command/factories/RequirementFactory'
+import { IRequirementFields } from '../../core/requirement-command/interfaces'
+import { IUserData } from '../../core/types/common'
 import { application } from 'express'
-import { IRequirementCommand } from '../core/requirement-command/RequirementCommand'
+import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
+import RequirementModule from './modules/requirements-module/RequirementsModule'
 
 // http://94.241.139.88:3000/
-export const ServerBaseURL = 'http://94.241.139.88:3030'
-// export const ServerBaseURL = 'http://127.0.0.1:3030'
+// export const ServerBaseURL = 'http://94.241.139.88:3030'
+export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({ person }: { person: IPerson }) => {
     const {
@@ -50,6 +51,8 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
         } else {
             setCurentWindow(<LoginWindowUI />)
         }
+
+        console.log('>>> person card :: ', user)
     }, [])
 
     useEffect(() => {
@@ -198,72 +201,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                             </button>
                         </div>
                     </div>
-                    <div className="flex-box">
-                        {requirements.map((requirement, i) => {
-                            const execDate = requirement.getExecutionDate()
-
-                            return (
-                                <div
-                                    onClick={() => {
-                                        // setCurentWindow(
-                                        //     <RequirementUI
-                                        //         requirement={requirement}
-                                        //         person={person}
-                                        //         key={i}
-                                        //     />
-                                        // )
-                                    }}
-                                    className={
-                                        'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                                        (requirement.checkIfExecuted()
-                                            ? ' requirement--executed'
-                                            : '')
-                                    }
-                                >
-                                    <div className="flex-box flex-dir-col flex-center">
-                                        <div>
-                                            {' '}
-                                            == {requirement.getTitle()} =={' '}
-                                        </div>
-                                        {/* <div>
-                                                = {requirement.getDescription()}{' '}
-                                                =
-                                            </div> */}
-                                        <div className="flex-box">
-                                            <div className="value-color--txt flex-item">
-                                                {
-                                                    [' ADD ', ' REMOVE '][
-                                                        requirement.getTransactionTypeCode()
-                                                    ]
-                                                }
-                                            </div>
-                                            <div className="flex-item">:</div>
-                                            <div className="value-color--txt flex-item">
-                                                {requirement.getValue()}
-                                            </div>
-                                        </div>
-                                        <div className="flex-box">
-                                            <div>{execDate}</div>
-                                            <div>{execDate}</div>
-                                            <div>{execDate}</div>
-                                        </div>
-                                    </div>
-                                    {!requirement.checkIfExecuted() ? (
-                                        <button
-                                            // onClick={(e) => {
-                                            //     e.stopPropagation()
-                                            //     requirement.execute(person)
-                                            //     update()
-                                            // }}
-                                            className="hover--child btn"
-                                        >
-                                            execute
-                                        </button>
-                                    ) : null}
-                                </div>
-                            )
-                        })}
-                    </div>
+                    {requirements && requirements.length ? (
+                        <RequirementModule requirements={requirements} />
+                    ) : null}
                 </div>
             </div>
         </div>

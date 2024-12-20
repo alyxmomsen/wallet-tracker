@@ -9,6 +9,10 @@
     --bdr-1: #3f792b;
     --color-1: #acd0a0;
     --value: #ff4;
+    --bkg-color-1: #2b7272;
+    --bkg-color-2: #2e5656;
+    --font-color-1: #7bbaba;
+    --font-color-2: #64baba;
 }
 
 * {
@@ -24,7 +28,8 @@ body {
 }
 
 #root {
-    background-color: var(--background-color);
+    background-color: var(--bkg-color-2);
+    color: var(--font-color-2);
     padding: calc(var(--gap) / 2);
     width: calc(100vw - var(--gap) * 2);
     height: calc(100vh - var(--gap) * 2);
@@ -142,9 +147,9 @@ textarea {
 .btn {
     cursor: pointer;
     transition: all 0.2s ease-out;
-    background-color: #5f915e;
+    background-color: var(--bkg-color-1);
     border-color: #778f77;
-    color: black;
+    color: var(--font-color-1);
     padding: var(--gap);
 }
 
@@ -263,6 +268,10 @@ textarea {
     height: calc((100vh - var(--gap) * 4));
 }
 
+.anim--faidIn {
+    animation: fadeIn 1.9s ease-out 0s 1 forwards;
+}
+
 @keyframes slideIn {
     from {
         left: calc(100vw);
@@ -270,5 +279,15 @@ textarea {
 
     to {
         left: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
     }
 }

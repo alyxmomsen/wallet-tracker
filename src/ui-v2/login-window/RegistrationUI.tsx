@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ServerBaseURL } from '../PersonCardUI'
+import { ServerBaseURL } from '../user-card/PersonCardUI'
 import { UseAppContext } from '../context/UseAppContext'
 import { CreateUserService } from '../../core/services/create-user-service'
 

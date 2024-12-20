@@ -1,29 +1,72 @@
-import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
-import { ServerBaseURL } from '../../ui-v2/PersonCardUI'
+import {
+    TFetchAuthResponseData,
+    TFetchResponse,
+} from '../../ui-v2/login-window/RegistrationUI'
+import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
+import { ICheckAuthTokenResponseData } from '../App-facade'
 import { IRequirementFactory } from '../requirement-command/factories/RequirementFactory'
 import { IRequirementFields } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'
+import { IAuthService } from './auth-service'
 
 export interface IRequirementManagementService {
     createRequirement(
         fields: Omit<IRequirementFields, 'userId' | 'id'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>>
+
+    deleteRequirement(
+        reqId: string,
+        authToken: string,
+        checkAuthMiddleWare: IAuthService
+    ): Promise<
+        TFetchResponse<{
+            requirementId: string
+        }>
+    >
 }
 
 export class RequrementManagementService
     implements IRequirementManagementService
 {
-    requirementFactory: IRequirementFactory
+    async deleteRequirement(
+        reqId: string,
+        authToken: string,
+        checkAuthMiddleWare: IAuthService
+    ): Promise<
+        TFetchResponse<{
+            requirementId: string
+        }>
+    > {
+        // const checkAuthResponse = await checkAuthMiddleWare.checkAuth(authToken)
 
-    // private che
+        const response = await fetch(
+            ServerBaseURL + '/delete-requirement-protected-ep',
+            {
+                headers: {
+                    'x-auth': authToken,
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    requirementId: reqId,
+                }),
+                method: 'post',
+            }
+        )
+
+        const data = (await response.json()) as TFetchResponse<{
+            requirementId: string
+        }>
+
+        return data
+    }
 
     async createRequirement(
-        fields: Omit<IRequirementFields, 'userId'>,
+        fields: Omit<IRequirementFields, 'userId' | 'id'>,
         authToken: string
     ): Promise<TFetchResponse<IUserData>> {
         try {
-            const body: Omit<IRequirementFields, 'userId'> = {
+            const body: Omit<IRequirementFields, 'userId' | 'id'> = {
                 ...fields,
             }
 
@@ -56,6 +99,9 @@ export class RequrementManagementService
 
         // this.requirementFactory.create('' ,);
     }
+
+    private requirementFactory: IRequirementFactory
+
     constructor(factory: IRequirementFactory) {
         this.requirementFactory = factory
     }

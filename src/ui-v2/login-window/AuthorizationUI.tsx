@@ -3,7 +3,7 @@ import { UseAppContext } from '../context/UseAppContext'
 import { OrdinaryPerson } from '../../core/person/Person'
 import { TFetchAuthResponseData, TFetchResponse } from './RegistrationUI'
 import { requestUserData } from '../context/AppContextProvider'
-import PersonCardUI, { ServerBaseURL } from '../PersonCardUI'
+import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
 import { AuthUserService } from '../../core/services/auth-service'
 
 const AuthorizationUI = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import PersonCardUI from '../PersonCardUI'
+import PersonCardUI from '../user-card/PersonCardUI'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
 import CurrentPersonTabUI from './tabs/CurrentPersonTabUI'
