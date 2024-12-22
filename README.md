@@ -5,6 +5,7 @@
     - [ ] Strategy
     - [ ] Observer
     - [ ] Decorator
+    - [ ] State
       <!-- -   [ ] Command
     - [ ] Command -->
 - [x] DDD
@@ -16,6 +17,8 @@
     - [ ] useMemo
 - [ ] custom css styles that is the "tailwind" principle alternative
 - [ ] interface inheritance
+
+- [ ] JWT
 
 issue:
 

@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import { OrdinaryPerson } from '../../core/person/Person'
-import { TFetchAuthResponseData, TFetchResponse } from './RegistrationUI'
-import { requestUserData } from '../context/AppContextProvider'
-import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
-import { AuthUserService } from '../../core/services/auth-service'
+import Button from './shared/Button'
 
 const AuthorizationUI = () => {
-    const { setCurentWindow, app } = UseAppContext()
+    const { app } = UseAppContext()
 
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -56,40 +58,31 @@ const AuthorizationUI = () => {
                     value={password}
                 />
             </div>
-            <div>
-                <button
-                    onClick={async (e) => {
-                        setInProcess(true)
-                        setResponseMessage('in process...')
-                        setMessageColor('grey')
+            <Button
+                title="hello"
+                onClickHandler={async () => {
+                    setInProcess(true)
+                    setMessageColor('grey')
+                    setResponseMessage('in process...')
+                    await app
+                        .userLogin(userName, password)
+                        .then((person) => {
+                            if (!person) {
+                                setMessageColor('red')
+                                return setResponseMessage('fail')
+                            }
 
-                        /* ----------------------------- */
-
-                        await app
-                            .userLogin(userName, password)
-                            .then((person) => {
-                                if (!person) {
-                                    setMessageColor('red')
-                                    return setResponseMessage('fail')
-                                }
-
-                                setResponseMessage('user authorized')
-                                setMessageColor('green')
-                            })
-                            .finally(() => {
-                                setInProcess(false)
-                            })
-                    }}
-                    className="btn"
-                >
-                    auth
-                </button>
-            </div>
+                            setResponseMessage('user authorized')
+                            setMessageColor('green')
+                        })
+                        .finally(() => {
+                            setInProcess(false)
+                        })
+                }}
+            />
         </div>
     )
 }
-
-//
 
 export default AuthorizationUI
 
@@ -104,22 +97,4 @@ type TFetchRequestInit = {
 type TFetchRequestBody = {
     username: string
     password: string
-}
-
-export async function requestAuthorization(username: string, password: string) {
-    const response = await fetch(ServerBaseURL + '/auth', {
-        method: 'post',
-        body: JSON.stringify({
-            username,
-            password,
-        } as TFetchRequestBody),
-        headers: {
-            'Content-Type': 'Application/JSON',
-        },
-    } as TFetchRequestInit)
-
-    const data =
-        (await response.json()) as TFetchResponse<TFetchAuthResponseData>
-
-    return data
 }

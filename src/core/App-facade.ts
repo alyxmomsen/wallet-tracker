@@ -82,7 +82,7 @@ export class ApplicationSingletoneFacade
     async deleteRequirement(
         reqId: string
     ): Promise<Pick<IRequirementFields, 'id'> | null> {
-        const log = loggerFactory(
+        const log = loggerCreator(
             true
             // && false
         )
@@ -121,6 +121,11 @@ export class ApplicationSingletoneFacade
         userName: string,
         password: string
     ): Promise<IPerson | null> {
+        const log = loggerCreator(true, 'USER LOGGING')
+
+        log('user loging')
+        log(userName + ' | ' + password)
+
         const person = await this.authUserAsync(
             userName,
             password,
@@ -411,10 +416,15 @@ export class ApplicationSingletoneFacade
 //     }
 // }
 
-function loggerFactory(isOn: boolean) {
+export function loggerCreator(
+    isOn: boolean,
+    titleValue: string = 'unnamed log'
+) {
+    const title = titleValue
+
     return (data: string) => {
         if (isOn) {
-            console.log(`>>> ${data}`)
+            console.log(`>>> ${title} >>> ${data}`)
         }
     }
 }

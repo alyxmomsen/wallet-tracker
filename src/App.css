@@ -28,7 +28,7 @@ body {
 }
 
 #root {
-    background-color: var(--bkg-color-2);
+    background-color: #181818;
     color: var(--font-color-2);
     padding: calc(var(--gap) / 2);
     width: calc(100vw - var(--gap) * 2);
