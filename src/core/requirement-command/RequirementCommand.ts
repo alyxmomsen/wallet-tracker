@@ -88,7 +88,7 @@ export class IncrementMoneyRequirementCommand extends TransactionRequirementComm
         const balanceBefore = person.getWalletBalance()
         person.incrementWallet(this.value)
         this.isExecuted = true
-
+        this.onUpdatedCallBacks.forEach((cb) => cb())
         return true
     }
 
