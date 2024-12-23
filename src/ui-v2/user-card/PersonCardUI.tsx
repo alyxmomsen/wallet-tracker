@@ -32,6 +32,8 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
         app,
     } = UseAppContext()
 
+    // console.log('>>>');
+
     const [user, setUser] = useState<IPerson | null>(null)
 
     const [updated, setUpdated] = useState(0)

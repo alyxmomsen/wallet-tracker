@@ -168,7 +168,7 @@ export class ApplicationSingletoneFacade
             if (data.payload) {
                 const newUser = this.personFactory.create(
                     // data.payload.id,
-                    data.payload.userName,
+                    data.payload.name,
                     data.payload.wallet
                 )
 
@@ -222,7 +222,7 @@ export class ApplicationSingletoneFacade
             if (userData.payload) {
                 const person = this.personFactory.create(
                     // response.payload.userId,
-                    userData.payload.userName,
+                    userData.payload.name,
                     userData.payload.wallet
                 )
 
@@ -371,7 +371,7 @@ export class ApplicationSingletoneFacade
             //             //
             //         })
 
-            //         console.log('>>> app constructor :: ', p.requirements)
+            //
 
             //         const reqFactory = new RequirementFactory()
 
@@ -407,8 +407,13 @@ export class ApplicationSingletoneFacade
                         )
 
                         const user = this.personFactory.create(
-                            responsedPayload.userStats.userName,
+                            responsedPayload.userStats.name,
                             responsedPayload.userStats.wallet
+                        )
+
+                        console.log(
+                            '>>> server-connector :: created user',
+                            user
                         )
 
                         responsedPayload.userStats.requirements.forEach(
@@ -432,6 +437,13 @@ export class ApplicationSingletoneFacade
                         )
 
                         this.setUserLocally(user)
+
+                        const log__user = this.getLocalUser()
+
+                        console.log(
+                            '>>> app constructor ::  user name: ' +
+                                log__user?.getName()
+                        )
                     }
                 })
         }

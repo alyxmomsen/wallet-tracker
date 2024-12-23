@@ -165,7 +165,7 @@ export abstract class Person implements IPerson {
     private updateRequirements(requirements: IRequirementCommand[]): void {}
 
     private update(newData: IUserData): any {
-        this.name = newData.userName
+        this.name = newData.name
         this.wallet.setValue(newData.wallet)
 
         const requirements = newData.requirements

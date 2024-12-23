@@ -1,6 +1,7 @@
 import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import PersonCardUI from '../user-card/PersonCardUI'
+import { loggerCreator } from '../../core/App-facade'
 
 const PersonIsUpdatedPopUpWindow = ({
     timeoutId,
@@ -28,7 +29,18 @@ const PersonIsUpdatedPopUpWindow = ({
                     <div>
                         <button
                             onClick={() => {
+                                const log = loggerCreator(
+                                    true,
+                                    'user-is-updateted pop-up'
+                                )
+                                log('button clicked')
+                                log('getting user data')
                                 const user = app.getLocalUser()
+
+                                if (user) {
+                                    log('user-name is: ' + user.getName())
+                                }
+
                                 if (user)
                                     setCurentWindow(
                                         <PersonCardUI person={user} />
