@@ -108,7 +108,7 @@ export abstract class Person implements IPerson {
                 value,
                 valueBefore,
                 valueAfter,
-                executionDate: requirement.getExecutionDate(),
+                executionDate: requirement.getExecutionTimestamp(),
                 transactionTypeCode: requirement.getTransactionTypeCode(),
             }
         })
@@ -152,7 +152,7 @@ export abstract class Person implements IPerson {
             const currDateObj = getDateUtil(new Date())
 
             const requirementDateObj = getDateUtil(
-                new Date(requirementCommand.getExecutionDate())
+                new Date(requirementCommand.getExecutionTimestamp())
             )
 
             if (

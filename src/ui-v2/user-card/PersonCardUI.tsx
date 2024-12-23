@@ -14,7 +14,7 @@ import {
     TUserRequirementStats as TUserRequirementStats,
 } from '../login-window/RegistrationUI'
 import { RequirementFactory } from '../../core/requirement-command/factories/RequirementFactory'
-import { IRequirementFields } from '../../core/requirement-command/interfaces'
+import { IRequirementStats } from '../../core/requirement-command/interfaces'
 import { IUserData } from '../../core/types/common'
 import { application } from 'express'
 import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
@@ -234,7 +234,7 @@ export async function checkUserAuth(userId: string) {
 
 export async function fetchUserRequirements(
     userId: string
-): Promise<TFetchResponse<IRequirementFields[]>> {
+): Promise<TFetchResponse<IRequirementStats[]>> {
     try {
         const response = await fetch(
             ServerBaseURL + '/get-user-requirements-protected',
@@ -248,7 +248,7 @@ export async function fetchUserRequirements(
             }
         )
 
-        return response.json() as Promise<TFetchResponse<IRequirementFields[]>>
+        return response.json() as Promise<TFetchResponse<IRequirementStats[]>>
     } catch (e) {
         return {
             payload: null,

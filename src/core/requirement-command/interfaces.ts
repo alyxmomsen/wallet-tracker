@@ -1,4 +1,4 @@
-export interface IRequirementFields {
+export interface IRequirementStats {
     cashFlowDirectionCode: number
     dateToExecute: number
     description: string
@@ -7,4 +7,5 @@ export interface IRequirementFields {
     userId: string
     value: number
     id: string
+    deleted:boolean
 }

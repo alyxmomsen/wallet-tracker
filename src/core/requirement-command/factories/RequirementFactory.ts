@@ -1,4 +1,4 @@
-import { IRequirementFields } from '../interfaces'
+import { IRequirementStats } from '../interfaces'
 import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
@@ -14,7 +14,7 @@ export interface IRequirementFactory {
         dateToExecute,
         cashFlowDirectionCode,
     }: Omit<
-        IRequirementFields,
+        IRequirementStats,
         'isExecuted' | 'userId'
     >): IRequirementCommand | null
 }
@@ -28,7 +28,7 @@ export class RequirementFactory implements IRequirementFactory {
         dateToExecute,
         cashFlowDirectionCode,
     }: Omit<
-        IRequirementFields,
+        IRequirementStats,
         'isExecuted' | 'userId'
     >): IRequirementCommand | null {
         switch (cashFlowDirectionCode) {

@@ -1,8 +1,4 @@
 import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useMemo,
     useState,
 } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
@@ -85,16 +81,3 @@ const AuthorizationUI = () => {
 }
 
 export default AuthorizationUI
-
-type TFetchRequestInit = {
-    method: 'post'
-    body: string
-    headers: {
-        'Content-Type': 'Application/JSON'
-    }
-}
-
-type TFetchRequestBody = {
-    username: string
-    password: string
-}

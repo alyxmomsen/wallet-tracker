@@ -22,7 +22,7 @@ const RequirementUI = ({
                 <div>{requirement.getValue()}</div>
                 <div>
                     {(() => {
-                        const date = requirement.getExecutionDate()
+                        const date = requirement.getExecutionTimestamp()
 
                         return <div>{date}</div>
                     })()}

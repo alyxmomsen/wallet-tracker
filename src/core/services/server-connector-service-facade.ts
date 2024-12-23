@@ -5,6 +5,7 @@ import { GetUserService, IGetUserService } from './get-user-service'
 
 export interface IServerConnector {
     getUserById(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
+    
 }
 
 export class ServerConnector implements IServerConnector {

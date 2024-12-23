@@ -20,7 +20,7 @@ const RequirementModule = ({
     return (
         <div className="flex-box flex-dir-col">
             {requirements.map((requirement, i) => {
-                const execDate = requirement.getExecutionDate()
+                const execDate = requirement.getExecutionTimestamp()
 
                 return fullReqSize ? (
                     <RegularRequirementItem requirement={requirement} />

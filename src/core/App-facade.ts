@@ -9,7 +9,7 @@ import {
     IRequirementFactory,
     RequirementFactory,
 } from './requirement-command/factories/RequirementFactory'
-import { IRequirementFields } from './requirement-command/interfaces'
+import { IRequirementStats } from './requirement-command/interfaces'
 import { IRequirementCommand } from './requirement-command/RequirementCommand'
 import { AuthUserService, IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
@@ -25,7 +25,7 @@ import { ITask } from './Task'
 export interface IApplicationSingletoneFacade {
     deleteRequirement(
         reqId: string
-    ): Promise<Pick<IRequirementFields, 'id'> | null>
+    ): Promise<Pick<IRequirementStats, 'id'> | null>
     addRequirement({
         cashFlowDirectionCode,
         dateToExecute,
@@ -33,7 +33,7 @@ export interface IApplicationSingletoneFacade {
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId' | 'id'>): Promise<any>
+    }: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>): Promise<any>
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
@@ -44,11 +44,11 @@ export interface IApplicationSingletoneFacade {
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
     getLocalUser(): IPerson | null
-    authUserAsync(
+    /* authUserAsync(
         userName: string,
         password: string,
         authService: IAuthService
-    ): Promise<IPerson | null>
+    ): Promise<IPerson | null> */
     userLogin(userName: string, password: string): Promise<IPerson | null>
     userLogout(): any
     onAppUpdated(cb: () => void): void
@@ -81,7 +81,7 @@ export class ApplicationSingletoneFacade
 {
     async deleteRequirement(
         reqId: string
-    ): Promise<Pick<IRequirementFields, 'id'> | null> {
+    ): Promise<Pick<IRequirementStats, 'id'> | null> {
         const log = loggerCreator(
             true
             // && false
@@ -89,7 +89,7 @@ export class ApplicationSingletoneFacade
 
         log('try delete the requirement')
         log('req id: ' + reqId)
-        const authData = this.localStorageManagementSerice.getAuthData()
+        const authData = this.localStorageManagementService.getAuthData()
 
         // log();
 
@@ -153,8 +153,8 @@ export class ApplicationSingletoneFacade
         isExecuted,
         title,
         value,
-    }: Omit<IRequirementFields, 'userId' | 'id'>): Promise<any> {
-        const authData = this.localStorageManagementSerice.getAuthData()
+    }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
+        const authData = this.localStorageManagementService.getAuthData()
         if (authData) {
             const data =
                 await this.requriementManagementService.createRequirement(
@@ -201,7 +201,7 @@ export class ApplicationSingletoneFacade
         this.userIsSetCallBackPull.push(cb)
     }
 
-    async authUserAsync(
+    private async authUserAsync(
         userName: string,
         password: string,
         authService: IAuthService
@@ -212,7 +212,7 @@ export class ApplicationSingletoneFacade
         )
 
         if (response.payload) {
-            this.localStorageManagementSerice.setAuthData(
+            this.localStorageManagementService.setAuthData(
                 response.payload.userId
             )
 
@@ -298,6 +298,35 @@ export class ApplicationSingletoneFacade
 
     update() {}
 
+    
+
+    private localStorageManagementService: ILocalStorageManagementService
+    private requriementManagementService: IRequirementManagementService
+    private authUserService: IAuthService
+    private updatingStatus: boolean
+    private personFactory: PersonFactory
+    private requirementFactory: IRequirementFactory
+    // private otherUsers: IPerson[];
+    private user: IPerson | null
+    private static instance: ApplicationSingletoneFacade | null = null
+    private eventServise: IEventService
+    private serverConnector: IServerConnector
+    private callbackPull: (() => void)[]
+    private userIsSetCallBackPull: ((user: IPerson) => any)[]
+    private userUnsetCallBackPull: (() => any)[]
+
+    private updateRequirements(): void {}
+
+    private unsetUser(): void {
+        this.localStorageManagementService.unsetAuthData()
+
+        this.user = null
+
+        this.userUnsetCallBackPull.forEach((callback) => {
+            callback()
+        })
+    }
+
     /* private  */ constructor(
         localStorageService: ILocalStorageManagementService,
         serverConnector: IServerConnector,
@@ -320,13 +349,15 @@ export class ApplicationSingletoneFacade
         this.eventServise = eventService
         this.callbackPull = []
         this.updatingStatus = false
-        this.localStorageManagementSerice = localStorageService
+        this.localStorageManagementService = localStorageService
         this.serverConnector = serverConnector
         // this.users = []
 
         this.user = null
 
-        const authData = this.localStorageManagementSerice.getAuthData()
+        const authData = this.localStorageManagementService.getAuthData()
+
+        
 
         if (authData) {
             this.updatingStatus = true
@@ -341,7 +372,7 @@ export class ApplicationSingletoneFacade
                     )
 
                     const p = payload as TFetchUserData & {
-                        requirements: IRequirementFields[]
+                        requirements: IRequirementStats[]
                     }
 
                     p.requirements.forEach((elem) => {
@@ -377,44 +408,7 @@ export class ApplicationSingletoneFacade
 
         // this.createUser()
     }
-
-    private localStorageManagementSerice: ILocalStorageManagementService
-    private requriementManagementService: IRequirementManagementService
-    private authUserService: IAuthService
-    private updatingStatus: boolean
-    private personFactory: PersonFactory
-    private requirementFactory: IRequirementFactory
-    // private otherUsers: IPerson[];
-    private user: IPerson | null
-    private static instance: ApplicationSingletoneFacade | null = null
-    private eventServise: IEventService
-    private serverConnector: IServerConnector
-    private callbackPull: (() => void)[]
-    private userIsSetCallBackPull: ((user: IPerson) => any)[]
-    private userUnsetCallBackPull: (() => any)[]
-
-    private updateRequirements(): void {}
-
-    private unsetUser(): void {
-        this.localStorageManagementSerice.unsetAuthData()
-
-        this.user = null
-
-        this.userUnsetCallBackPull.forEach((callback) => {
-            callback()
-        })
-    }
 }
-
-// export class Logger {
-
-//     execute()
-
-//     protected isOn: boolean;
-//     constructor(isOn:boolean) {
-//         this.isOn = isOn;
-//     }
-// }
 
 export function loggerCreator(
     isOn: boolean,

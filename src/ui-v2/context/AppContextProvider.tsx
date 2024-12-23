@@ -28,11 +28,11 @@ const cashFlowApp = new ApplicationSingletoneFacade(
 
 const popUpService = new PopUpService()
 
-export interface IPopUpItem {
+/* export interface IPopUpItem {
     exec(): JSX.Element
-}
+} */
 
-export class PopUpItem implements IPopUpItem {
+/* export class PopUpItem implements IPopUpItem {
     private elem: () => JSX.Element
 
     exec(): JSX.Element {
@@ -42,7 +42,7 @@ export class PopUpItem implements IPopUpItem {
     constructor(elem: () => JSX.Element) {
         this.elem = elem
     }
-}
+} */
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
@@ -53,26 +53,23 @@ export type TAppCtx = {
     popUpWindow: JSX.Element | null
     setPopUpWindow: (elem: JSX.Element | null) => any
     update: () => void
-    popUpItems: Map<number, PopUpItem>
+    // popUpItems: Map<number, PopUpItem>
     popUpService: IPopUpService
 }
 
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
 
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
-    // const { app } = UseMyApp()
 
-    const { data: updatedTokenData, inProcess: tokenUpdatingInProcessStatus } =
-        UseCheckUserToken(localStorage.getItem('userId'))
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
     const [loginedUser, setLoginedUser] = useState<IPerson | null>(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <StartWindow />
     )
-    const [popUpItems, setPopUpItems] = useState<Map<number, PopUpItem>>(
-        new Map()
-    )
+    // const [popUpItems, setPopUpItems] = useState<Map<number, PopUpItem>>(
+    //     new Map()
+    // )
 
     const [popUpPool, setPopUpPool] = useState<JSX.Element[]>(
         popUpService.getElems()
@@ -125,7 +122,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
                 update: () => {},
                 popUpWindow: null,
                 setPopUpWindow: (elem: JSX.Element | null) => setPopUp(elem),
-                popUpItems,
+                // popUpItems,
                 popUpService,
             }}
         >
@@ -191,54 +188,6 @@ type TUseCheckUserTokenResponseData = {
     payload: {
         token: string
     } | null
-}
-
-function UseCheckUserToken(tokenString: string | null) {
-    const [token, setToken] = useState<string | null>(tokenString)
-
-    const [data, setData] = useState<TUseCheckUserTokenResponseData | null>(
-        null
-    )
-
-    const [inProcess, setInProcess] = useState(false)
-
-    useEffect(() => {
-        if (token) {
-            setInProcess(true)
-
-            fetch('http://localhost:3030/check-user-auth-protected-ep', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-auth': token,
-                },
-            })
-                .then((response) => {
-                    return response.json() as Promise<TUseCheckUserTokenResponseData>
-                })
-                .then((data) => {
-                    setData(data)
-                    setInProcess(false)
-                })
-                .catch((e) => {
-                    alert({ e })
-                    setInProcess(false)
-                })
-                .finally(() => {})
-        }
-    }, [token])
-
-    return { data, inProcess }
-}
-
-function UseMyApp() {
-    const [app, setApp] = useState<ApplicationSingletoneFacade>(cashFlowApp)
-
-    useEffect(() => {}, [app])
-
-    return {
-        app,
-    }
 }
 
 export function StartWindow(): JSX.Element {
