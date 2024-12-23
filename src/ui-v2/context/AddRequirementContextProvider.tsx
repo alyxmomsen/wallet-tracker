@@ -21,7 +21,7 @@ export type TDateContext = {
     setIsRequirementAddedSuccessfully: (state: boolean) => void
     isNewRequirementBeingWritten: boolean
     setIsNewRequirementBeingWritten: (state: boolean) => void
-    // setDirection:() => void
+
     optionalFields: OptionElement[]
     setOptionalFields: (elem: OptionElement[]) => void
 }

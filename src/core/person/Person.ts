@@ -150,14 +150,10 @@ export abstract class Person implements IPerson {
         // this.id = ''
     }
 
-    // private password: string
-    // protected id: string
     protected name: string
     protected wallet: IWallet
     protected requirementCommandsPool: IRequirementCommand[]
-    // protected hungerLevel: number;
-    // protected tiredLevel: number;
-    // protected sleepLevel: number;
+
     protected averageSpending: number
     protected status: IPersonStatusSystem
     private onUpdateObserver: IPersonObserver

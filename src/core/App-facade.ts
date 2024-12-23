@@ -33,7 +33,7 @@ export interface IApplicationSingletoneFacade {
     addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
     update(): void
     setUserLocally(user: IPerson): void
-    // unsetUser(): any
+
     createUserRemote(
         userName: string,
         password: string,
@@ -221,56 +221,6 @@ export class ApplicationSingletoneFacade
         this.userIsSetCallBackPull.push(cb)
     }
 
-    private async authUserAsync(
-        userName: string,
-        password: string,
-        authService: IAuthService
-    ): Promise<IPerson | null> {
-        const response: IAuthUserResponseData = await authService.execute(
-            userName,
-            password
-        )
-
-        if (response.payload) {
-            this.localStorageManagementService.setAuthData(
-                response.payload.userId
-            )
-
-            // если установка данных авторизации прошло успешно,
-            // запрашиваем пользователя у бэк энд сервера
-
-            const userData = await this.serverConnector.getUserById(
-                response.payload.userId
-            )
-
-            if (userData.payload) {
-                const person = this.personFactory.create(
-                    // response.payload.userId,
-                    userData.payload.name,
-                    userData.payload.wallet
-                )
-
-                const requirementsData = userData.payload.requirements
-
-                requirementsData.forEach((elem) => {
-                    const requirementObject = this.requirementFactory.create({
-                        ...elem,
-                    })
-
-                    if (requirementObject) {
-                        person.addRequirementCommand(requirementObject)
-                    }
-                })
-
-                this.setUserLocally(person)
-
-                return person
-            }
-        }
-
-        return null
-    }
-
     getLocalUser(): IPerson | null {
         if (this.user === null) {
             return null
@@ -324,7 +274,7 @@ export class ApplicationSingletoneFacade
     private updatingStatus: boolean
     private personFactory: PersonFactory
     private requirementFactory: IRequirementFactory
-    // private otherUsers: IPerson[];
+
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
     private eventServise: IEventService

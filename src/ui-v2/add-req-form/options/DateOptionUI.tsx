@@ -212,7 +212,6 @@ function foo(str: string): Date {
 
     const newDate = new Date(`${Number.parseInt(month)}-${date}-${year}`)
 
-    //{newDate});
     return newDate
 }
 

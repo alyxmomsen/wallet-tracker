@@ -53,7 +53,7 @@ export type TAppCtx = {
     popUpWindow: JSX.Element | null
     setPopUpWindow: (elem: JSX.Element | null) => any
     update: () => void
-    // popUpItems: Map<number, PopUpItem>
+
     popUpService: IPopUpService
 }
 
@@ -66,9 +66,6 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <StartWindow />
     )
-    // const [popUpItems, setPopUpItems] = useState<Map<number, PopUpItem>>(
-    //     new Map()
-    // )
 
     const [popUpPool, setPopUpPool] = useState<JSX.Element[]>(
         popUpService.getElems()

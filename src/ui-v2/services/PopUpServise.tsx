@@ -1,5 +1,4 @@
 export interface IPopUpService {
-    // push(elem: IPopUpElement): any
     getElems(): JSX.Element[]
     onUpdated(cb: () => void): void
     addNotification(jsx: JSX.Element): void

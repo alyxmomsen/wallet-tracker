@@ -32,8 +32,6 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
         app,
     } = UseAppContext()
 
-    // console.log('>>>');
-
     const [user, setUser] = useState<IPerson | null>(null)
 
     const [updated, setUpdated] = useState(0)
@@ -214,50 +212,50 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
 export default PersonCardUI
 
-export async function checkUserAuth(userId: string) {
-    try {
-        const response = await fetch(
-            ServerBaseURL + '/get-user-requirements-protected',
-            {
-                headers: {
-                    // 'content-type': 'application/json',
-                    'Content-Type': 'Application/json',
-                    'x-auth': userId,
-                },
-                method: 'post',
-            }
-        )
+// export async function checkUserAuth(userId: string) {
+//     try {
+//         const response = await fetch(
+//             ServerBaseURL + '/get-user-requirements-protected',
+//             {
+//                 headers: {
+//                     // 'content-type': 'application/json',
+//                     'Content-Type': 'Application/json',
+//                     'x-auth': userId,
+//                 },
+//                 method: 'post',
+//             }
+//         )
 
-        return response.json() as Promise<
-            TFetchResponse<TUserRequirementStats[]>
-        >
-    } catch (e) {}
-}
+//         return response.json() as Promise<
+//             TFetchResponse<TUserRequirementStats[]>
+//         >
+//     } catch (e) {}
+// }
 
-export async function fetchUserRequirements(
-    userId: string
-): Promise<TFetchResponse<IRequirementStats[]>> {
-    try {
-        const response = await fetch(
-            ServerBaseURL + '/get-user-requirements-protected',
-            {
-                headers: {
-                    // 'content-type': 'application/json',
-                    'Content-Type': 'Application/json',
-                    'x-auth': userId,
-                },
-                method: 'post',
-            }
-        )
+// export async function fetchUserRequirements(
+//     userId: string
+// ): Promise<TFetchResponse<IRequirementStats[]>> {
+//     try {
+//         const response = await fetch(
+//             ServerBaseURL + '/get-user-requirements-protected',
+//             {
+//                 headers: {
+//                     // 'content-type': 'application/json',
+//                     'Content-Type': 'Application/json',
+//                     'x-auth': userId,
+//                 },
+//                 method: 'post',
+//             }
+//         )
 
-        return response.json() as Promise<TFetchResponse<IRequirementStats[]>>
-    } catch (e) {
-        return {
-            payload: null,
-            status: {
-                code: 1,
-                details: 'fetch error',
-            },
-        }
-    }
-}
+//         return response.json() as Promise<TFetchResponse<IRequirementStats[]>>
+//     } catch (e) {
+//         return {
+//             payload: null,
+//             status: {
+//                 code: 1,
+//                 details: 'fetch error',
+//             },
+//         }
+//     }
+// }
