@@ -6,7 +6,7 @@ import {
     RequirementFactory,
 } from './requirement-command/factories/RequirementFactory'
 import { IRequirementStats } from './requirement-command/interfaces'
-import { IRequirementCommand } from './requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from './requirement-command/RequirementCommand'
 import { AuthUserService, IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
 import { ILocalStorageManagementService } from './services/local-storage-service'
@@ -30,7 +30,9 @@ export interface IApplicationSingletoneFacade {
         title,
         value,
     }: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>): Promise<any>
-    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>): void
+    addRequirementSchedule(
+        task: ITask<ITransactionRequirementCommand, IPerson>
+    ): void
     update(): void
     setUserLocally(user: IPerson): void
 
@@ -40,11 +42,6 @@ export interface IApplicationSingletoneFacade {
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
     getLocalUser(): IPerson | null
-    /* authUserAsync(
-        userName: string,
-        password: string,
-        authService: IAuthService
-    ): Promise<IPerson | null> */
     userLogin(userName: string, password: string): Promise<IPerson | null>
     userLogout(): any
     onAppUpdated(cb: () => void): void
@@ -75,6 +72,52 @@ export interface ICheckAuthTokenResponseData {
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
+    async addRequirement({
+        cashFlowDirectionCode,
+        dateToExecute,
+        description,
+        isExecuted,
+        title,
+        value,
+    }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
+        const authToken = this.localStorageManagementService.getAuthData()
+        if (authToken) {
+            const data =
+                await this.requriementManagementService.createRequirement(
+                    {
+                        cashFlowDirectionCode,
+                        dateToExecute,
+                        description,
+                        isExecuted,
+                        title,
+                        value,
+                    },
+                    authToken
+                )
+
+            if (data.payload) {
+                const newUser = this.personFactory.create(
+                    data.payload.name,
+                    data.payload.wallet
+                )
+
+                if (newUser) {
+                    data.payload.requirements.forEach((requirement) => {
+                        const newRequirement = new RequirementFactory().create({
+                            ...requirement,
+                        })
+
+                        if (newRequirement) {
+                            newUser.addRequirementCommand(newRequirement)
+                        }
+                    })
+
+                    this.setUserLocally(newUser)
+                }
+            }
+        }
+    }
+
     async deleteRequirement(
         reqId: string
     ): Promise<Pick<IRequirementStats, 'id'> | null> {
@@ -86,8 +129,6 @@ export class ApplicationSingletoneFacade
         log('try delete the requirement')
         log('req id: ' + reqId)
         const authData = this.localStorageManagementService.getAuthData()
-
-        // log();
 
         if (authData === null) {
             log('localstorage failed')
@@ -166,53 +207,6 @@ export class ApplicationSingletoneFacade
 
     onUserUpdated(cb: () => any) {}
 
-    async addRequirement({
-        cashFlowDirectionCode,
-        dateToExecute,
-        description,
-        isExecuted,
-        title,
-        value,
-    }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
-        const authData = this.localStorageManagementService.getAuthData()
-        if (authData) {
-            const data =
-                await this.requriementManagementService.createRequirement(
-                    {
-                        cashFlowDirectionCode,
-                        dateToExecute,
-                        description,
-                        isExecuted,
-                        title,
-                        value,
-                    },
-                    authData
-                )
-
-            if (data.payload) {
-                const newUser = this.personFactory.create(
-                    // data.payload.id,
-                    data.payload.name,
-                    data.payload.wallet
-                )
-
-                if (newUser) {
-                    data.payload.requirements.forEach((requirement) => {
-                        const newRequirement = new RequirementFactory().create({
-                            ...requirement,
-                        })
-
-                        if (newRequirement) {
-                            newUser.addRequirementCommand(newRequirement)
-                        }
-                    })
-
-                    this.setUserLocally(newUser)
-                }
-            }
-        }
-    }
-
     onAppUpdated(cb: () => void): void {
         this.callbackPull.push(cb)
     }
@@ -242,6 +236,10 @@ export class ApplicationSingletoneFacade
 
         // ---------
 
+        this.user.onUpdate((user: IPerson) => {
+            this.setUserLocally(user)
+        })
+
         this.userIsSetCallBackPull.forEach((callBack) => {
             callBack(user)
         })
@@ -264,7 +262,9 @@ export class ApplicationSingletoneFacade
         return ApplicationSingletoneFacade.instance
     }
 
-    addRequirementSchedule(task: ITask<IRequirementCommand, IPerson>) {}
+    addRequirementSchedule(
+        task: ITask<ITransactionRequirementCommand, IPerson>
+    ) {}
 
     update() {}
 

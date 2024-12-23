@@ -1,12 +1,15 @@
 import React from 'react'
-import { IRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
 import { UseAppContext } from '../../../context/UseAppContext'
 import RequirementCard from '../../../requirement-card/RequirementCard'
+import { IPerson } from '../../../../core/person/Person'
 
 const RegularRequirementItem = ({
     requirement,
+    user,
 }: {
-    requirement: IRequirementCommand
+    requirement: ITransactionRequirementCommand
+    user: IPerson
 }) => {
     const { curentWindow, setCurentWindow } = UseAppContext()
 
@@ -36,18 +39,19 @@ const RegularRequirementItem = ({
                     </div>
                 </div>
                 <div className="flex-box">
-                    {/* <div>{execDate}</div>
-                                <div>{execDate}</div>
-                                <div>{execDate}</div> */}
+                    mother fucker
+                    {new Date(
+                        requirement.getExecutionTimestamp()
+                    ).getFullYear()}
+                    {new Date(requirement.getExecutionTimestamp()).getMonth()}
+                    {new Date(requirement.getExecutionTimestamp()).getDate()}
                 </div>
             </div>
             {!requirement.checkIfExecuted() ? (
                 <button
-                    // onClick={(e) => {
-                    //     e.stopPropagation()
-                    //     requirement.execute(person)
-                    //     update()
-                    // }}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                    }}
                     className="hover--child btn"
                 >
                     execute

@@ -2,7 +2,7 @@ import { IRequirementStats } from '../interfaces'
 import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
-    IRequirementCommand,
+    ITransactionRequirementCommand,
 } from '../RequirementCommand'
 
 export interface IRequirementFactory {
@@ -16,7 +16,7 @@ export interface IRequirementFactory {
     }: Omit<
         IRequirementStats,
         'isExecuted' | 'userId'
-    >): IRequirementCommand | null
+    >): ITransactionRequirementCommand | null
 }
 
 export class RequirementFactory implements IRequirementFactory {
@@ -30,7 +30,7 @@ export class RequirementFactory implements IRequirementFactory {
     }: Omit<
         IRequirementStats,
         'isExecuted' | 'userId'
-    >): IRequirementCommand | null {
+    >): ITransactionRequirementCommand | null {
         switch (cashFlowDirectionCode) {
             case 0:
                 return new IncrementMoneyRequirementCommand(

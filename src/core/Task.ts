@@ -1,22 +1,24 @@
 import { IPerson } from './person/Person'
-import { IRequirementCommand } from './requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from './requirement-command/RequirementCommand'
 
 export interface ITask<T, S> {
-    getRequirement(): IRequirementCommand
+    getRequirement(): ITransactionRequirementCommand
     getDateStart(): Date
 }
 
-export class RequirementTask implements ITask<IRequirementCommand, IPerson> {
+export class RequirementTask
+    implements ITask<ITransactionRequirementCommand, IPerson>
+{
     dateStart: Date
-    requirement: IRequirementCommand
+    requirement: ITransactionRequirementCommand
 
-    getRequirement(): IRequirementCommand {
+    getRequirement(): ITransactionRequirementCommand {
         return this.requirement
     }
     getDateStart(): Date {
         return this.dateStart
     }
-    constructor(dateStart: Date, requirement: IRequirementCommand) {
+    constructor(dateStart: Date, requirement: ITransactionRequirementCommand) {
         this.dateStart = dateStart
         this.requirement = requirement
     }

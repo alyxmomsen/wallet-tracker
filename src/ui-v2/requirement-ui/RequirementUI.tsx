@@ -1,5 +1,5 @@
 import React from 'react'
-import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
@@ -8,7 +8,7 @@ const RequirementUI = ({
     requirement,
     person,
 }: {
-    requirement: IRequirementCommand
+    requirement: ITransactionRequirementCommand
     person: IPerson
 }) => {
     const { update } = UseAppContext()

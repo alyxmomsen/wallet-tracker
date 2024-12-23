@@ -1,11 +1,11 @@
 import React from 'react'
-import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import { UseAppContext } from '../context/UseAppContext'
 
 const RequirementCard = ({
     requirement,
 }: {
-    requirement: IRequirementCommand
+    requirement: ITransactionRequirementCommand
 }) => {
     const { app } = UseAppContext()
 

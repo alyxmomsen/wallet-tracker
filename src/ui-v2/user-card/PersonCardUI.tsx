@@ -17,7 +17,7 @@ import { RequirementFactory } from '../../core/requirement-command/factories/Req
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
 import { IUserData } from '../../core/types/common'
 import { application } from 'express'
-import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
 
 // http://94.241.139.88:3000/
@@ -38,7 +38,9 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
 
     const [statusStarted, setStatusStarted] = useState(0)
 
-    const [requirements, setRequirements] = useState<IRequirementCommand[]>([])
+    const [requirements, setRequirements] = useState<
+        ITransactionRequirementCommand[]
+    >([])
 
     let reqanfrid = 0
 
@@ -201,8 +203,11 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                             </button>
                         </div>
                     </div>
-                    {requirements && requirements.length ? (
-                        <RequirementModule requirements={requirements} />
+                    {requirements && requirements.length && user ? (
+                        <RequirementModule
+                            requirements={requirements}
+                            user={user}
+                        />
                     ) : null}
                 </div>
             </div>

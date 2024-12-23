@@ -1,6 +1,6 @@
 import { networkInterfaces } from 'os'
 import { IWallet, Wallet } from '../Wallet'
-import { IRequirementCommand } from '../requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../requirement-command/RequirementCommand'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
 import { IUserData } from '../types/common'
 import { RequirementFactory } from '../requirement-command/factories/RequirementFactory'
@@ -22,27 +22,27 @@ export type TWalletTrackValue = {
 export interface IPerson {
     getWalletBalance(): number
     addRequirementCommand(
-        requirementCommand: IRequirementCommand
-    ): IRequirementCommand | null
-    getRequirementCommandById(id: string): IRequirementCommand[]
-    getActualRequirementCommands(): IRequirementCommand[]
-    getAllReauirementCommands(): IRequirementCommand[]
-    getExecutedRequirementCommands(): IRequirementCommand[]
+        requirementCommand: ITransactionRequirementCommand
+    ): ITransactionRequirementCommand | null
+    getRequirementCommandById(id: string): ITransactionRequirementCommand[]
+    getActualRequirementCommands(): ITransactionRequirementCommand[]
+    getAllReauirementCommands(): ITransactionRequirementCommand[]
+    getExecutedRequirementCommands(): ITransactionRequirementCommand[]
     decrementWallet(value: number): void
     getName(): string
     incrementWallet(value: number): void
     getWalletTrackForActualRequirements(): TWalletTrackValue[]
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
-    onUpdate(cb: () => any): any
+    onUpdate(cb: (user: IPerson) => any): any
 }
 
 export abstract class Person implements IPerson {
-    onUpdate(cb: () => any): any {
+    onUpdate(cb: (user: IPerson) => any): any {
         this.onUpdateObserver.addObserveable(cb)
     }
 
-    getRequirementCommandById(id: string): IRequirementCommand[] {
+    getRequirementCommandById(id: string): ITransactionRequirementCommand[] {
         const requirements = this.requirementCommandsPool.filter((elem) => {
             return elem.getId() === id
         })
@@ -89,13 +89,15 @@ export abstract class Person implements IPerson {
     }
 
     addRequirementCommand(
-        requirementCommand: IRequirementCommand
-    ): IRequirementCommand | null {
+        requirementCommand: ITransactionRequirementCommand
+    ): ITransactionRequirementCommand | null {
         for (const requirement of this.requirementCommandsPool) {
             const id = requirement.getId()
 
             requirementCommand.getId()
         }
+
+        requirementCommand.onUpdated(() => this.update())
 
         this.requirementCommandsPool.push(requirementCommand)
 
@@ -106,7 +108,7 @@ export abstract class Person implements IPerson {
         return this.wallet.getBalance()
     }
 
-    getActualRequirementCommands(): IRequirementCommand[] {
+    getActualRequirementCommands(): ITransactionRequirementCommand[] {
         return this.requirementCommandsPool.filter((requirementCommand) => {
             if (requirementCommand.checkIfExecuted()) {
                 return false
@@ -130,11 +132,11 @@ export abstract class Person implements IPerson {
         })
     }
 
-    getAllReauirementCommands(): IRequirementCommand[] {
+    getAllReauirementCommands(): ITransactionRequirementCommand[] {
         return this.requirementCommandsPool
     }
 
-    getExecutedRequirementCommands(): IRequirementCommand[] {
+    getExecutedRequirementCommands(): ITransactionRequirementCommand[] {
         return this.requirementCommandsPool.filter((elem) => {
             return !elem.checkIfExecuted()
         })
@@ -152,35 +154,18 @@ export abstract class Person implements IPerson {
 
     protected name: string
     protected wallet: IWallet
-    protected requirementCommandsPool: IRequirementCommand[]
+    protected requirementCommandsPool: ITransactionRequirementCommand[]
 
     protected averageSpending: number
     protected status: IPersonStatusSystem
     private onUpdateObserver: IPersonObserver
 
-    private updateRequirements(requirements: IRequirementCommand[]): void {}
+    private updateRequirements(
+        requirements: ITransactionRequirementCommand[]
+    ): void {}
 
-    private update(newData: IUserData): any {
-        this.name = newData.name
-        this.wallet.setValue(newData.wallet)
-
-        const requirements = newData.requirements
-        const requirementFactory = new RequirementFactory()
-        const newRequirementPool: IRequirementCommand[] = []
-
-        requirements.forEach((requirement) => {
-            const newRequirement = requirementFactory.create({
-                ...requirement,
-            })
-
-            if (newRequirement) {
-                newRequirementPool.push(newRequirement)
-            }
-        })
-
-        this.requirementCommandsPool = newRequirementPool
-
-        this.onUpdateObserver.execute()
+    private update(): any {
+        this.onUpdateObserver.execute(this)
     }
 }
 

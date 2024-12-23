@@ -94,15 +94,8 @@ export class RequrementManagementService
                     details: 'bad mood',
                 },
             }
-            console.error(e)
         }
-
-        // this.requirementFactory.create('' ,);
     }
 
-    private requirementFactory: IRequirementFactory
-
-    constructor(factory: IRequirementFactory) {
-        this.requirementFactory = factory
-    }
+    constructor(factory: IRequirementFactory) {}
 }

@@ -1,6 +1,6 @@
 import { IPerson } from '../person/Person'
 
-export interface IRequirementCommand {
+export interface ITransactionRequirementCommand {
     execute(person: IPerson): boolean
     getId(): string
     getDescription(): string
@@ -10,12 +10,19 @@ export interface IRequirementCommand {
     getExecutionTimestamp(): number
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
+    onUpdated(cb: () => void): void
 }
 
-abstract class RequirementCommand implements IRequirementCommand {
+abstract class TransactionRequirementCommand
+    implements ITransactionRequirementCommand
+{
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
+
+    onUpdated(cb: () => void): void {
+        this.onUpdatedCallBacks.push(cb)
+    }
 
     getId(): string {
         return this.id
@@ -60,8 +67,9 @@ abstract class RequirementCommand implements IRequirementCommand {
         this.isExecuted = false
         this.title = title
         this.transactionTypeCode = transactionTypeCode
+        this.onUpdatedCallBacks = []
     }
-
+    protected onUpdatedCallBacks: (() => void)[]
     protected id: string
     protected title: string
     protected value: number
@@ -71,7 +79,7 @@ abstract class RequirementCommand implements IRequirementCommand {
     protected transactionTypeCode: number
 }
 
-export class IncrementMoneyRequirementCommand extends RequirementCommand {
+export class IncrementMoneyRequirementCommand extends TransactionRequirementCommand {
     execute(person: IPerson): boolean {
         if (this.isExecuted) {
             return false
@@ -99,7 +107,7 @@ export class IncrementMoneyRequirementCommand extends RequirementCommand {
     }
 }
 
-export class DecrementMoneyRequirementCommand extends RequirementCommand {
+export class DecrementMoneyRequirementCommand extends TransactionRequirementCommand {
     executeWithValue(value: number): number {
         return value - this.value
     }
@@ -121,6 +129,7 @@ export class DecrementMoneyRequirementCommand extends RequirementCommand {
         person.decrementWallet(this.value)
         this.isExecuted = true
 
+        this.onUpdatedCallBacks.forEach((cb) => cb())
         return true
     }
 

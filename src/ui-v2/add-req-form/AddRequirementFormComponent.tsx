@@ -9,7 +9,7 @@ import { UseDateFormContext } from '../context/AddRequirementContextProvider'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
-import { IRequirementCommand } from '../../core/requirement-command/RequirementCommand'
+import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 
 const AddRequirementFormComponent = () => {
     const {
@@ -70,9 +70,9 @@ const ThankYouMessageUI = () => {
     const { setIsNewRequirementBeingWritten } = UseDateFormContext()
     const { loginedPerson: loginedPerson, setCurentWindow } = UseAppContext()
 
-    const [logPersActReqCommands, setThat] = useState<IRequirementCommand[]>(
-        loginedPerson ? loginedPerson.getActualRequirementCommands() : []
-    )
+    const [logPersActReqCommands, setThat] = useState<
+        ITransactionRequirementCommand[]
+    >(loginedPerson ? loginedPerson.getActualRequirementCommands() : [])
 
     return (
         <div className="flex-box flex-center">
