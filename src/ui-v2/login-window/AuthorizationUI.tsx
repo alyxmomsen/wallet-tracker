@@ -1,6 +1,4 @@
-import React, {
-    useState,
-} from 'react'
+import React, { useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import Button from './shared/Button'
 

@@ -1,7 +1,3 @@
-import {
-    TFetchUserData,
-    TUserRequirementStats,
-} from '../ui-v2/login-window/RegistrationUI'
 import { IEventService } from './events/App-event'
 import { PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
@@ -171,7 +167,7 @@ export class ApplicationSingletoneFacade
 
             if (data.payload) {
                 const newUser = this.personFactory.create(
-                    data.payload.id,
+                    // data.payload.id,
                     data.payload.userName,
                     data.payload.wallet
                 )
@@ -225,7 +221,7 @@ export class ApplicationSingletoneFacade
 
             if (userData.payload) {
                 const person = this.personFactory.create(
-                    response.payload.userId,
+                    // response.payload.userId,
                     userData.payload.userName,
                     userData.payload.wallet
                 )
@@ -298,8 +294,6 @@ export class ApplicationSingletoneFacade
 
     update() {}
 
-    
-
     private localStorageManagementService: ILocalStorageManagementService
     private requriementManagementService: IRequirementManagementService
     private authUserService: IAuthService
@@ -357,53 +351,89 @@ export class ApplicationSingletoneFacade
 
         const authData = this.localStorageManagementService.getAuthData()
 
-        
-
         if (authData) {
             this.updatingStatus = true
-            this.serverConnector.getUserById(authData).then((response) => {
-                const { payload, status } = response
+            // this.serverConnector.getUserById(authData).then((response) => {
+            //     const { payload, status } = response
 
-                if (payload) {
-                    const newUser: IPerson = this.personFactory.create(
-                        authData,
-                        payload.userName,
-                        payload.wallet
-                    )
+            //     if (payload) {
+            //         const newUser: IPerson = this.personFactory.create(
+            //             authData,
+            //             payload.userName,
+            //             payload.wallet
+            //         )
 
-                    const p = payload as TFetchUserData & {
-                        requirements: IRequirementStats[]
+            //         const p = payload as TFetchUserData & {
+            //             requirements: IRequirementStats[]
+            //         }
+
+            //         p.requirements.forEach((elem) => {
+            //             //
+            //         })
+
+            //         console.log('>>> app constructor :: ', p.requirements)
+
+            //         const reqFactory = new RequirementFactory()
+
+            //         console.log(
+            //             'constructor requirements',
+            //             p.requirements,
+            //             payload
+            //         )
+
+            //         p.requirements.forEach((req) => {
+            //             const requirement = reqFactory.create({
+            //                 ...req,
+            //             })
+
+            //             if (requirement)
+            //                 newUser.addRequirementCommand(requirement)
+            //         })
+
+            //         this.setUserLocally(newUser)
+            //     }
+
+            //     this.callbackPull.forEach((cb) => cb())
+            //     this.updatingStatus = false
+            // })
+            this.serverConnector
+                .getUserByAuthToken(authData)
+                .then((response) => {
+                    const responsedPayload = response.payload
+
+                    if (responsedPayload !== null) {
+                        this.localStorageManagementService.setAuthData(
+                            responsedPayload.authToken
+                        )
+
+                        const user = this.personFactory.create(
+                            responsedPayload.userStats.userName,
+                            responsedPayload.userStats.wallet
+                        )
+
+                        responsedPayload.userStats.requirements.forEach(
+                            (elem) => {
+                                const requirementInitData: Omit<
+                                    IRequirementStats,
+                                    'isExecuted' | 'userId'
+                                > = elem
+
+                                const createdRequirement =
+                                    this.requirementFactory.create(
+                                        requirementInitData
+                                    )
+
+                                if (createdRequirement !== null) {
+                                    user.addRequirementCommand(
+                                        createdRequirement
+                                    )
+                                }
+                            }
+                        )
+
+                        this.setUserLocally(user)
                     }
-
-                    p.requirements.forEach((elem) => {
-                        //
-                    })
-
-                    console.log('>>> app constructor :: ', p.requirements)
-
-                    const reqFactory = new RequirementFactory()
-
-                    console.log(
-                        'constructor requirements',
-                        p.requirements,
-                        payload
-                    )
-
-                    p.requirements.forEach((req) => {
-                        const requirement = reqFactory.create({
-                            ...req,
-                        })
-
-                        if (requirement)
-                            newUser.addRequirementCommand(requirement)
-                    })
-
-                    this.setUserLocally(newUser)
-                }
-
-                this.callbackPull.forEach((cb) => cb())
-                this.updatingStatus = false
-            })
+                })
         }
 
         // this.createUser()

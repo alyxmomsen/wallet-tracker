@@ -38,43 +38,6 @@ export interface IPerson {
 }
 
 export abstract class Person implements IPerson {
-    // private password: string
-    protected id: string
-    protected name: string
-    protected wallet: IWallet
-    protected requirementCommandsPool: IRequirementCommand[]
-    // protected hungerLevel: number;
-    // protected tiredLevel: number;
-    // protected sleepLevel: number;
-    protected averageSpending: number
-    protected status: IPersonStatusSystem
-    private onUpdateObserver: IPersonObserver
-
-    private updateRequirements(requirements: IRequirementCommand[]): void {}
-
-    private update(newData: IUserData): any {
-        this.name = newData.userName
-        this.wallet.setValue(newData.wallet)
-
-        const requirements = newData.requirements
-        const requirementFactory = new RequirementFactory()
-        const newRequirementPool: IRequirementCommand[] = []
-
-        requirements.forEach((requirement) => {
-            const newRequirement = requirementFactory.create({
-                ...requirement,
-            })
-
-            if (newRequirement) {
-                newRequirementPool.push(newRequirement)
-            }
-        })
-
-        this.requirementCommandsPool = newRequirementPool
-
-        this.onUpdateObserver.execute()
-    }
-
     onUpdate(cb: () => any): any {
         this.onUpdateObserver.addObserveable(cb)
     }
@@ -177,20 +140,57 @@ export abstract class Person implements IPerson {
         })
     }
 
-    constructor(id: string, wallet: IWallet, name: string) {
+    constructor(/* id: string,  */ wallet: IWallet, name: string) {
         this.onUpdateObserver = new PersonObserver()
         this.wallet = wallet
         this.name = name
         this.requirementCommandsPool = []
         this.averageSpending = 700
         this.status = new GoingSleepStatus()
-        this.id = ''
+        // this.id = ''
+    }
+
+    // private password: string
+    // protected id: string
+    protected name: string
+    protected wallet: IWallet
+    protected requirementCommandsPool: IRequirementCommand[]
+    // protected hungerLevel: number;
+    // protected tiredLevel: number;
+    // protected sleepLevel: number;
+    protected averageSpending: number
+    protected status: IPersonStatusSystem
+    private onUpdateObserver: IPersonObserver
+
+    private updateRequirements(requirements: IRequirementCommand[]): void {}
+
+    private update(newData: IUserData): any {
+        this.name = newData.userName
+        this.wallet.setValue(newData.wallet)
+
+        const requirements = newData.requirements
+        const requirementFactory = new RequirementFactory()
+        const newRequirementPool: IRequirementCommand[] = []
+
+        requirements.forEach((requirement) => {
+            const newRequirement = requirementFactory.create({
+                ...requirement,
+            })
+
+            if (newRequirement) {
+                newRequirementPool.push(newRequirement)
+            }
+        })
+
+        this.requirementCommandsPool = newRequirementPool
+
+        this.onUpdateObserver.execute()
     }
 }
 
 export class OrdinaryPerson extends Person {
-    constructor(id: string, name: string, walletInitValue: number) {
-        super(id, new Wallet(walletInitValue), name)
+    constructor(/* id: string,  */ name: string, walletInitValue: number) {
+        super(/* id,  */ new Wallet(walletInitValue), name)
     }
 }
 

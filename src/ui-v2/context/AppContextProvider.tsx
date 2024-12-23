@@ -60,7 +60,6 @@ export type TAppCtx = {
 export const AppContext = createContext<TAppCtx | undefined>(undefined)
 
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
-
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
     const [loginedUser, setLoginedUser] = useState<IPerson | null>(null)

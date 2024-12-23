@@ -9,7 +9,6 @@ import { IRequirementStats } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'
 import { IAuthService } from './auth-service'
 
-
 export interface IRequirementManagementService {
     createRequirement(
         fields: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>,

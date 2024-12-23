@@ -11,6 +11,6 @@ export abstract class PersonFactory extends Factory<IPerson> {
 
 export class PlayerPersonFactory extends PersonFactory {
     create(name: string, walletInitValue: number): IPerson {
-        return new OrdinaryPerson('', name, walletInitValue)
+        return new OrdinaryPerson(name, walletInitValue)
     }
 }

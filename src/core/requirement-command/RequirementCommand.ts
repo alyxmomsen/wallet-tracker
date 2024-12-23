@@ -13,7 +13,6 @@ export interface IRequirementCommand {
 }
 
 abstract class RequirementCommand implements IRequirementCommand {
-    
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean

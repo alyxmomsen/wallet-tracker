@@ -7,5 +7,5 @@ export interface IRequirementStats {
     userId: string
     value: number
     id: string
-    deleted:boolean
+    deleted: boolean
 }
