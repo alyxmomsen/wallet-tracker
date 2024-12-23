@@ -122,13 +122,37 @@ export class ApplicationSingletoneFacade
         log('user loging')
         log(userName + ' | ' + password)
 
-        const person = await this.authUserAsync(
-            userName,
-            password,
-            this.authUserService
-        )
+        const loginResponse =
+            await this.serverConnector.getUserByUserNameAndPassword(
+                userName,
+                password
+            )
 
-        return person
+        if (loginResponse.payload === null) {
+            return null
+        }
+
+        const { name, wallet, requirements } = loginResponse.payload.userStats
+
+        const newPerson = this.personFactory.create(name, wallet)
+
+        for (const requirement of requirements) {
+            const createdReauirement = this.requirementFactory.create({
+                ...requirement,
+            })
+
+            if (createdReauirement === null) continue
+
+            newPerson.addRequirementCommand(createdReauirement)
+        }
+
+        this.setUserLocally(newPerson)
+
+        const token = loginResponse.payload.authToken
+
+        this.localStorageManagementService.setAuthData(token)
+
+        return newPerson
     }
 
     userLogout() {

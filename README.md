@@ -20,6 +20,12 @@
 
 - [ ] JWT
 
+<!-- ---------------------------------------- -->
+
+- [x] user auth by webbrowser localstorage
+- [x] login user
+- [ ] logout user
+
 issue:
 
 person factory dont use persons registry

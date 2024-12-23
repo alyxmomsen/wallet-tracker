@@ -58,20 +58,18 @@ const AuthorizationUI = () => {
                     setInProcess(true)
                     setMessageColor('grey')
                     setResponseMessage('in process...')
-                    await app
-                        .userLogin(userName, password)
-                        .then((person) => {
-                            if (!person) {
-                                setMessageColor('red')
-                                return setResponseMessage('fail')
-                            }
+                    const user = await app.userLogin(userName, password)
 
-                            setResponseMessage('user authorized')
-                            setMessageColor('green')
-                        })
-                        .finally(() => {
-                            setInProcess(false)
-                        })
+                    if (user === null) {
+                        setMessageColor('red')
+                        setResponseMessage('fail')
+
+                        return
+                    }
+
+                    setResponseMessage('user authorized')
+                    setMessageColor('green')
+                    setInProcess(false)
                 }}
             />
         </div>

@@ -11,6 +11,12 @@ export interface IServerConnector {
     ): Promise<
         TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
     >
+    getUserByUserNameAndPassword(
+        userName: string,
+        password: string
+    ): Promise<
+        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+    >
 }
 
 export interface IFetchHeaders {
@@ -19,6 +25,37 @@ export interface IFetchHeaders {
 }
 
 export class ServerConnector implements IServerConnector {
+    async getUserByUserNameAndPassword(
+        userName: string,
+        password: string
+    ): Promise<
+        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+    > {
+        const headers = {
+            'content-type': 'application/json',
+        }
+
+        const bodyInitData: { userName: string; password: string } = {
+            userName,
+            password,
+        }
+
+        const response = await fetch(
+            ServerBaseURL + '/get-user-with-username-and-password',
+            {
+                headers: headers,
+                method: 'post',
+                body: JSON.stringify(bodyInitData),
+            }
+        )
+
+        const responseData = (await response.json()) as TFetchResponse<{
+            userStats: Omit<IUserData, 'id'>
+            authToken: string
+        }>
+
+        return responseData
+    }
     async getUserByAuthToken(
         token: string
     ): Promise<
