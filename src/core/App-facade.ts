@@ -340,11 +340,21 @@ export class ApplicationSingletoneFacade
 
         user.subscribeOnMessage('requirement-updated', [
             () => this.emitMessage('updated'),
+            () => {
+                const userStats = this.getUserStats()
+
+                if (userStats === null) {
+                    return
+                }
+
+                this.serverConnector.pushUserDataStats(
+                    userStats,
+                    this.localStorageManagementService
+                )
+            },
         ])
 
-        this.user.onUpdate((user: IPerson) => {
-            this.setUserLocally(user)
-        })
+        this.user.onUpdate((user: IPerson) => {})
 
         this.userIsSetCallBackPull.forEach((callBack) => {
             const userData = this.getUserStats()

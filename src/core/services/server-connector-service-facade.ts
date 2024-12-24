@@ -1,9 +1,11 @@
 import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
+import { IPerson } from '../person/Person'
 import { IRequirementStats } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'
 import { AuthUserService, IAuthService } from './auth-service'
 import { GetUserService, IGetUserService } from './get-user-service'
+import { ILocalStorageManagementService } from './local-storage-service'
 
 export interface IServerConnector {
     getUserById(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
@@ -26,6 +28,12 @@ export interface IServerConnector {
             authToken: string
         }>
     >
+    pushUserDataStats(
+        user: Omit<IUserData, 'id'> & {
+            requirements: Omit<IRequirementStats, 'userId'>[]
+        },
+        localStorageService: ILocalStorageManagementService
+    ): Promise<any>
 }
 
 export interface IFetchHeaders {
@@ -34,6 +42,30 @@ export interface IFetchHeaders {
 }
 
 export class ServerConnector implements IServerConnector {
+    async pushUserDataStats(
+        user: Omit<IUserData, 'id'> & {
+            requirements: Omit<IRequirementStats, 'userId'>[]
+        },
+        localStorageService: ILocalStorageManagementService
+    ): Promise<any> {
+        const authJWTToken = localStorageService.getAuthData()
+
+        if (authJWTToken === null) return null
+
+        const response = await fetch(ServerBaseURL + '/update-user', {
+            headers: {
+                'content-type': 'application/json',
+                'x-auth': authJWTToken,
+            },
+            body: JSON.stringify(user),
+            method: 'post',
+        })
+
+        const data = await response.json()
+
+        console.log('>>> update user request ::  server respose: ', { data })
+    }
+
     async getUserByUserNameAndPassword(
         userName: string,
         password: string
