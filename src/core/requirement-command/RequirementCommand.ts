@@ -10,7 +10,6 @@ export interface ITransactionRequirementCommand {
     getExecutionTimestamp(): number
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
-    onUpdate(cb: () => void): void
     getDeletedTheState(): boolean
 }
 
@@ -20,10 +19,6 @@ abstract class TransactionRequirementCommand
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
-
-    onUpdate(cb: () => void): void {
-        this.onUpdatedCallBacks.push(cb)
-    }
 
     getId(): string {
         return this.id

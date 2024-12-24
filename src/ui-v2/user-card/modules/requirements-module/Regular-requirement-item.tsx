@@ -3,13 +3,15 @@ import { ITransactionRequirementCommand } from '../../../../core/requirement-com
 import { UseAppContext } from '../../../context/UseAppContext'
 import RequirementCard from '../../../requirement-card/RequirementCard'
 import { IPerson } from '../../../../core/person/Person'
+import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
+import { IUserData } from '../../../../core/types/common'
 
 const RegularRequirementItem = ({
     requirement,
     user,
 }: {
-    requirement: ITransactionRequirementCommand
-    user: IPerson
+    requirement: Omit<IRequirementStats ,'userId'>
+    user: Omit<IUserData ,'id'>
 }) => {
     const { curentWindow, setCurentWindow } = UseAppContext()
 
@@ -20,34 +22,34 @@ const RegularRequirementItem = ({
             }}
             className={
                 'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                (requirement.checkIfExecuted() ? ' requirement--executed' : '')
+                (requirement.isExecuted ? ' requirement--executed' : '')
             }
         >
             <div className="flex-box  flex-center">
-                <div> == {requirement.getTitle()} == </div>
+                <div> == {requirement.title} == </div>
                 {/* <div>
                                                 = {requirement.getDescription()}{' '}
                                                 =
                                             </div> */}
                 <div className="flex-box">
                     <div className="value-color--txt flex-item">
-                        {[' - ', ' + '][requirement.getTransactionTypeCode()]}
+                        {[' - ', ' + '][requirement.cashFlowDirectionCode]}
                     </div>
                     {/* <div className="flex-item">:</div> */}
                     <div className="value-color--txt flex-item">
-                        {requirement.getValue()}
+                        {requirement.value}
                     </div>
                 </div>
                 <div className="flex-box">
                     mother fucker
                     {new Date(
-                        requirement.getExecutionTimestamp()
+                        requirement.dateToExecute
                     ).getFullYear()}
-                    {new Date(requirement.getExecutionTimestamp()).getMonth()}
-                    {new Date(requirement.getExecutionTimestamp()).getDate()}
+                    {new Date(requirement.dateToExecute).getMonth()}
+                    {new Date(requirement.dateToExecute).getDate()}
                 </div>
             </div>
-            {!requirement.checkIfExecuted() ? (
+            {!requirement.isExecuted ? (
                 <button
                     onClick={(e) => {
                         e.stopPropagation()

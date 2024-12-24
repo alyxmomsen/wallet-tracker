@@ -28,24 +28,24 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
         app,
     } = UseAppContext()
 
-    const [user, setUser] = useState<IPerson | null>(null)
+    const [user, setUser] = useState<Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats ,'userId'>[] } | null>(null)
 
     const [updated, setUpdated] = useState(0)
 
     const [statusStarted, setStatusStarted] = useState(0)
 
     const [requirements, setRequirements] = useState<
-        ITransactionRequirementCommand[]
+        Omit<IRequirementStats , 'userId'>[]
     >([])
 
     let reqanfrid = 0
 
     useEffect(() => {
-        const user = app.getLocalUserStats()
+        const user = app.getUserStats()
 
         if (user) {
             setUser(user)
-            setRequirements(user.getAllReauirementCommands())
+            setRequirements(user.requirements)
         } else {
             setCurentWindow(<LoginWindowUI />)
         }
@@ -113,12 +113,12 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                 </button>
             </div>
             <div className="flex-box flex-dir-col bdr pdg">
-                <h3>{user?.getName()}</h3>
+                <h3>{user?.name}</h3>
                 <div>
                     <div className="flex-box">
                         <span>Wallet: </span>
                         <span className="value-color--txt">
-                            {user?.getWalletBalance()}
+                            {user?.wallet}
                         </span>
                     </div>
                 </div>
@@ -151,7 +151,7 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                               )
                           })}
                 </div>
-                <div>{user?.getStatusDescription()}</div>
+                <div>{'status description'}</div>
                 <div className="flex-box flex-dir-col">
                     <h3>{'REQUIREMENTS:'}</h3>
 

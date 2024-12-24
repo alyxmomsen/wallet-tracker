@@ -2,13 +2,15 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { ITransactionRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
 import RegularRequirementItem from './Regular-requirement-item'
 import { IPerson } from '../../../../core/person/Person'
+import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
+import { IUserData } from '../../../../core/types/common'
 
 const RequirementModule = ({
     requirements,
     user,
 }: {
-    requirements: ITransactionRequirementCommand[]
-    user: IPerson
+    requirements: Omit<IRequirementStats , 'userId'>[]
+    user: Omit<IUserData ,'id'>
 }) => {
     const length = useMemo(() => {
         return requirements.length
@@ -21,7 +23,7 @@ const RequirementModule = ({
     return (
         <div className="flex-box flex-dir-col">
             {requirements.map((requirement, i) => {
-                const execDate = requirement.getExecutionTimestamp()
+                const execDate = requirement.dateToExecute
 
                 return fullReqSize ? (
                     <RegularRequirementItem
@@ -45,8 +47,8 @@ const MinimalisticRequirement = ({
     requirement,
     user,
 }: {
-    requirement: ITransactionRequirementCommand
-    user: IPerson
+    requirement: Omit<IRequirementStats , 'userId'>
+    user: Omit<IUserData , 'id'>
 }) => {
     return (
         <div
@@ -61,34 +63,34 @@ const MinimalisticRequirement = ({
             }}
             className={
                 'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                (requirement.checkIfExecuted() ? ' requirement--executed' : '')
+                (requirement.isExecuted ? ' requirement--executed' : '')
             }
         >
             <div className="flex-box flex-dir-col flex-center">
-                <div> == {requirement.getTitle()} == </div>
+                <div> == {requirement.title} == </div>
                 {/* <div>
                                                 = {requirement.getDescription()}{' '}
                                                 =
                                             </div> */}
                 <div className="flex-box">
                     <div className="value-color--txt flex-item">
-                        {[' - ', ' + '][requirement.getTransactionTypeCode()]}
+                        {[' - ', ' + '][requirement.cashFlowDirectionCode]}
                     </div>
                     <div className="flex-item">:</div>
                     <div className="value-color--txt flex-item">
-                        {requirement.getValue()}
+                        {requirement.value}
                     </div>
                 </div>
                 <div className="flex-box">
                     {new Date(
-                        requirement.getExecutionTimestamp()
+                        requirement.dateToExecute
                     ).getFullYear()}
-                    .{new Date(requirement.getExecutionTimestamp()).getMonth()}.
-                    {new Date(requirement.getExecutionTimestamp()).getDate()}/
-                    {new Date(requirement.getExecutionTimestamp()).getHours()}:
-                    {new Date(requirement.getExecutionTimestamp()).getMinutes()}
+                    .{new Date(requirement.dateToExecute).getMonth()}.
+                    {new Date(requirement.dateToExecute).getDate()}/
+                    {new Date(requirement.dateToExecute).getHours()}:
+                    {new Date(requirement.dateToExecute).getMinutes()}
                     <div style={{ fontWeight: 'bolder' }}>
-                        {Date.now() > requirement.getExecutionTimestamp() ? (
+                        {Date.now() > requirement.dateToExecute ? (
                             <span style={{ color: 'black' }}>'EXPIRED'</span>
                         ) : (
                             ''
@@ -96,11 +98,10 @@ const MinimalisticRequirement = ({
                     </div>
                 </div>
             </div>
-            {!requirement.checkIfExecuted() ? (
+            {!requirement.isExecuted ? (
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
-                        requirement.execute(user)
                     }}
                     className="hover--child btn"
                 >
