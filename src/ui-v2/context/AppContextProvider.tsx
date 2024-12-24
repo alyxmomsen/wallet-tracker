@@ -30,30 +30,20 @@ const cashFlowApp = new ApplicationSingletoneFacade(
 
 const popUpService = new PopUpService()
 
-/* export interface IPopUpItem {
-    exec(): JSX.Element
-} */
-
-/* export class PopUpItem implements IPopUpItem {
-    private elem: () => JSX.Element
-
-    exec(): JSX.Element {
-        return this.elem()
-    }
-
-    constructor(elem: () => JSX.Element) {
-        this.elem = elem
-    }
-} */
-
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
-    loginedPerson: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-} | null
-    setUser: (person: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-} | null) => void
+    loginedPerson:
+        | (Omit<IUserData, 'id'> & {
+              requirements: Omit<IRequirementStats, 'userId'>[]
+          })
+        | null
+    setUser: (
+        person:
+            | (Omit<IUserData, 'id'> & {
+                  requirements: Omit<IRequirementStats, 'userId'>[]
+              })
+            | null
+    ) => void
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
     popUpWindow: JSX.Element | null
@@ -68,9 +58,12 @@ export const AppContext = createContext<TAppCtx | undefined>(undefined)
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
-    const [loginedUser, setLoginedUser] = useState<Omit<IUserData, "id"> & {
-        requirements: Omit<IRequirementStats, "userId">[]
-    } | null>(null)
+    const [loginedUser, setLoginedUser] = useState<
+        | (Omit<IUserData, 'id'> & {
+              requirements: Omit<IRequirementStats, 'userId'>[]
+          })
+        | null
+    >(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <StartWindow />
     )
@@ -82,6 +75,18 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     let timeOutId: NodeJS.Timeout | null = null
 
     useEffect(() => {
+        app.subscriberOnMessage({
+            callBacks: [
+                () => {
+                    const userStats = app.getUserStats()
+                    if (userStats) {
+                        setLoginedUser(userStats)
+                    }
+                },
+            ],
+            message: 'updated',
+        })
+
         app.onAppUpdate(() => {
             if (timeOutId) clearTimeout(timeOutId)
             const user = app.getLocalUserStats()
@@ -90,19 +95,23 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             // setCurrentWindow(<PersonCardUI person={user} />)
         })
 
-        app.onUserSet((user: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-}) => {
-            if (timeOutId) {
-                clearTimeout(timeOutId)
+        app.onUserSet(
+            (
+                user: Omit<IUserData, 'id'> & {
+                    requirements: Omit<IRequirementStats, 'userId'>[]
+                }
+            ) => {
+                if (timeOutId) {
+                    clearTimeout(timeOutId)
+                }
+                timeOutId = setTimeout(() => setPopUp(null), 3000)
+                setLoginedUser(app.getUserStats())
+                popUpService.addNotification(
+                    <PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />
+                )
+                // setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
             }
-            timeOutId = setTimeout(() => setPopUp(null), 3000)
-            setLoginedUser(app.getUserStats())
-            popUpService.addNotification(
-                <PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />
-            )
-            // setPopUp(<PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />)
-        })
+        )
 
         app.onUserIsUnset(() => {
             // setPopUp(<div>hello world</div>)

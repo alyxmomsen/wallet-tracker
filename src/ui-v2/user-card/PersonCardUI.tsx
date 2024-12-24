@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import {
@@ -11,31 +10,40 @@ import TrackComponentUI from '../track-component-ui/TrackComponentUI'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
 import { IUserData } from '../../core/types/common'
-import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
 
 // http://94.241.139.88:3000/
 // export const ServerBaseURL = 'http://94.241.139.88:3030'
 export const ServerBaseURL = 'http://127.0.0.1:3030'
 
-const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-} }) => {
+const PersonCardUI = ({
+    person,
+}: {
+    person: Omit<IUserData, 'id'> & {
+        requirements: Omit<IRequirementStats, 'userId'>[]
+    }
+}) => {
     const {
         curentWindow: curPage,
         setCurentWindow,
         update,
         app,
+        loginedPerson,
     } = UseAppContext()
 
-    const [user, setUser] = useState<Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats ,'userId'>[] } | null>(null)
+    const [user, setUser] = useState<
+        | (Omit<IUserData, 'id'> & {
+              requirements: Omit<IRequirementStats, 'userId'>[]
+          })
+        | null
+    >(null)
 
     const [updated, setUpdated] = useState(0)
 
     const [statusStarted, setStatusStarted] = useState(0)
 
     const [requirements, setRequirements] = useState<
-        Omit<IRequirementStats , 'userId'>[]
+        Omit<IRequirementStats, 'userId'>[]
     >([])
 
     let reqanfrid = 0
@@ -113,12 +121,12 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                 </button>
             </div>
             <div className="flex-box flex-dir-col bdr pdg">
-                <h3>{user?.name}</h3>
+                <h3>{loginedPerson?.name}</h3>
                 <div>
                     <div className="flex-box">
                         <span>Wallet: </span>
                         <span className="value-color--txt">
-                            {user?.wallet}
+                            {loginedPerson?.wallet}
                         </span>
                     </div>
                 </div>
@@ -126,12 +134,7 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                     {currentStatusFactory
                         ? currentStatusFactory.getLinks().map((link) => {
                               return (
-                                  <button
-                                      className="btn"
-                                      onClick={() => {
-                                          
-                                      }}
-                                  >
+                                  <button className="btn" onClick={() => {}}>
                                       {link.getTitle()}
                                   </button>
                               )
@@ -141,9 +144,7 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                                   <div className=" flex-item">
                                       <button
                                           className="btn"
-                                          onClick={() => {
-                                              
-                                          }}
+                                          onClick={() => {}}
                                       >
                                           {sleepStatusfactory.getTitle()}
                                       </button>
@@ -161,9 +162,7 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                                 className="btn"
                                 onClick={() => {
                                     if (person) {
-                                        setCurentWindow(
-                                            <AddRequirementForm />
-                                        )
+                                        setCurentWindow(<AddRequirementForm />)
                                     }
                                 }}
                             >
@@ -183,10 +182,10 @@ const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
                             </button>
                         </div>
                     </div>
-                    {requirements && requirements.length && user ? (
+                    {requirements && requirements.length && loginedPerson ? (
                         <RequirementModule
-                            requirements={requirements}
-                            user={user}
+                            requirements={loginedPerson.requirements}
+                            user={loginedPerson}
                         />
                     ) : null}
                 </div>

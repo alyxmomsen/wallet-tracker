@@ -7,9 +7,7 @@ import { GetUserService, IGetUserService } from './get-user-service'
 
 export interface IServerConnector {
     getUserById(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
-    getUserByAuthToken(
-        token: string
-    ): Promise<
+    getUserByAuthToken(token: string): Promise<
         TFetchResponse<{
             userStats: Omit<IUserData, 'id'> & {
                 requirements: Omit<IRequirementStats, 'userId'>[]
@@ -74,9 +72,7 @@ export class ServerConnector implements IServerConnector {
 
         return responseData
     }
-    async getUserByAuthToken(
-        token: string
-    ): Promise<
+    async getUserByAuthToken(token: string): Promise<
         TFetchResponse<{
             userStats: Omit<IUserData, 'id'> & {
                 requirements: Omit<IRequirementStats, 'userId'>[]

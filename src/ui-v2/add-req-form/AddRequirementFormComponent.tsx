@@ -70,8 +70,8 @@ const ThankYouMessageUI = () => {
     const { loginedPerson: loginedPerson, setCurentWindow } = UseAppContext()
 
     const [logPersActReqCommands, setThat] = useState<
-        Omit<IRequirementStats , 'userId'>[]
-    >(loginedPerson ? loginedPerson.requirements : []) 
+        Omit<IRequirementStats, 'userId'>[]
+    >(loginedPerson ? loginedPerson.requirements : [])
 
     return (
         <div className="flex-box flex-center">

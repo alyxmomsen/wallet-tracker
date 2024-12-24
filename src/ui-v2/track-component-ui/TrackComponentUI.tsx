@@ -6,9 +6,13 @@ import GoPersonButton from '../shared/GoPersonButtonUI'
 import { IUserData } from '../../core/types/common'
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
 
-const TrackComponentUI = ({ person }: { person: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-} }) => {
+const TrackComponentUI = ({
+    person,
+}: {
+    person: Omit<IUserData, 'id'> & {
+        requirements: Omit<IRequirementStats, 'userId'>[]
+    }
+}) => {
     const { setCurentWindow: setCurPage } = UseAppContext()
 
     const transactionTypeCode = ['PLUS', 'MINUS']
@@ -32,47 +36,45 @@ const TrackComponentUI = ({ person }: { person: Omit<IUserData, "id"> & {
             {person.requirements.length ? (
                 <div className="flex-box flex-dir-col">
                     {
-                        person
-                            .requirements
-                            .map((elem, i) => {
-                                const unixTime = elem.dateToExecute
+                        person.requirements.map((elem, i) => {
+                            const unixTime = elem.dateToExecute
 
-                                const dateObj = new Date(unixTime)
+                            const dateObj = new Date(unixTime)
 
-                                const date = dateObj.getDate()
-                                const month = dateObj.getMonth()
-                                const year = dateObj.getFullYear()
+                            const date = dateObj.getDate()
+                            const month = dateObj.getMonth()
+                            const year = dateObj.getFullYear()
 
-                                return (
-                                    <div className="bdr pdg flex-box">
-                                        <div className={`pdg`}>{i + 1}.</div>
-                                        <div className="flex-box no-gap-flex bdr pdg">
-                                            <span>{date}</span>
-                                            <div>-</div>
-                                            <span>{month}</span>
-                                            <div>-</div>
-                                            <span>{year}</span>
-                                        </div>
-                                        <div className={`bdr pdg`}>
-                                            value befor calculate
-                                        </div>
-                                        <div className={` pdg`}>
-                                            {
-                                                transactionTypeCode[
-                                                    elem.cashFlowDirectionCode
-                                                ]
-                                            }
-                                        </div>
-                                        <div className={`bdr pdg`}>
-                                            {elem.value}
-                                        </div>{' '}
-                                        =
-                                        <div className={`bdr pdg`}>
-                                            {'value after'}
-                                        </div>
+                            return (
+                                <div className="bdr pdg flex-box">
+                                    <div className={`pdg`}>{i + 1}.</div>
+                                    <div className="flex-box no-gap-flex bdr pdg">
+                                        <span>{date}</span>
+                                        <div>-</div>
+                                        <span>{month}</span>
+                                        <div>-</div>
+                                        <span>{year}</span>
                                     </div>
-                                )
-                            })
+                                    <div className={`bdr pdg`}>
+                                        value befor calculate
+                                    </div>
+                                    <div className={` pdg`}>
+                                        {
+                                            transactionTypeCode[
+                                                elem.cashFlowDirectionCode
+                                            ]
+                                        }
+                                    </div>
+                                    <div className={`bdr pdg`}>
+                                        {elem.value}
+                                    </div>{' '}
+                                    =
+                                    <div className={`bdr pdg`}>
+                                        {'value after'}
+                                    </div>
+                                </div>
+                            )
+                        })
                         // [''].map(elem =><div>foobar</div>)
                     }
                 </div>
@@ -83,9 +85,7 @@ const TrackComponentUI = ({ person }: { person: Omit<IUserData, "id"> & {
                         className="btn"
                         onClick={() => {
                             if (person) {
-                                setCurPage(
-                                    <AddRequirementForm />
-                                )
+                                setCurPage(<AddRequirementForm />)
                             }
                         }}
                     >

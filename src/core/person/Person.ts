@@ -35,9 +35,28 @@ export interface IPerson {
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
     onUpdate(cb: (user: IPerson) => any): any
+    subscribeOnMessage(message: string, callBacks: (() => void)[]): void
 }
 
 export abstract class Person implements IPerson {
+    private emitMessage(message: string): void {
+        this.subscribers.forEach((elem) => {
+            if (elem.message === message) {
+                elem.callBacksPool.forEach((callBack) => {
+                    callBack()
+                })
+            }
+        })
+    }
+
+    subscribeOnMessage(message: string, callBacks: (() => void)[]): void {
+        this.subscribers.push({
+            callBacksPool: callBacks,
+            executedTimeStamp: 0,
+            message,
+        })
+    }
+
     onUpdate(cb: (user: IPerson) => any): any {
         this.onUpdateObserver.addObserveable(cb)
     }
@@ -91,11 +110,10 @@ export abstract class Person implements IPerson {
     addRequirementCommand(
         requirementCommand: ITransactionRequirementCommand
     ): ITransactionRequirementCommand | null {
-        for (const requirement of this.requirementCommandsPool) {
-            const id = requirement.getId()
-
-            requirementCommand.getId()
-        }
+        requirementCommand.subscribeOnUpdate(() => {
+            this.emitMessage('requirement-updated')
+            console.log('>>> add requirement :: requirement updated')
+        })
 
         this.requirementCommandsPool.push(requirementCommand)
 
@@ -112,17 +130,13 @@ export abstract class Person implements IPerson {
                 return false
             }
 
-            const currDateObj = getDateUtil(new Date())
+            const now = Date.now()
 
-            const requirementDateObj = getDateUtil(
-                new Date(requirementCommand.getExecutionTimestamp())
-            )
+            // const requirementDateObj = getDateUtil(
+            //     new Date(requirementCommand.getExecutionTimestamp())
+            // )
 
-            if (
-                requirementDateObj.year >= currDateObj.year &&
-                requirementDateObj.month >= currDateObj.month &&
-                requirementDateObj.date >= currDateObj.date
-            ) {
+            if (requirementCommand.getExecutionTimestamp() >= now) {
                 return true
             }
 
@@ -147,7 +161,7 @@ export abstract class Person implements IPerson {
         this.requirementCommandsPool = []
         this.averageSpending = 700
         this.status = new GoingSleepStatus()
-        // this.id = ''
+        this.subscribers = []
     }
 
     protected name: string
@@ -157,14 +171,11 @@ export abstract class Person implements IPerson {
     protected averageSpending: number
     protected status: IPersonStatusSystem
     private onUpdateObserver: IPersonObserver
-
-    private updateRequirements(
-        requirements: ITransactionRequirementCommand[]
-    ): void {}
-
-    private update(): any {
-        this.onUpdateObserver.execute(this)
-    }
+    private subscribers: {
+        executedTimeStamp: number
+        message: string
+        callBacksPool: (() => void)[]
+    }[]
 }
 
 export class OrdinaryPerson extends Person {

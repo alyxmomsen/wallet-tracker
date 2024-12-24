@@ -6,7 +6,7 @@ import { IRequirementStats } from '../../core/requirement-command/interfaces'
 const RequirementCard = ({
     requirement,
 }: {
-    requirement: Omit<IRequirementStats , 'userId'>
+    requirement: Omit<IRequirementStats, 'userId'>
 }) => {
     const { app } = UseAppContext()
 

@@ -20,7 +20,7 @@ import { ITask } from './Task'
 import { IUserData } from './types/common'
 
 export interface IApplicationSingletoneFacade {
-    // executeTransaction(): void;
+    executeTransactsionById(id: string): void
     deleteRequirement(
         reqId: string
     ): Promise<Pick<IRequirementStats, 'id'> | null>
@@ -41,14 +41,31 @@ export interface IApplicationSingletoneFacade {
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
     getLocalUserStats(): IPerson | null
-    getUserStats(): Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats , 'userId'>[]} | null
+    getUserStats():
+        | (Omit<IUserData, 'id'> & {
+              requirements: Omit<IRequirementStats, 'userId'>[]
+          })
+        | null
     userLogIn(userName: string, password: string): Promise<IPerson | null>
     userLogOut(): any
     onAppUpdate(cb: () => void): void
-    onUserSet(cb: (user:Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-}) => void): void
+    onUserSet(
+        cb: (
+            user: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+        ) => void
+    ): void
     onUserUpdate(cb: () => any): any
+    subscriberOnMessage({
+        callBacks,
+        message,
+    }: {
+        message: string
+        callBacks: (() => void)[]
+        executedTimeStamp: number
+    }): void
+    emitMessage(message: string): void
 }
 
 export interface IResponseData<T> {
@@ -74,6 +91,30 @@ export interface ICheckAuthTokenResponseData {
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
+    executeTransactsionById(id: string): void {
+        const user = this.user
+
+        if (user === null) return
+
+        console.log('>>> executeTransaction :: getting requirements...')
+        const requirements = user.getAllReauirementCommands().filter((elem) => {
+            return elem.getId() === id
+        })
+
+        if (requirements.length > 1)
+            throw new Error('multiple items by Id: ' + id)
+
+        if (requirements.length < 1)
+            throw new Error('no transactions by Id: ' + id)
+
+        const requirement = requirements[0]
+
+        requirement.execute(user)
+
+        console.log('>>> executeTransaction :: ', requirements)
+        console.log('>>> executeTransaction :: user has been mutated')
+    }
+
     async addRequirement({
         cashFlowDirectionCode,
         dateToExecute,
@@ -213,9 +254,13 @@ export class ApplicationSingletoneFacade
         this.callbackPull.push(cb)
     }
 
-    onUserSet(cb: (user: Omit<IUserData, "id"> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-}) => void): any {
+    onUserSet(
+        cb: (
+            user: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+        ) => void
+    ): any {
         this.userIsSetCallBackPull.push(cb)
     }
 
@@ -227,7 +272,11 @@ export class ApplicationSingletoneFacade
         return this.user
     }
 
-    getUserStats(): Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats , 'userId'>[]} | null {
+    getUserStats():
+        | (Omit<IUserData, 'id'> & {
+              requirements: Omit<IRequirementStats, 'userId'>[]
+          })
+        | null {
         if (this.user === null) {
             return null
         }
@@ -249,7 +298,7 @@ export class ApplicationSingletoneFacade
                     id: transactinRequirement.getId(),
                     isExecuted: transactinRequirement.checkIfExecuted(),
                     title: transactinRequirement.getTitle(),
-                    value:transactinRequirement.getValue(),
+                    value: transactinRequirement.getValue(),
                 })),
         }
 
@@ -264,19 +313,42 @@ export class ApplicationSingletoneFacade
         return createUserService.execute(userName, password)
     }
 
+    subscriberOnMessage({
+        callBacks,
+        message,
+    }: {
+        message: string
+        callBacks: (() => void)[]
+    }): void {
+        this.subscribers.push({ callBacks, message, executedTimeStamp: 0 })
+    }
+
+    emitMessage(message: string): void {
+        this.subscribers.forEach((subscriber) => {
+            if (subscriber.message === message) {
+                subscriber.callBacks.forEach((callBack) => {
+                    callBack()
+                })
+            }
+        })
+    }
+
     private setUserLocally(user: IPerson): void {
         this.user = user
 
         // ---------
+
+        user.subscribeOnMessage('requirement-updated', [
+            () => this.emitMessage('updated'),
+        ])
 
         this.user.onUpdate((user: IPerson) => {
             this.setUserLocally(user)
         })
 
         this.userIsSetCallBackPull.forEach((callBack) => {
-            const userData = this.getUserStats();
+            const userData = this.getUserStats()
             if (userData) {
-                
                 callBack(userData)
             }
         })
@@ -303,6 +375,11 @@ export class ApplicationSingletoneFacade
         task: ITask<ITransactionRequirementCommand, IPerson>
     ) {}
 
+    private subscribers: {
+        message: string
+        callBacks: (() => void)[]
+        executedTimeStamp: number
+    }[]
     private localStorageManagementService: ILocalStorageManagementService
     private requriementManagementService: IRequirementManagementService
     private authUserService: IAuthService
@@ -315,9 +392,11 @@ export class ApplicationSingletoneFacade
     private eventServise: IEventService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
-    private userIsSetCallBackPull: ((user: Omit<IUserData , 'id'> & {
-    requirements: Omit<IRequirementStats, "userId">[];
-}) => any)[]
+    private userIsSetCallBackPull: ((
+        user: Omit<IUserData, 'id'> & {
+            requirements: Omit<IRequirementStats, 'userId'>[]
+        }
+    ) => any)[]
     private userUnsetCallBackPull: (() => any)[]
 
     private updateRequirements(): void {}
@@ -337,6 +416,10 @@ export class ApplicationSingletoneFacade
         serverConnector: IServerConnector,
         eventService: IEventService
     ) {
+        // subscribers
+
+        this.subscribers = []
+
         // observer pulls
 
         this.userIsSetCallBackPull = []
@@ -356,7 +439,6 @@ export class ApplicationSingletoneFacade
         this.updatingStatus = false
         this.localStorageManagementService = localStorageService
         this.serverConnector = serverConnector
-        // this.users = []
 
         this.user = null
 
@@ -364,49 +446,7 @@ export class ApplicationSingletoneFacade
 
         if (authData) {
             this.updatingStatus = true
-            // this.serverConnector.getUserById(authData).then((response) => {
-            //     const { payload, status } = response
 
-            //     if (payload) {
-            //         const newUser: IPerson = this.personFactory.create(
-            //             authData,
-            //             payload.userName,
-            //             payload.wallet
-            //         )
-
-            //         const p = payload as TFetchUserData & {
-            //             requirements: IRequirementStats[]
-            //         }
-
-            //         p.requirements.forEach((elem) => {
-            //             //
-            //         })
-
-            //
-
-            //         const reqFactory = new RequirementFactory()
-
-            //         console.log(
-            //             'constructor requirements',
-            //             p.requirements,
-            //             payload
-            //         )
-
-            //         p.requirements.forEach((req) => {
-            //             const requirement = reqFactory.create({
-            //                 ...req,
-            //             })
-
-            //             if (requirement)
-            //                 newUser.addRequirementCommand(requirement)
-            //         })
-
-            //         this.setUserLocally(newUser)
-            //     }
-
-            //     this.callbackPull.forEach((cb) => cb())
-            //     this.updatingStatus = false
-            // })
             this.serverConnector
                 .getUserByAuthToken(authData)
                 .then((response) => {

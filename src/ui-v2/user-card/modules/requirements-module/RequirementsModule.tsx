@@ -4,13 +4,14 @@ import RegularRequirementItem from './Regular-requirement-item'
 import { IPerson } from '../../../../core/person/Person'
 import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
 import { IUserData } from '../../../../core/types/common'
+import { UseAppContext } from '../../../context/UseAppContext'
 
 const RequirementModule = ({
     requirements,
     user,
 }: {
-    requirements: Omit<IRequirementStats , 'userId'>[]
-    user: Omit<IUserData ,'id'>
+    requirements: Omit<IRequirementStats, 'userId'>[]
+    user: Omit<IUserData, 'id'>
 }) => {
     const length = useMemo(() => {
         return requirements.length
@@ -47,9 +48,11 @@ const MinimalisticRequirement = ({
     requirement,
     user,
 }: {
-    requirement: Omit<IRequirementStats , 'userId'>
-    user: Omit<IUserData , 'id'>
+    requirement: Omit<IRequirementStats, 'userId'>
+    user: Omit<IUserData, 'id'>
 }) => {
+    const { app } = UseAppContext()
+
     return (
         <div
             onClick={() => {
@@ -82,10 +85,8 @@ const MinimalisticRequirement = ({
                     </div>
                 </div>
                 <div className="flex-box">
-                    {new Date(
-                        requirement.dateToExecute
-                    ).getFullYear()}
-                    .{new Date(requirement.dateToExecute).getMonth()}.
+                    {new Date(requirement.dateToExecute).getFullYear()}.
+                    {new Date(requirement.dateToExecute).getMonth()}.
                     {new Date(requirement.dateToExecute).getDate()}/
                     {new Date(requirement.dateToExecute).getHours()}:
                     {new Date(requirement.dateToExecute).getMinutes()}
@@ -102,6 +103,7 @@ const MinimalisticRequirement = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
+                        app.executeTransactsionById(requirement.id)
                     }}
                     className="hover--child btn"
                 >

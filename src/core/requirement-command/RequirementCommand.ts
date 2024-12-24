@@ -11,6 +11,7 @@ export interface ITransactionRequirementCommand {
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
     getDeletedTheState(): boolean
+    subscribeOnUpdate(cb: () => void): void
 }
 
 abstract class TransactionRequirementCommand
@@ -19,6 +20,10 @@ abstract class TransactionRequirementCommand
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
+
+    subscribeOnUpdate(cb: () => void): void {
+        this.observeables.push({ cb, executedTimeStamp: 0 })
+    }
 
     getId(): string {
         return this.id
@@ -67,10 +72,9 @@ abstract class TransactionRequirementCommand
         this.isExecuted = false
         this.title = title
         this.transactionTypeCode = transactionTypeCode
-        this.onUpdatedCallBacks = []
         this.deleted = false
+        this.observeables = []
     }
-    protected onUpdatedCallBacks: (() => void)[]
     protected id: string
     protected title: string
     protected value: number
@@ -79,6 +83,7 @@ abstract class TransactionRequirementCommand
     protected isExecuted: boolean
     protected transactionTypeCode: number
     protected deleted: boolean
+    protected observeables: { cb: () => void; executedTimeStamp: number }[]
 }
 
 export class IncrementMoneyRequirementCommand extends TransactionRequirementCommand {
@@ -90,7 +95,12 @@ export class IncrementMoneyRequirementCommand extends TransactionRequirementComm
         const balanceBefore = person.getWalletBalance()
         person.incrementWallet(this.value)
         this.isExecuted = true
-        this.onUpdatedCallBacks.forEach((cb) => cb())
+
+        this.observeables.forEach((elem) => {
+            elem.cb()
+            elem.executedTimeStamp = Date.now()
+        })
+
         return true
     }
 
@@ -131,7 +141,11 @@ export class DecrementMoneyRequirementCommand extends TransactionRequirementComm
         person.decrementWallet(this.value)
         this.isExecuted = true
 
-        this.onUpdatedCallBacks.forEach((cb) => cb())
+        this.observeables.forEach((elem) => {
+            elem.cb()
+            elem.executedTimeStamp = Date.now()
+        })
+
         return true
     }
 

@@ -10,10 +10,10 @@ const RegularRequirementItem = ({
     requirement,
     user,
 }: {
-    requirement: Omit<IRequirementStats ,'userId'>
-    user: Omit<IUserData ,'id'>
+    requirement: Omit<IRequirementStats, 'userId'>
+    user: Omit<IUserData, 'id'>
 }) => {
-    const { curentWindow, setCurentWindow } = UseAppContext()
+    const { app, curentWindow, setCurentWindow } = UseAppContext()
 
     return (
         <div
@@ -42,9 +42,7 @@ const RegularRequirementItem = ({
                 </div>
                 <div className="flex-box">
                     mother fucker
-                    {new Date(
-                        requirement.dateToExecute
-                    ).getFullYear()}
+                    {new Date(requirement.dateToExecute).getFullYear()}
                     {new Date(requirement.dateToExecute).getMonth()}
                     {new Date(requirement.dateToExecute).getDate()}
                 </div>
@@ -53,6 +51,7 @@ const RegularRequirementItem = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
+                        app.executeTransactsionById(requirement.id)
                     }}
                     className="hover--child btn"
                 >
