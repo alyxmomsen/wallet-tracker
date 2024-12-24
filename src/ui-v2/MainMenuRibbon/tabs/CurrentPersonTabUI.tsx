@@ -17,7 +17,7 @@ const CurrentPersonTabUI = () => {
             disabled={currentPerson ? false : true}
             className={`main-menu__button btn`}
         >
-            {currentPerson ? currentPerson.getName() : 'Person'}
+            {currentPerson ? currentPerson.name : 'Person'}
         </button>
     )
 }

@@ -19,6 +19,8 @@ import {
     PopUpElement,
     PopUpService,
 } from '../services/PopUpServise'
+import { IUserData } from '../../core/types/common'
+import { IRequirementStats } from '../../core/requirement-command/interfaces'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
@@ -46,8 +48,12 @@ const popUpService = new PopUpService()
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
-    loginedPerson: IPerson | null
-    setUser: (person: IPerson | null) => void
+    loginedPerson: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+} | null
+    setUser: (person: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+} | null) => void
     curentWindow: JSX.Element
     setCurentWindow: (elem: JSX.Element) => void
     popUpWindow: JSX.Element | null
@@ -62,7 +68,9 @@ export const AppContext = createContext<TAppCtx | undefined>(undefined)
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
-    const [loginedUser, setLoginedUser] = useState<IPerson | null>(null)
+    const [loginedUser, setLoginedUser] = useState<Omit<IUserData, "id"> & {
+        requirements: Omit<IRequirementStats, "userId">[]
+    } | null>(null)
     const [curentWindow, setCurrentWindow] = useState<JSX.Element>(
         <StartWindow />
     )
@@ -82,12 +90,14 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             // setCurrentWindow(<PersonCardUI person={user} />)
         })
 
-        app.onUserSet((user: IPerson) => {
+        app.onUserSet((user: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+}) => {
             if (timeOutId) {
                 clearTimeout(timeOutId)
             }
             timeOutId = setTimeout(() => setPopUp(null), 3000)
-            setLoginedUser(user)
+            setLoginedUser(app.getUserStats())
             popUpService.addNotification(
                 <PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />
             )

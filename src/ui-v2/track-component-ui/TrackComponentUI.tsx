@@ -3,8 +3,12 @@ import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import GoPersonButton from '../shared/GoPersonButtonUI'
+import { IUserData } from '../../core/types/common'
+import { IRequirementStats } from '../../core/requirement-command/interfaces'
 
-const TrackComponentUI = ({ person }: { person: IPerson }) => {
+const TrackComponentUI = ({ person }: { person: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+} }) => {
     const { setCurentWindow: setCurPage } = UseAppContext()
 
     const transactionTypeCode = ['PLUS', 'MINUS']
@@ -17,7 +21,7 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                     <button
                         className="btn"
                         onClick={() => {
-                            setCurPage(<AddRequirementForm person={person} />)
+                            setCurPage(<AddRequirementForm />)
                         }}
                     >
                         Add Requirement
@@ -25,13 +29,13 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                 </div>
             </div>
             <h2>Track</h2>
-            {person.getActualRequirementCommands().length ? (
+            {person.requirements.length ? (
                 <div className="flex-box flex-dir-col">
                     {
                         person
-                            .getWalletTrackForActualRequirements()
+                            .requirements
                             .map((elem, i) => {
-                                const unixTime = elem.executionDate
+                                const unixTime = elem.dateToExecute
 
                                 const dateObj = new Date(unixTime)
 
@@ -50,12 +54,12 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                                             <span>{year}</span>
                                         </div>
                                         <div className={`bdr pdg`}>
-                                            {elem.valueBefore}
+                                            value befor calculate
                                         </div>
                                         <div className={` pdg`}>
                                             {
                                                 transactionTypeCode[
-                                                    elem.transactionTypeCode
+                                                    elem.cashFlowDirectionCode
                                                 ]
                                             }
                                         </div>
@@ -64,7 +68,7 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                                         </div>{' '}
                                         =
                                         <div className={`bdr pdg`}>
-                                            {elem.valueAfter}
+                                            {'value after'}
                                         </div>
                                     </div>
                                 )
@@ -80,7 +84,7 @@ const TrackComponentUI = ({ person }: { person: IPerson }) => {
                         onClick={() => {
                             if (person) {
                                 setCurPage(
-                                    <AddRequirementForm person={person} />
+                                    <AddRequirementForm />
                                 )
                             }
                         }}

@@ -35,10 +35,10 @@ const PersonIsUpdatedPopUpWindow = ({
                                 )
                                 log('button clicked')
                                 log('getting user data')
-                                const user = app.getLocalUserStats()
+                                const user = app.getUserStats()
 
                                 if (user) {
-                                    log('user-name is: ' + user.getName())
+                                    log('user-name is: ' + user.name)
                                 }
 
                                 if (user)

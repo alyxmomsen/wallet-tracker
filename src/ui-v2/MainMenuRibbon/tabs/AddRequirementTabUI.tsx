@@ -12,7 +12,7 @@ const AddRequirementTabUI = () => {
         <button
             onClick={() => {
                 if (currentPerson) {
-                    setCurPage(<AddRequirementForm person={currentPerson} />)
+                    setCurPage(<AddRequirementForm />)
                 }
             }}
             disabled={currentPerson ? false : true}

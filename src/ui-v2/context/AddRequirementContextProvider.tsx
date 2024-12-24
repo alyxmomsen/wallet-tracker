@@ -38,7 +38,7 @@ const AddDateFormContextProvider = ({
     const [dateObj, setDateObj] = useState<number>(Date.now())
     const [direction, setDirection] = useState<TDirection>('increment')
     const [value, setValue] = useState<number>(
-        currentPerson ? averageValueUtil(currentPerson) : 0
+        currentPerson ? averageValueUtil(currentPerson.requirements) : 0
     )
     const [title, setTitle] = useState('no title')
     const [description, setDescription] = useState('no description')

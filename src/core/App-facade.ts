@@ -45,7 +45,9 @@ export interface IApplicationSingletoneFacade {
     userLogIn(userName: string, password: string): Promise<IPerson | null>
     userLogOut(): any
     onAppUpdate(cb: () => void): void
-    onUserSet(cb: () => void): void
+    onUserSet(cb: (user:Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+}) => void): void
     onUserUpdate(cb: () => any): any
 }
 
@@ -211,7 +213,9 @@ export class ApplicationSingletoneFacade
         this.callbackPull.push(cb)
     }
 
-    onUserSet(cb: (user: IPerson) => void): any {
+    onUserSet(cb: (user: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+}) => void): any {
         this.userIsSetCallBackPull.push(cb)
     }
 
@@ -270,7 +274,11 @@ export class ApplicationSingletoneFacade
         })
 
         this.userIsSetCallBackPull.forEach((callBack) => {
-            callBack(user)
+            const userData = this.getUserStats();
+            if (userData) {
+                
+                callBack(userData)
+            }
         })
     }
 
@@ -307,7 +315,9 @@ export class ApplicationSingletoneFacade
     private eventServise: IEventService
     private serverConnector: IServerConnector
     private callbackPull: (() => void)[]
-    private userIsSetCallBackPull: ((user: IPerson) => any)[]
+    private userIsSetCallBackPull: ((user: Omit<IUserData , 'id'> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+}) => any)[]
     private userUnsetCallBackPull: (() => any)[]
 
     private updateRequirements(): void {}

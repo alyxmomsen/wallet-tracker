@@ -52,7 +52,7 @@ const LoginWindowUI = () => {
                         {'Go to ' + (state ? 'registration' : 'authorization')}
                     </button>
                 </div>
-                {app.getLocalUserStats() && (
+                {app.getUserStats() && (
                     <div>
                         <button
                             style={{
@@ -61,7 +61,7 @@ const LoginWindowUI = () => {
                             }}
                             className="btn"
                             onClick={() => {
-                                const user = app.getLocalUserStats()
+                                const user = app.getUserStats()
 
                                 if (user) {
                                     setCurPage(<PersonCardUI person={user} />)

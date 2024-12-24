@@ -11,7 +11,7 @@ import ApplyButtonUI from './options/ApplyButtonUI'
 import DescriptionOptionUI from './options/DescriptionOption'
 import AddRequirementFormComponent from './AddRequirementFormComponent'
 
-const AddRequirementForm = ({ person }: { person: IPerson }) => {
+const AddRequirementForm = () => {
     return (
         <AddDateFormContextProvider>
             <AddRequirementFormComponent />

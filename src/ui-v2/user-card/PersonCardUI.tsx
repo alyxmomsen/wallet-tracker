@@ -9,14 +9,8 @@ import {
 } from '../../core/person/PersonStatus'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import {
-    TFetchResponse,
-    TUserRequirementStats as TUserRequirementStats,
-} from '../login-window/RegistrationUI'
-import { RequirementFactory } from '../../core/requirement-command/factories/RequirementFactory'
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
 import { IUserData } from '../../core/types/common'
-import { application } from 'express'
 import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
 
@@ -24,7 +18,9 @@ import RequirementModule from './modules/requirements-module/RequirementsModule'
 // export const ServerBaseURL = 'http://94.241.139.88:3030'
 export const ServerBaseURL = 'http://127.0.0.1:3030'
 
-const PersonCardUI = ({ person }: { person: IPerson }) => {
+const PersonCardUI = ({ person }: { person: Omit<IUserData, "id"> & {
+    requirements: Omit<IRequirementStats, "userId">[];
+} }) => {
     const {
         curentWindow: curPage,
         setCurentWindow,
@@ -133,12 +129,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                   <button
                                       className="btn"
                                       onClick={() => {
-                                          setCurrentStatusFactory(link)
-                                          const instance =
-                                              currentStatusFactory.instance()
-                                          person.setStatus(instance)
-                                          setStatusStarted(instance.getDate())
-                                          update()
+                                          
                                       }}
                                   >
                                       {link.getTitle()}
@@ -151,16 +142,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                       <button
                                           className="btn"
                                           onClick={() => {
-                                              const instance =
-                                                  sleepStatusfactory.instance()
-                                              person.setStatus(instance)
-                                              setCurrentStatusFactory(
-                                                  sleepStatusfactory
-                                              )
-                                              setStatusStarted(
-                                                  instance.getDate()
-                                              )
-                                              update()
+                                              
                                           }}
                                       >
                                           {sleepStatusfactory.getTitle()}
@@ -180,9 +162,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                                 onClick={() => {
                                     if (person) {
                                         setCurentWindow(
-                                            <AddRequirementForm
-                                                person={person}
-                                            />
+                                            <AddRequirementForm />
                                         )
                                     }
                                 }}
