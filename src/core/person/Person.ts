@@ -97,7 +97,7 @@ export abstract class Person implements IPerson {
             requirementCommand.getId()
         }
 
-        requirementCommand.onUpdated(() => this.update())
+        requirementCommand.onUpdate(() => this.update())
 
         this.requirementCommandsPool.push(requirementCommand)
 

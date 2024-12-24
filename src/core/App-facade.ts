@@ -19,6 +19,7 @@ import { IServerConnector } from './services/server-connector-service-facade'
 import { ITask } from './Task'
 
 export interface IApplicationSingletoneFacade {
+    // executeTransaction(): void;
     deleteRequirement(
         reqId: string
     ): Promise<Pick<IRequirementStats, 'id'> | null>

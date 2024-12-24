@@ -10,7 +10,7 @@ export interface ITransactionRequirementCommand {
     getExecutionTimestamp(): number
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
-    onUpdated(cb: () => void): void
+    onUpdate(cb: () => void): void
 }
 
 abstract class TransactionRequirementCommand
@@ -20,7 +20,7 @@ abstract class TransactionRequirementCommand
 
     abstract execute(person: IPerson): boolean
 
-    onUpdated(cb: () => void): void {
+    onUpdate(cb: () => void): void {
         this.onUpdatedCallBacks.push(cb)
     }
 
