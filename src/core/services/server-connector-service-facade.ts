@@ -1,5 +1,6 @@
 import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
+import { IRequirementStats } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'
 import { AuthUserService, IAuthService } from './auth-service'
 import { GetUserService, IGetUserService } from './get-user-service'
@@ -9,13 +10,23 @@ export interface IServerConnector {
     getUserByAuthToken(
         token: string
     ): Promise<
-        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+        TFetchResponse<{
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+            authToken: string
+        }>
     >
     getUserByUserNameAndPassword(
         userName: string,
         password: string
     ): Promise<
-        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+        TFetchResponse<{
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+            authToken: string
+        }>
     >
 }
 
@@ -29,7 +40,12 @@ export class ServerConnector implements IServerConnector {
         userName: string,
         password: string
     ): Promise<
-        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+        TFetchResponse<{
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+            authToken: string
+        }>
     > {
         const headers = {
             'content-type': 'application/json',
@@ -50,7 +66,9 @@ export class ServerConnector implements IServerConnector {
         )
 
         const responseData = (await response.json()) as TFetchResponse<{
-            userStats: Omit<IUserData, 'id'>
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
             authToken: string
         }>
 
@@ -59,7 +77,12 @@ export class ServerConnector implements IServerConnector {
     async getUserByAuthToken(
         token: string
     ): Promise<
-        TFetchResponse<{ userStats: Omit<IUserData, 'id'>; authToken: string }>
+        TFetchResponse<{
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
+            authToken: string
+        }>
     > {
         const headers = {
             'content-type': 'application/json',
@@ -72,7 +95,9 @@ export class ServerConnector implements IServerConnector {
         })
 
         const responseData = (await response.json()) as TFetchResponse<{
-            userStats: Omit<IUserData, 'id'>
+            userStats: Omit<IUserData, 'id'> & {
+                requirements: Omit<IRequirementStats, 'userId'>[]
+            }
             authToken: string
         }>
 

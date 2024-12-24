@@ -74,15 +74,15 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     let timeOutId: NodeJS.Timeout | null = null
 
     useEffect(() => {
-        app.onAppUpdated(() => {
+        app.onAppUpdate(() => {
             if (timeOutId) clearTimeout(timeOutId)
-            const user = app.getLocalUser()
+            const user = app.getLocalUserStats()
             if (user === null) return
             // setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
             // setCurrentWindow(<PersonCardUI person={user} />)
         })
 
-        app.onUserIsSet((user: IPerson) => {
+        app.onUserSet((user: IPerson) => {
             if (timeOutId) {
                 clearTimeout(timeOutId)
             }

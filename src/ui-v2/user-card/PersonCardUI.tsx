@@ -45,7 +45,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
     let reqanfrid = 0
 
     useEffect(() => {
-        const user = app.getLocalUser()
+        const user = app.getLocalUserStats()
 
         if (user) {
             setUser(user)
@@ -110,7 +110,7 @@ const PersonCardUI = ({ person }: { person: IPerson }) => {
                 <button
                     className="btn"
                     onClick={() => {
-                        if (app.userLogout()) setCurentWindow(<LoginWindowUI />)
+                        if (app.userLogOut()) setCurentWindow(<LoginWindowUI />)
                     }}
                 >
                     log out

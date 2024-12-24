@@ -58,7 +58,7 @@ const AuthorizationUI = () => {
                     setInProcess(true)
                     setMessageColor('grey')
                     setResponseMessage('in process...')
-                    const user = await app.userLogin(userName, password)
+                    const user = await app.userLogIn(userName, password)
 
                     if (user === null) {
                         setMessageColor('red')

@@ -18,7 +18,7 @@ const OnAuthorizedPopUp = ({
                     <div>
                         <button
                             onClick={() => {
-                                const user = app.getLocalUser()
+                                const user = app.getLocalUserStats()
                                 if (!user) return
                                 setCurentWindow(<PersonCardUI person={user} />)
                                 if (timeOutId) clearTimeout(timeOutId)

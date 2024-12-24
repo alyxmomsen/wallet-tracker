@@ -17,6 +17,7 @@ import {
 import { IServerConnector } from './services/server-connector-service-facade'
 
 import { ITask } from './Task'
+import { IUserData } from './types/common'
 
 export interface IApplicationSingletoneFacade {
     // executeTransaction(): void;
@@ -34,20 +35,18 @@ export interface IApplicationSingletoneFacade {
     addRequirementSchedule(
         task: ITask<ITransactionRequirementCommand, IPerson>
     ): void
-    update(): void
-    setUserLocally(user: IPerson): void
-
     createUserRemote(
         userName: string,
         password: string,
         createUserService: ICreateUserService
     ): Promise<ICreateUserResponseData>
-    getLocalUser(): IPerson | null
-    userLogin(userName: string, password: string): Promise<IPerson | null>
-    userLogout(): any
-    onAppUpdated(cb: () => void): void
-    onUserIsSet(cb: () => void): void
-    onUserUpdated(cb: () => any): any
+    getLocalUserStats(): IPerson | null
+    getUserStats(): Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats , 'userId'>[]} | null
+    userLogIn(userName: string, password: string): Promise<IPerson | null>
+    userLogOut(): any
+    onAppUpdate(cb: () => void): void
+    onUserSet(cb: () => void): void
+    onUserUpdate(cb: () => any): any
 }
 
 export interface IResponseData<T> {
@@ -155,7 +154,7 @@ export class ApplicationSingletoneFacade
         return { id: response.payload.requirementId }
     }
 
-    async userLogin(
+    async userLogIn(
         userName: string,
         password: string
     ): Promise<IPerson | null> {
@@ -164,17 +163,17 @@ export class ApplicationSingletoneFacade
         log('user loging')
         log(userName + ' | ' + password)
 
-        const loginResponse =
+        const logInResponse =
             await this.serverConnector.getUserByUserNameAndPassword(
                 userName,
                 password
             )
 
-        if (loginResponse.payload === null) {
+        if (logInResponse.payload === null) {
             return null
         }
 
-        const { name, wallet, requirements } = loginResponse.payload.userStats
+        const { name, wallet, requirements } = logInResponse.payload.userStats
 
         const newPerson = this.personFactory.create(name, wallet)
 
@@ -190,14 +189,14 @@ export class ApplicationSingletoneFacade
 
         this.setUserLocally(newPerson)
 
-        const token = loginResponse.payload.authToken
+        const token = logInResponse.payload.authToken
 
         this.localStorageManagementService.setAuthData(token)
 
         return newPerson
     }
 
-    userLogout() {
+    userLogOut() {
         this.unsetUser()
         return true
     }
@@ -206,22 +205,51 @@ export class ApplicationSingletoneFacade
         this.userUnsetCallBackPull.push(cb)
     }
 
-    onUserUpdated(cb: () => any) {}
+    onUserUpdate(cb: () => any) {}
 
-    onAppUpdated(cb: () => void): void {
+    onAppUpdate(cb: () => void): void {
         this.callbackPull.push(cb)
     }
 
-    onUserIsSet(cb: (user: IPerson) => void): any {
+    onUserSet(cb: (user: IPerson) => void): any {
         this.userIsSetCallBackPull.push(cb)
     }
 
-    getLocalUser(): IPerson | null {
+    getLocalUserStats(): IPerson | null {
         if (this.user === null) {
             return null
         }
 
         return this.user
+    }
+
+    getUserStats(): Omit<IUserData, 'id'> & {requirements:Omit<IRequirementStats , 'userId'>[]} | null {
+        if (this.user === null) {
+            return null
+        }
+
+        const stats: Omit<IUserData, 'id'> & {
+            requirements: Omit<IRequirementStats, 'userId'>[]
+        } = {
+            name: this.user.getName(),
+            wallet: this.user.getWalletBalance(),
+            requirements: this.user
+                .getAllReauirementCommands()
+                .map((transactinRequirement) => ({
+                    cashFlowDirectionCode:
+                        transactinRequirement.getTransactionTypeCode(),
+                    dateToExecute:
+                        transactinRequirement.getExecutionTimestamp(),
+                    deleted: transactinRequirement.getDeletedTheState(),
+                    description: transactinRequirement.getDescription(),
+                    id: transactinRequirement.getId(),
+                    isExecuted: transactinRequirement.checkIfExecuted(),
+                    title: transactinRequirement.getTitle(),
+                    value:transactinRequirement.getValue(),
+                })),
+        }
+
+        return stats
     }
 
     async createUserRemote(
@@ -232,7 +260,7 @@ export class ApplicationSingletoneFacade
         return createUserService.execute(userName, password)
     }
 
-    setUserLocally(user: IPerson): void {
+    private setUserLocally(user: IPerson): void {
         this.user = user
 
         // ---------
@@ -266,8 +294,6 @@ export class ApplicationSingletoneFacade
     addRequirementSchedule(
         task: ITask<ITransactionRequirementCommand, IPerson>
     ) {}
-
-    update() {}
 
     private localStorageManagementService: ILocalStorageManagementService
     private requriementManagementService: IRequirementManagementService
@@ -413,7 +439,7 @@ export class ApplicationSingletoneFacade
 
                         this.setUserLocally(user)
 
-                        const log__user = this.getLocalUser()
+                        const log__user = this.getLocalUserStats()
 
                         console.log(
                             '>>> app constructor ::  user name: ' +

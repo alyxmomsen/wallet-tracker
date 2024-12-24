@@ -11,6 +11,7 @@ export interface ITransactionRequirementCommand {
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
     onUpdate(cb: () => void): void
+    getDeletedTheState(): boolean
 }
 
 abstract class TransactionRequirementCommand
@@ -52,6 +53,10 @@ abstract class TransactionRequirementCommand
         return this.value
     }
 
+    getDeletedTheState(): boolean {
+        return this.deleted
+    }
+
     constructor(
         id: string,
         value: number,
@@ -68,6 +73,7 @@ abstract class TransactionRequirementCommand
         this.title = title
         this.transactionTypeCode = transactionTypeCode
         this.onUpdatedCallBacks = []
+        this.deleted = false
     }
     protected onUpdatedCallBacks: (() => void)[]
     protected id: string
@@ -77,6 +83,7 @@ abstract class TransactionRequirementCommand
     protected date: number
     protected isExecuted: boolean
     protected transactionTypeCode: number
+    protected deleted: boolean
 }
 
 export class IncrementMoneyRequirementCommand extends TransactionRequirementCommand {

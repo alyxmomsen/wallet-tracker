@@ -13,7 +13,9 @@ export interface IRequirementManagementService {
     createRequirement(
         fields: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>,
         authToken: string
-    ): Promise<TFetchResponse<IUserData>>
+    ): Promise<TFetchResponse<IUserData & {
+        requirements: Omit<IRequirementStats, 'userId'>[]
+    }>>
 
     deleteRequirement(
         reqId: string,
@@ -64,7 +66,9 @@ export class RequrementManagementService
     async createRequirement(
         fields: Omit<IRequirementStats, 'userId' | 'id'>,
         authToken: string
-    ): Promise<TFetchResponse<IUserData>> {
+    ): Promise<TFetchResponse<IUserData & {
+        requirements: Omit<IRequirementStats, 'userId'>[]
+    }>> {
         try {
             const body: Omit<IRequirementStats, 'userId' | 'id'> = {
                 ...fields,
@@ -83,7 +87,9 @@ export class RequrementManagementService
                     method: 'post',
                 }
             )
-            const data = (await response.json()) as TFetchResponse<IUserData>
+            const data = (await response.json()) as TFetchResponse<IUserData & {
+        requirements: Omit<IRequirementStats, 'userId'>[]
+    }>
 
             return data
         } catch (e) {
