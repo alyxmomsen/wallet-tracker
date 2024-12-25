@@ -499,11 +499,11 @@ export class ApplicationSingletoneFacade
 
                         this.setUserLocally(user)
 
-                        const log__user = this.getLocalUserStats()
+                        const log__user = this.getUserStats()
 
                         console.log(
                             '>>> app constructor ::  user name: ' +
-                                log__user?.getName()
+                                log__user?.name
                         )
                     }
                 })
