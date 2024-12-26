@@ -1,9 +1,7 @@
 import {
-    TFetchAuthResponseData,
     TFetchResponse,
 } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
-import { ICheckAuthTokenResponseData } from '../App-facade'
 import { IRequirementFactory } from '../requirement-command/factories/RequirementFactory'
 import { IRequirementStats } from '../requirement-command/interfaces'
 import { IUserData } from '../types/common'

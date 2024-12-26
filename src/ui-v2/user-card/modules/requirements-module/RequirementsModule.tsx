@@ -1,7 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { ITransactionRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
 import RegularRequirementItem from './Regular-requirement-item'
-import { IPerson } from '../../../../core/person/Person'
 import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
 import { IUserData } from '../../../../core/types/common'
 import { UseAppContext } from '../../../context/UseAppContext'
@@ -19,20 +17,27 @@ const RequirementModule = ({
 
     const [fullReqSize, setFullReqSize] = useState(length > 3)
 
+    const [listMode, setListMode] = useState(false)
+
     useEffect(() => {}, [length])
 
     return (
         <div className="flex-box flex-dir-col">
+            <div>
+                <button
+                    onClick={() => {
+                        setListMode((curr) => !curr)
+                    }}
+                >
+                    list mode is:{' '}
+                    {listMode ? <span>ON</span> : <span>OFF</span>}
+                </button>
+            </div>
             {requirements.map((requirement, i) => {
                 const execDate = requirement.dateToExecute
 
-                return fullReqSize ? (
+                return (
                     <RegularRequirementItem
-                        requirement={requirement}
-                        user={user}
-                    />
-                ) : (
-                    <MinimalisticRequirement
                         requirement={requirement}
                         user={user}
                     />

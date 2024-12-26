@@ -49,6 +49,8 @@ const AddRequirementFormComponent = () => {
                     <DateOptionUI />
                     <AddOtherOption />
                     <ApplyButtonUI />
+                    <div>категория расхода</div>
+                    <div>категория прихода</div>
                     {optionalFields.map((elem) => {
                         return elem.execute()
                     })}

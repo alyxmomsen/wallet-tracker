@@ -1,14 +1,14 @@
 import React from 'react'
-import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import { UseAppContext } from '../context/UseAppContext'
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
+import PersonCardUI from '../user-card/PersonCardUI'
 
-const RequirementCard = ({
+const TransactionRequirementCard = ({
     requirement,
 }: {
     requirement: Omit<IRequirementStats, 'userId'>
 }) => {
-    const { app } = UseAppContext()
+    const { app, setCurentWindow } = UseAppContext()
 
     return (
         <div>
@@ -22,7 +22,19 @@ const RequirementCard = ({
                     <button className="btn">execute</button>
                 </div>
                 <div>
-                    <button className="btn">do smth</button>
+                    <button
+                        onClick={() => {
+                            const userStats = app.getUserStats()
+                            if (userStats) {
+                                setCurentWindow(
+                                    <PersonCardUI person={userStats} />
+                                )
+                            }
+                        }}
+                        className="btn"
+                    >
+                        go to User
+                    </button>
                 </div>
                 <div>
                     <button className="btn">edit</button>
@@ -42,4 +54,4 @@ const RequirementCard = ({
     )
 }
 
-export default RequirementCard
+export default TransactionRequirementCard

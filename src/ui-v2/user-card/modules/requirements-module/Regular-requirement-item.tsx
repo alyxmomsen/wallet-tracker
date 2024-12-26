@@ -1,7 +1,7 @@
 import React from 'react'
 import { ITransactionRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
 import { UseAppContext } from '../../../context/UseAppContext'
-import RequirementCard from '../../../requirement-card/RequirementCard'
+import TransactionRequirementCard from '../../../requirement-card/TransactionRequirementCard'
 import { IPerson } from '../../../../core/person/Person'
 import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
 import { IUserData } from '../../../../core/types/common'
@@ -18,7 +18,9 @@ const RegularRequirementItem = ({
     return (
         <div
             onClick={() => {
-                setCurentWindow(<RequirementCard requirement={requirement} />)
+                setCurentWindow(
+                    <TransactionRequirementCard requirement={requirement} />
+                )
             }}
             className={
                 'bdr pdg btn  hover--parent flex-box flex-dir-col' +
@@ -26,11 +28,22 @@ const RegularRequirementItem = ({
             }
         >
             <div className="flex-box  flex-center">
-                <div> == {requirement.title} == </div>
-                {/* <div>
-                                                = {requirement.getDescription()}{' '}
-                                                =
-                                            </div> */}
+                {requirement.dateToExecute < Date.now() ? (
+                    <div
+                        className="pdg"
+                        style={{ backgroundColor: 'red', color: 'whitesmoke' }}
+                    >
+                        EXPIRED
+                    </div>
+                ) : null}
+                <div>
+                    <span>title: </span>
+                    <span style={{ color: 'whitesmoke' }}>
+                        {' '}
+                        == {requirement.title} =={' '}
+                    </span>
+                </div>
+                <div>= {requirement.description} =</div>
                 <div className="flex-box">
                     <div className="value-color--txt flex-item">
                         {[' - ', ' + '][requirement.cashFlowDirectionCode]}

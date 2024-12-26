@@ -41,7 +41,9 @@ export interface IFetchHeaders {
     'x-auth': string
 }
 
-export class HTTPServerComunicateService implements IHTTPServerCommunicateService {
+export class HTTPServerComunicateService
+    implements IHTTPServerCommunicateService
+{
     async pushUserDataStats(
         user: Omit<IUserData, 'id'> & {
             requirements: Omit<IRequirementStats, 'userId'>[]

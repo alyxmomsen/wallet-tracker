@@ -123,7 +123,8 @@ export class ApplicationSingletoneFacade
         title,
         value,
     }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
-        const authToken = this.browserLocalStorageManagementService.getAuthData()
+        const authToken =
+            this.browserLocalStorageManagementService.getAuthData()
         if (authToken) {
             const data =
                 await this.requriementManagementService.createRequirement(
@@ -457,9 +458,8 @@ export class ApplicationSingletoneFacade
         if (authData) {
             this.updatingStatus = true
 
-            this.HTTPServerComunicateService
-                .getUserByAuthToken(authData)
-                .then((response) => {
+            this.HTTPServerComunicateService.getUserByAuthToken(authData).then(
+                (response) => {
                     const responsedPayload = response.payload
 
                     if (responsedPayload !== null) {
@@ -506,7 +506,8 @@ export class ApplicationSingletoneFacade
                                 log__user?.name
                         )
                     }
-                })
+                }
+            )
         }
 
         // this.createUser()

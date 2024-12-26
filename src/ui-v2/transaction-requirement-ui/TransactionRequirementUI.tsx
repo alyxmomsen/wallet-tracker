@@ -4,7 +4,7 @@ import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 
-const RequirementUI = ({
+const TransactionRequirementUI = ({
     requirement,
     person,
 }: {
@@ -46,4 +46,4 @@ const RequirementUI = ({
     )
 }
 
-export default RequirementUI
+export default TransactionRequirementUI

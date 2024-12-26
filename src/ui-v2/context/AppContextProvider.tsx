@@ -87,9 +87,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
             message: 'updated',
         })
 
-        app.onAppUpdate(() => {
-            
-        })
+        app.onAppUpdate(() => {})
 
         app.onUserSet(
             (
