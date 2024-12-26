@@ -1,6 +1,4 @@
-import {
-    TFetchResponse,
-} from '../../ui-v2/login-window/RegistrationUI'
+import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
 import { IRequirementFactory } from '../requirement-command/factories/RequirementFactory'
 import { IRequirementStats } from '../requirement-command/interfaces'
