@@ -13,8 +13,8 @@ import { IUserData } from '../../core/types/common'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
 
 // http://94.241.139.88:3000/
-export const ServerBaseURL = 'http://94.241.139.88:3030'
-// export const ServerBaseURL = 'http://127.0.0.1:3030'
+// export const ServerBaseURL = 'http://94.241.139.88:3030'
+export const ServerBaseURL = 'http://127.0.0.1:3030'
 
 const PersonCardUI = ({
     person,

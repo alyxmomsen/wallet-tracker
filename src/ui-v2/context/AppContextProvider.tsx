@@ -9,7 +9,7 @@ import {
     ApplicationSingletoneFacade,
     IApplicationSingletoneFacade,
 } from '../../core/App-facade'
-import { ServerConnector } from '../../core/services/server-connector-service-facade'
+import { HTTPServerComunicateService } from '../../core/services/server-connector-service-facade'
 import { EventService } from '../../core/events/App-event'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import { UseAppContext } from './UseAppContext'
@@ -24,7 +24,7 @@ import { IRequirementStats } from '../../core/requirement-command/interfaces'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
-    new ServerConnector(),
+    new HTTPServerComunicateService(),
     new EventService()
 )
 
@@ -88,11 +88,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         })
 
         app.onAppUpdate(() => {
-            if (timeOutId) clearTimeout(timeOutId)
-            const user = app.getLocalUserStats()
-            if (user === null) return
-            // setPopUp(<OnAuthorizedPopUp timeOutId={timeOutId} />)
-            // setCurrentWindow(<PersonCardUI person={user} />)
+            
         })
 
         app.onUserSet(

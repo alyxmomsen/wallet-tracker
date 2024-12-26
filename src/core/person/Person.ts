@@ -35,7 +35,7 @@ export interface IPerson {
     getStatusDescription(): string
     setStatus(status: IPersonStatusSystem): boolean
     onUpdate(cb: (user: IPerson) => any): any
-    subscribeOnMessage(message: string, callBacks: (() => void)[]): void
+    on(message: string, callBacks: (() => void)[]): void
 }
 
 export abstract class Person implements IPerson {
@@ -49,7 +49,7 @@ export abstract class Person implements IPerson {
         })
     }
 
-    subscribeOnMessage(message: string, callBacks: (() => void)[]): void {
+    on(message: string, callBacks: (() => void)[]): void {
         this.subscribers.push({
             callBacksPool: callBacks,
             executedTimeStamp: 0,

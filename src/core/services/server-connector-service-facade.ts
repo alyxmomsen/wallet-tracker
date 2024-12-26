@@ -7,7 +7,7 @@ import { AuthUserService, IAuthService } from './auth-service'
 import { GetUserService, IGetUserService } from './get-user-service'
 import { ILocalStorageManagementService } from './local-storage-service'
 
-export interface IServerConnector {
+export interface IHTTPServerCommunicateService {
     getUserById(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
     getUserByAuthToken(token: string): Promise<
         TFetchResponse<{
@@ -41,7 +41,7 @@ export interface IFetchHeaders {
     'x-auth': string
 }
 
-export class ServerConnector implements IServerConnector {
+export class HTTPServerComunicateService implements IHTTPServerCommunicateService {
     async pushUserDataStats(
         user: Omit<IUserData, 'id'> & {
             requirements: Omit<IRequirementStats, 'userId'>[]

@@ -14,7 +14,7 @@ import {
     IRequirementManagementService,
     RequrementManagementService,
 } from './services/requirement-management-service'
-import { IServerConnector } from './services/server-connector-service-facade'
+import { IHTTPServerCommunicateService } from './services/server-connector-service-facade'
 
 import { ITask } from './Task'
 import { IUserData } from './types/common'
@@ -65,7 +65,7 @@ export interface IApplicationSingletoneFacade {
         callBacks: (() => void)[]
         executedTimeStamp: number
     }): void
-    emitMessage(message: string): void
+    // emitMessage(message: string): void
 }
 
 export interface IResponseData<T> {
@@ -123,7 +123,7 @@ export class ApplicationSingletoneFacade
         title,
         value,
     }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
-        const authToken = this.localStorageManagementService.getAuthData()
+        const authToken = this.browserLocalStorageManagementService.getAuthData()
         if (authToken) {
             const data =
                 await this.requriementManagementService.createRequirement(
@@ -171,7 +171,7 @@ export class ApplicationSingletoneFacade
 
         log('try delete the requirement')
         log('req id: ' + reqId)
-        const authData = this.localStorageManagementService.getAuthData()
+        const authData = this.browserLocalStorageManagementService.getAuthData()
 
         if (authData === null) {
             log('localstorage failed')
@@ -207,7 +207,7 @@ export class ApplicationSingletoneFacade
         log(userName + ' | ' + password)
 
         const logInResponse =
-            await this.serverConnector.getUserByUserNameAndPassword(
+            await this.HTTPServerComunicateService.getUserByUserNameAndPassword(
                 userName,
                 password
             )
@@ -234,7 +234,7 @@ export class ApplicationSingletoneFacade
 
         const token = logInResponse.payload.authToken
 
-        this.localStorageManagementService.setAuthData(token)
+        this.browserLocalStorageManagementService.setAuthData(token)
 
         return newPerson
     }
@@ -323,7 +323,7 @@ export class ApplicationSingletoneFacade
         this.subscribers.push({ callBacks, message, executedTimeStamp: 0 })
     }
 
-    emitMessage(message: string): void {
+    private emitMessage(message: string): void {
         this.subscribers.forEach((subscriber) => {
             if (subscriber.message === message) {
                 subscriber.callBacks.forEach((callBack) => {
@@ -338,7 +338,7 @@ export class ApplicationSingletoneFacade
 
         // ---------
 
-        user.subscribeOnMessage('requirement-updated', [
+        user.on('requirement-updated', [
             () => this.emitMessage('updated'),
             () => {
                 const userStats = this.getUserStats()
@@ -347,9 +347,9 @@ export class ApplicationSingletoneFacade
                     return
                 }
 
-                this.serverConnector.pushUserDataStats(
+                this.HTTPServerComunicateService.pushUserDataStats(
                     userStats,
-                    this.localStorageManagementService
+                    this.browserLocalStorageManagementService
                 )
             },
         ])
@@ -366,7 +366,7 @@ export class ApplicationSingletoneFacade
 
     static Instance(
         localStorageService: ILocalStorageManagementService,
-        serverConnector: IServerConnector,
+        serverConnector: IHTTPServerCommunicateService,
         eventService: IEventService
     ) {
         if (ApplicationSingletoneFacade.instance === null) {
@@ -390,7 +390,7 @@ export class ApplicationSingletoneFacade
         callBacks: (() => void)[]
         executedTimeStamp: number
     }[]
-    private localStorageManagementService: ILocalStorageManagementService
+    private browserLocalStorageManagementService: ILocalStorageManagementService
     private requriementManagementService: IRequirementManagementService
     private authUserService: IAuthService
     private updatingStatus: boolean
@@ -400,7 +400,7 @@ export class ApplicationSingletoneFacade
     private user: IPerson | null
     private static instance: ApplicationSingletoneFacade | null = null
     private eventServise: IEventService
-    private serverConnector: IServerConnector
+    private HTTPServerComunicateService: IHTTPServerCommunicateService
     private callbackPull: (() => void)[]
     private userIsSetCallBackPull: ((
         user: Omit<IUserData, 'id'> & {
@@ -412,7 +412,7 @@ export class ApplicationSingletoneFacade
     private updateRequirements(): void {}
 
     private unsetUser(): void {
-        this.localStorageManagementService.unsetAuthData()
+        this.browserLocalStorageManagementService.unsetAuthData()
 
         this.user = null
 
@@ -423,7 +423,7 @@ export class ApplicationSingletoneFacade
 
     /* private  */ constructor(
         localStorageService: ILocalStorageManagementService,
-        serverConnector: IServerConnector,
+        serverConnector: IHTTPServerCommunicateService,
         eventService: IEventService
     ) {
         // subscribers
@@ -447,23 +447,23 @@ export class ApplicationSingletoneFacade
         this.eventServise = eventService
         this.callbackPull = []
         this.updatingStatus = false
-        this.localStorageManagementService = localStorageService
-        this.serverConnector = serverConnector
+        this.browserLocalStorageManagementService = localStorageService
+        this.HTTPServerComunicateService = serverConnector
 
         this.user = null
 
-        const authData = this.localStorageManagementService.getAuthData()
+        const authData = this.browserLocalStorageManagementService.getAuthData()
 
         if (authData) {
             this.updatingStatus = true
 
-            this.serverConnector
+            this.HTTPServerComunicateService
                 .getUserByAuthToken(authData)
                 .then((response) => {
                     const responsedPayload = response.payload
 
                     if (responsedPayload !== null) {
-                        this.localStorageManagementService.setAuthData(
+                        this.browserLocalStorageManagementService.setAuthData(
                             responsedPayload.authToken
                         )
 
