@@ -1,9 +1,7 @@
-import { networkInterfaces } from 'os'
 import { IWallet, Wallet } from '../Wallet'
 import { ITransactionRequirementCommand } from '../requirement-command/RequirementCommand'
+import { IRequirementStats } from '../requirement-command/interfaces'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
-import { IUserData } from '../types/common'
-import { RequirementFactory } from '../requirement-command/factories/RequirementFactory'
 import { IPersonObserver, PersonObserver } from './observers/person-observer'
 
 export type TStatus = {
@@ -36,17 +34,50 @@ export interface IPerson {
     setStatus(status: IPersonStatusSystem): boolean
     onUpdate(cb: (user: IPerson) => any): any
     on(message: string, callBacks: (() => void)[]): void
+    removeTransactionsToSyncAsStats(): Omit<IRequirementStats, 'userId'>[]
 }
 
 export abstract class Person implements IPerson {
-    private emitMessage(message: string): void {
-        this.subscribers.forEach((elem) => {
-            if (elem.message === message) {
-                elem.callBacksPool.forEach((callBack) => {
-                    callBack()
-                })
-            }
-        })
+    removeTransactionsToSyncAsStats(): Omit<IRequirementStats, 'userId'>[] {
+        console.log('>>> remove requirements ::: started')
+
+        const requirementsStatsArr = Array.from(
+            this.requirementToSyncPool.entries()
+        )
+            .filter((elem) => {
+                const [, poolElem] = elem
+
+                if (poolElem.removed) return false
+
+                return true
+            })
+            .map((elem) => {
+                const [, poolElement] = elem
+
+                console.log('>>> remove requirement ::: ', poolElement)
+
+                console.log(
+                    '>>> remove requirement :::: 2',
+                    poolElement.data.getTransactionTypeCode
+                )
+
+                poolElement.removed = true
+
+                const requirement = poolElement.data
+
+                return {
+                    cashFlowDirectionCode: requirement.getTransactionTypeCode(),
+                    dateToExecute: requirement.getExecutionTimestamp(),
+                    deleted: requirement.getDeletedTheState(),
+                    description: requirement.getDescription(),
+                    id: requirement.getId(),
+                    isExecuted: requirement.checkIfExecuted(),
+                    title: requirement.getTitle(),
+                    value: requirement.getValue(),
+                } as Omit<IRequirementStats, 'userId'>
+            })
+
+        return requirementsStatsArr
     }
 
     on(message: string, callBacks: (() => void)[]): void {
@@ -110,7 +141,14 @@ export abstract class Person implements IPerson {
     addRequirementCommand(
         requirementCommand: ITransactionRequirementCommand
     ): ITransactionRequirementCommand | null {
-        requirementCommand.subscribeOnUpdate(() => {
+        requirementCommand.subscribeOnUpdate((reqId: string) => {
+            console.log('>>> add requirement id test :: id : ' + reqId)
+
+            this.requirementToSyncPool.set(reqId, {
+                removed: false,
+                data: requirementCommand,
+            })
+
             this.emitMessage('requirement-updated')
             console.log('>>> add requirement :: requirement updated')
         })
@@ -154,6 +192,16 @@ export abstract class Person implements IPerson {
         })
     }
 
+    private emitMessage(message: string): void {
+        this.subscribers.forEach((elem) => {
+            if (elem.message === message) {
+                elem.callBacksPool.forEach((callBack) => {
+                    callBack()
+                })
+            }
+        })
+    }
+
     constructor(/* id: string,  */ wallet: IWallet, name: string) {
         this.onUpdateObserver = new PersonObserver()
         this.wallet = wallet
@@ -162,11 +210,20 @@ export abstract class Person implements IPerson {
         this.averageSpending = 700
         this.status = new GoingSleepStatus()
         this.subscribers = []
+        this.requirementToSyncPool = new Map<
+            string,
+            IPoolItem<ITransactionRequirementCommand>
+        >()
     }
 
     protected name: string
     protected wallet: IWallet
     protected requirementCommandsPool: ITransactionRequirementCommand[]
+
+    protected requirementToSyncPool: Map<
+        string,
+        IPoolItem<ITransactionRequirementCommand>
+    >
 
     protected averageSpending: number
     protected status: IPersonStatusSystem
@@ -198,4 +255,9 @@ export function getDateUtil(dateObj: Date): {
         month,
         year,
     }
+}
+
+export interface IPoolItem<T> {
+    removed: boolean
+    data: T
 }

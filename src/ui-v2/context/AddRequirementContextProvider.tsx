@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './UseAppContext'
-import { IPerson } from '../../core/person/Person'
 import { averageValueUtil } from '../../utils/averageValueUtil'
 import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
 
 export type TDirection = 'increment' | 'decrement'
 
-export type TDateContext = {
+export type TAddRequirementContext = {
     dateObj: number
     direction: TDirection
     value: number
@@ -24,9 +23,14 @@ export type TDateContext = {
 
     optionalFields: OptionElement[]
     setOptionalFields: (elem: OptionElement[]) => void
+
+    loading: boolean
+    loaded: boolean
+    setLoaded: (state: boolean) => void
+    setLoading: (state: boolean) => void
 }
 
-const DateContext = createContext<TDateContext | undefined>(undefined)
+const DateContext = createContext<TAddRequirementContext | undefined>(undefined)
 
 const AddDateFormContextProvider = ({
     children,
@@ -52,6 +56,10 @@ const AddDateFormContextProvider = ({
         new OptionElement('DESK Creep SHon', () => <DescriptionOptionUI />),
     ])
 
+    const [loading, setLoading] = useState(false)
+
+    const [loaded, setLoaded] = useState(false)
+
     useEffect(() => {}, [direction])
 
     useEffect(() => {}, [dateObj])
@@ -59,6 +67,10 @@ const AddDateFormContextProvider = ({
     return (
         <DateContext.Provider
             value={{
+                loaded,
+                loading,
+                setLoaded,
+                setLoading,
                 dateObj,
                 direction,
                 value,

@@ -11,7 +11,7 @@ export interface ITransactionRequirementCommand {
     checkIfExecuted(): boolean
     getTransactionTypeCode(): number
     getDeletedTheState(): boolean
-    subscribeOnUpdate(cb: () => void): void
+    subscribeOnUpdate(cb: (rquirementiD: string) => void): void
 }
 
 abstract class TransactionRequirementCommand
@@ -21,8 +21,8 @@ abstract class TransactionRequirementCommand
 
     abstract execute(person: IPerson): boolean
 
-    subscribeOnUpdate(cb: () => void): void {
-        this.observeables.push({ cb, executedTimeStamp: 0 })
+    subscribeOnUpdate(cb: (requirementId: string) => void): void {
+        this.observeables.push({ cb: () => cb(this.id), executedTimeStamp: 0 })
     }
 
     getId(): string {
@@ -63,13 +63,14 @@ abstract class TransactionRequirementCommand
         title: string,
         description: string,
         date: number,
-        transactionTypeCode: number
+        transactionTypeCode: number,
+        executed: boolean
     ) {
         this.id = id
         this.value = value
         this.description = description
         this.date = date
-        this.isExecuted = false
+        this.isExecuted = executed
         this.title = title
         this.transactionTypeCode = transactionTypeCode
         this.deleted = false
@@ -113,9 +114,10 @@ export class IncrementMoneyRequirementCommand extends TransactionRequirementComm
         value: number,
         title: string,
         description: string,
-        date: number
+        date: number,
+        executed: boolean
     ) {
-        super(id, value, title, description, date, 0)
+        super(id, value, title, description, date, 0, executed)
     }
 }
 
@@ -154,8 +156,9 @@ export class DecrementMoneyRequirementCommand extends TransactionRequirementComm
         value: number,
         title: string,
         description: string,
-        date: number
+        date: number,
+        executed: boolean
     ) {
-        super(id, value, title, description, date, 1)
+        super(id, value, title, description, date, 1, executed)
     }
 }

@@ -1,5 +1,5 @@
 import { IEventService } from './events/App-event'
-import { PersonFactory } from './person/factories/PersonFactory'
+import { IPersonFacory, PersonFactory } from './person/factories/PersonFactory'
 import { IPerson } from './person/Person'
 import {
     IRequirementFactory,
@@ -94,7 +94,11 @@ export class ApplicationSingletoneFacade
     executeTransactsionById(id: string): void {
         const user = this.user
 
-        if (user === null) return
+        if (user === null) {
+            this.browserLocalStorageManagementService.unsetAuthData()
+
+            return
+        }
 
         console.log('>>> executeTransaction :: getting requirements...')
         const requirements = user.getAllReauirementCommands().filter((elem) => {
@@ -139,25 +143,29 @@ export class ApplicationSingletoneFacade
                     authToken
                 )
 
-            if (data.payload) {
-                const newUser = this.personFactory.create(
-                    data.payload.name,
-                    data.payload.wallet
-                )
+            console.log('>>> create requirement :: response: ', data)
 
-                if (newUser) {
-                    data.payload.requirements.forEach((requirement) => {
-                        const newRequirement = new RequirementFactory().create({
-                            ...requirement,
-                        })
+            if (data.payload === null) {
+                return null
+            }
 
-                        if (newRequirement) {
-                            newUser.addRequirementCommand(newRequirement)
-                        }
+            const newUser = this.personFactory.create(
+                data.payload.name,
+                data.payload.wallet
+            )
+
+            if (newUser) {
+                data.payload.requirements.forEach((requirement) => {
+                    const newRequirement = new RequirementFactory().create({
+                        ...requirement,
                     })
 
-                    this.setUserLocally(newUser)
-                }
+                    if (newRequirement) {
+                        newUser.addRequirementCommand(newRequirement)
+                    }
+                })
+
+                this.setUserLocally(newUser)
             }
         }
     }
@@ -348,10 +356,58 @@ export class ApplicationSingletoneFacade
                     return
                 }
 
+                const user = this.user
+
+                if (user === null) return
+
+                const transactionsStatsArr: Omit<
+                    IRequirementStats,
+                    'userId'
+                >[] = user.removeTransactionsToSyncAsStats()
+
+                userStats.requirements = transactionsStatsArr
+
+                console.log('>>> set user locally ::: userStats:', userStats)
+
                 this.HTTPServerComunicateService.pushUserDataStats(
                     userStats,
                     this.browserLocalStorageManagementService
                 )
+                    .then((response) => {
+                        if (response.payload === null) return
+
+                        const newUser = this.personFactory.create(
+                            response.payload.name,
+                            response.payload.wallet
+                        )
+
+                        // const newRequirmentsPool:ITransactionRequirementCommand[] = []
+
+                        console.log(
+                            '>>> response payload requirements >>> ',
+                            response.payload.requirements
+                        )
+
+                        response.payload.requirements.forEach((elem) => {
+                            const transaction = this.requirementFactory.create({
+                                ...elem,
+                            })
+
+                            console.log(
+                                '>>> new transaction >>> data ::: ',
+                                transaction
+                            )
+                            if (transaction !== null) {
+                                // newRequirmentsPool.push(transaction);
+                                newUser.addRequirementCommand(transaction)
+                            }
+                        })
+
+                        this.setUserLocally(newUser)
+                    })
+                    .catch((e) => {
+                        alert(e)
+                    })
             },
         ])
 
@@ -455,60 +511,61 @@ export class ApplicationSingletoneFacade
 
         const authData = this.browserLocalStorageManagementService.getAuthData()
 
-        if (authData) {
-            this.updatingStatus = true
+        ;(async (
+            serverCommunicator: IHTTPServerCommunicateService,
+            localstorageServ: ILocalStorageManagementService,
+            personFactory: IPersonFacory,
+            reqFactory: IRequirementFactory
+        ) => {
+            if (authData) {
+                this.updatingStatus = true
 
-            this.HTTPServerComunicateService.getUserByAuthToken(authData).then(
-                (response) => {
-                    const responsedPayload = response.payload
+                const response =
+                    await serverCommunicator.getUserByAuthToken(authData)
 
-                    if (responsedPayload !== null) {
-                        this.browserLocalStorageManagementService.setAuthData(
-                            responsedPayload.authToken
-                        )
+                const responsedPayload = response.payload
 
-                        const user = this.personFactory.create(
-                            responsedPayload.userStats.name,
-                            responsedPayload.userStats.wallet
-                        )
-
-                        console.log(
-                            '>>> server-connector :: created user',
-                            user
-                        )
-
-                        responsedPayload.userStats.requirements.forEach(
-                            (elem) => {
-                                const requirementInitData: Omit<
-                                    IRequirementStats,
-                                    'isExecuted' | 'userId'
-                                > = elem
-
-                                const createdRequirement =
-                                    this.requirementFactory.create(
-                                        requirementInitData
-                                    )
-
-                                if (createdRequirement !== null) {
-                                    user.addRequirementCommand(
-                                        createdRequirement
-                                    )
-                                }
-                            }
-                        )
-
-                        this.setUserLocally(user)
-
-                        const log__user = this.getUserStats()
-
-                        console.log(
-                            '>>> app constructor ::  user name: ' +
-                                log__user?.name
-                        )
-                    }
+                if (responsedPayload === null) {
+                    return
                 }
-            )
-        }
+
+                localstorageServ.setAuthData(responsedPayload.authToken)
+
+                const user = personFactory.create(
+                    responsedPayload.userStats.name,
+                    responsedPayload.userStats.wallet
+                )
+
+                console.log('>>> server-connector :: created user', user)
+
+                responsedPayload.userStats.requirements.forEach((elem) => {
+                    const requirementInitData: Omit<
+                        IRequirementStats,
+                        'userId'
+                    > = elem
+
+                    const createdRequirement =
+                        reqFactory.create(requirementInitData)
+
+                    if (createdRequirement !== null) {
+                        user.addRequirementCommand(createdRequirement)
+                    }
+                })
+
+                this.setUserLocally(user)
+
+                const log__user = this.getUserStats()
+
+                console.log(
+                    '>>> app constructor ::  user name: ' + log__user?.name
+                )
+            }
+        })(
+            this.HTTPServerComunicateService,
+            this.browserLocalStorageManagementService,
+            this.personFactory,
+            this.requirementFactory
+        )
 
         // this.createUser()
     }

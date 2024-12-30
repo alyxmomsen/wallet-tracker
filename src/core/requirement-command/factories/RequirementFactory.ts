@@ -13,10 +13,9 @@ export interface IRequirementFactory {
         description,
         dateToExecute,
         cashFlowDirectionCode,
-    }: Omit<
-        IRequirementStats,
-        'isExecuted' | 'userId'
-    >): ITransactionRequirementCommand | null
+        isExecuted,
+        deleted,
+    }: Omit<IRequirementStats, 'userId'>): ITransactionRequirementCommand | null
 }
 
 export class RequirementFactory implements IRequirementFactory {
@@ -27,27 +26,31 @@ export class RequirementFactory implements IRequirementFactory {
         description,
         dateToExecute,
         cashFlowDirectionCode,
+        deleted,
+        isExecuted,
     }: Omit<
         IRequirementStats,
-        'isExecuted' | 'userId'
+        'userId'
     >): ITransactionRequirementCommand | null {
         switch (cashFlowDirectionCode) {
-            case 0:
+            case 1:
                 return new IncrementMoneyRequirementCommand(
                     id,
                     value,
                     title,
                     description,
-                    dateToExecute
+                    dateToExecute,
+                    isExecuted
                 )
                 break
-            case 1:
+            case 0:
                 return new DecrementMoneyRequirementCommand(
                     id,
                     value,
                     title,
                     description,
-                    dateToExecute
+                    dateToExecute,
+                    isExecuted
                 )
                 break
 

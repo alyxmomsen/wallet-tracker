@@ -12,14 +12,20 @@ const ApplyButtonUI = () => {
         value,
         dateObj: dateToExecute,
         direction: cashFlowDirectionCode,
+        loading,
+        loaded,
+        setLoading,
+        setLoaded,
     } = UseDateFormContext()
 
     return (
         <div className="flex-box">
             <button
                 className="btn"
-                onClick={() => {
-                    app.addRequirement({
+                onClick={async () => {
+                    setLoading(true)
+                    setLoaded(false)
+                    const response = await app.addRequirement({
                         cashFlowDirectionCode:
                             cashFlowDirectionCode === 'increment' ? 0 : 1,
                         dateToExecute,
@@ -28,6 +34,9 @@ const ApplyButtonUI = () => {
                         title,
                         value,
                     })
+
+                    setLoading(false)
+                    setLoaded(true)
                 }}
             >
                 Apply

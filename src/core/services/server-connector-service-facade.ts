@@ -33,7 +33,11 @@ export interface IHTTPServerCommunicateService {
             requirements: Omit<IRequirementStats, 'userId'>[]
         },
         localStorageService: ILocalStorageManagementService
-    ): Promise<any>
+    ): Promise<
+        TFetchResponse<
+            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+        >
+    >
 }
 
 export interface IFetchHeaders {
@@ -49,10 +53,21 @@ export class HTTPServerComunicateService
             requirements: Omit<IRequirementStats, 'userId'>[]
         },
         localStorageService: ILocalStorageManagementService
-    ): Promise<any> {
+    ): Promise<
+        TFetchResponse<
+            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+        >
+    > {
         const authJWTToken = localStorageService.getAuthData()
 
-        if (authJWTToken === null) return null
+        if (authJWTToken === null)
+            return {
+                payload: null,
+                status: {
+                    code: 0,
+                    details: 'no auth token (in local storage)',
+                },
+            }
 
         const response = await fetch(ServerBaseURL + '/update-user', {
             headers: {
@@ -63,9 +78,13 @@ export class HTTPServerComunicateService
             method: 'post',
         })
 
-        const data = await response.json()
+        const data = (await response.json()) as TFetchResponse<
+            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+        >
 
         console.log('>>> update user request ::  server respose: ', { data })
+
+        return data
     }
 
     async getUserByUserNameAndPassword(

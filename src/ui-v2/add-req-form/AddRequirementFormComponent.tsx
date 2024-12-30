@@ -9,7 +9,6 @@ import { UseDateFormContext } from '../context/AddRequirementContextProvider'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
-import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
 import { IRequirementStats } from '../../core/requirement-command/interfaces'
 
 const AddRequirementFormComponent = () => {
@@ -17,6 +16,8 @@ const AddRequirementFormComponent = () => {
         isRequirementAddedSuccessfully,
         isNewRequirementBeingWritten,
         optionalFields,
+        loaded,
+        loading,
     } = UseDateFormContext()
 
     const { setCurentWindow, loginedPerson: loginedPerson } = UseAppContext()
@@ -60,6 +61,15 @@ const AddRequirementFormComponent = () => {
             ) : (
                 <div>case2</div>
             )}
+            {!loading && loaded ? (
+                <div style={{ backgroundColor: 'grey' }} className="pdg">
+                    LOADED
+                </div>
+            ) : loading ? (
+                <div style={{ backgroundColor: 'orange' }} className="pdg">
+                    LOADING
+                </div>
+            ) : null}
         </div>
         // {}
     )
