@@ -2,17 +2,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './UseAppContext'
 import { averageValueUtil } from '../../utils/averageValueUtil'
 import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
+import { IRrequirementsStatsType } from '../../core/requirement-command/interfaces'
 
-export type TDirection = 'increment' | 'decrement'
+export type TDirection = 0 | 1
 
 export type TAddRequirementContext = {
-    dateObj: number
-    direction: TDirection
-    value: number
-    title: string
-    description: string
-    setDateObj: (dateObj: number) => void
-    setDirection: (direction: TDirection) => void
+    setDateToExecute: (dateObj: number) => void
+    setTransactionTypeCode: (direction: TDirection) => void
     setValue: (value: number) => void
     setTitle: (title: string) => void
     setDescription: (descr: string) => void
@@ -20,15 +16,21 @@ export type TAddRequirementContext = {
     setIsRequirementAddedSuccessfully: (state: boolean) => void
     isNewRequirementBeingWritten: boolean
     setIsNewRequirementBeingWritten: (state: boolean) => void
-
     optionalFields: OptionElement[]
     setOptionalFields: (elem: OptionElement[]) => void
-
     loading: boolean
     loaded: boolean
     setLoaded: (state: boolean) => void
     setLoading: (state: boolean) => void
-}
+} & Omit<
+    IRrequirementsStatsType,
+    | 'id'
+    | 'userId'
+    | 'createdTimeStamp'
+    | 'updatedTimeStamp'
+    | 'deleted'
+    | 'executed'
+>
 
 const DateContext = createContext<TAddRequirementContext | undefined>(undefined)
 
@@ -39,8 +41,9 @@ const AddDateFormContextProvider = ({
 }) => {
     const { loginedPerson: currentPerson } = UseAppContext()
 
-    const [dateObj, setDateObj] = useState<number>(Date.now())
-    const [direction, setDirection] = useState<TDirection>('increment')
+    const [dateToExecute, setDateToExecute] = useState<number>(Date.now())
+    const [transactionTypeCode, setTransactionTypeCode] =
+        useState<TDirection>(0)
     const [value, setValue] = useState<number>(
         currentPerson ? averageValueUtil(currentPerson.requirements) : 0
     )
@@ -60,9 +63,7 @@ const AddDateFormContextProvider = ({
 
     const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {}, [direction])
-
-    useEffect(() => {}, [dateObj])
+    useEffect(() => {}, [transactionTypeCode])
 
     return (
         <DateContext.Provider
@@ -71,13 +72,14 @@ const AddDateFormContextProvider = ({
                 loading,
                 setLoaded,
                 setLoading,
-                dateObj,
-                direction,
+                dateToExecute,
+                transactionTypeCode,
                 value,
                 title,
                 description,
-                setDateObj,
-                setDirection /*: (direction:TDirection) => setDirection(direction) */,
+                setDateToExecute: setDateToExecute,
+                setTransactionTypeCode:
+                    setTransactionTypeCode /*: (direction:TDirection) => setDirection(direction) */,
                 setTitle,
                 setValue,
                 setDescription,

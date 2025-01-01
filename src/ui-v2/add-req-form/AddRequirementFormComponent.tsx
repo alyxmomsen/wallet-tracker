@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import DirectionOptionUI from './options/DirectionOptionUI'
+import TransactionTypeCode from './options/DirectionOptionUI'
 import ValueOptionUI from './options/ValueOptionUI'
 import TitleOptionUI from './options/TitleOptionUI'
 import DateOptionUI from './options/DateOptionUI'
@@ -9,7 +9,10 @@ import { UseDateFormContext } from '../context/AddRequirementContextProvider'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
-import { IRequirementStats } from '../../core/requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../core/requirement-command/interfaces'
 
 const AddRequirementFormComponent = () => {
     const {
@@ -44,7 +47,7 @@ const AddRequirementFormComponent = () => {
             <h2>Add Requirement Form</h2>
             {isNewRequirementBeingWritten ? (
                 <div className="flex-box flex-dir-col pdg bdr flex-item">
-                    <DirectionOptionUI />
+                    <TransactionTypeCode />
                     <ValueOptionUI />
                     <TitleOptionUI />
                     <DateOptionUI />
@@ -82,13 +85,11 @@ const ThankYouMessageUI = () => {
     const { loginedPerson: loginedPerson, setCurentWindow } = UseAppContext()
 
     const [logPersActReqCommands, setThat] = useState<
-        Omit<IRequirementStats, 'userId'>[]
+        Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
     >(loginedPerson ? loginedPerson.requirements : [])
-
     return (
         <div className="flex-box flex-center">
             <h3>thank you for you added you requrierement</h3>
-
             <div className="flex-box">
                 <div>
                     <GoPersonButton />

@@ -1,18 +1,29 @@
 import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
 import { IRequirementFactory } from '../requirement-command/factories/RequirementFactory'
-import { IRequirementStats } from '../requirement-command/interfaces'
-import { IUserData } from '../types/common'
+import { IRrequirementsStatsType } from '../requirement-command/interfaces'
+import { IUserStats } from '../types/common'
 import { IAuthService } from './auth-service'
 
 export interface IRequirementManagementService {
     createRequirement(
-        fields: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>,
+        fields: Omit<
+            IRrequirementsStatsType,
+            | 'id'
+            | 'userId'
+            | 'createdTimeStamp'
+            | 'updatedTimeStamp'
+            | 'deleted'
+            | 'executed'
+        >,
         authToken: string
     ): Promise<
         TFetchResponse<
-            IUserData & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            IUserStats & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
         >
     >
@@ -64,17 +75,36 @@ export class RequrementManagementService
     }
 
     async createRequirement(
-        fields: Omit<IRequirementStats, 'userId' | 'id'>,
+        fields: Omit<
+            IRrequirementsStatsType,
+            | 'id'
+            | 'userId'
+            | 'createdTimeStamp'
+            | 'updatedTimeStamp'
+            | 'deleted'
+            | 'executed'
+        >,
         authToken: string
     ): Promise<
         TFetchResponse<
-            IUserData & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            IUserStats & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
         >
     > {
         try {
-            const body: Omit<IRequirementStats, 'userId' | 'id'> = {
+            const body: Omit<
+                IRrequirementsStatsType,
+                | 'id'
+                | 'userId'
+                | 'createdTimeStamp'
+                | 'updatedTimeStamp'
+                | 'deleted'
+                | 'executed'
+            > = {
                 ...fields,
             }
 
@@ -92,8 +122,11 @@ export class RequrementManagementService
                 }
             )
             const data = (await response.json()) as TFetchResponse<
-                IUserData & {
-                    requirements: Omit<IRequirementStats, 'userId'>[]
+                IUserStats & {
+                    requirements: Omit<
+                        IRrequirementsStatsType,
+                        'userId' | 'deleted'
+                    >[]
                 }
             >
 

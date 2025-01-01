@@ -1,16 +1,18 @@
 import React from 'react'
-import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import GoPersonButton from '../shared/GoPersonButtonUI'
-import { IUserData } from '../../core/types/common'
-import { IRequirementStats } from '../../core/requirement-command/interfaces'
+import { IUserStats } from '../../core/types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../core/requirement-command/interfaces'
 
 const TrackComponentUI = ({
     person,
 }: {
-    person: Omit<IUserData, 'id'> & {
-        requirements: Omit<IRequirementStats, 'userId'>[]
+    person: Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+        requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
     }
 }) => {
     const { setCurentWindow: setCurPage } = UseAppContext()
@@ -61,7 +63,7 @@ const TrackComponentUI = ({
                                     <div className={` pdg`}>
                                         {
                                             transactionTypeCode[
-                                                elem.cashFlowDirectionCode
+                                                elem.transactionTypeCode
                                             ]
                                         }
                                     </div>

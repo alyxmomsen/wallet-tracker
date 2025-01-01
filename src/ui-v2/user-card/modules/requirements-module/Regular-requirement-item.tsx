@@ -1,19 +1,22 @@
 import React from 'react'
-import { ITransactionRequirementCommand } from '../../../../core/requirement-command/RequirementCommand'
 import { UseAppContext } from '../../../context/UseAppContext'
 import TransactionRequirementCard from '../../../requirement-card/TransactionRequirementCard'
-import { IPerson } from '../../../../core/person/Person'
-import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
-import { IUserData } from '../../../../core/types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../../../core/requirement-command/interfaces'
+import { IUserStats } from '../../../../core/types/common'
 
 const RegularRequirementItem = ({
     requirement,
     user,
 }: {
-    requirement: Omit<IRequirementStats, 'userId'>
-    user: Omit<IUserData, 'id'>
+    requirement: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>
+    user: Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+        requirements: Omit<IRrequirementsStatsType, 'deleted' | 'userId'>[]
+    }
 }) => {
-    const { app, curentWindow, setCurentWindow } = UseAppContext()
+    const { app, setCurentWindow } = UseAppContext()
 
     return (
         <div
@@ -24,7 +27,7 @@ const RegularRequirementItem = ({
             }}
             className={
                 'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                (requirement.isExecuted ? ' requirement--executed' : '')
+                (requirement.executed ? ' requirement--executed' : '')
             }
         >
             <div className="flex-box  flex-center">
@@ -46,9 +49,8 @@ const RegularRequirementItem = ({
                 <div>= {requirement.description} =</div>
                 <div className="flex-box">
                     <div className="value-color--txt flex-item">
-                        {[' - ', ' + '][requirement.cashFlowDirectionCode]}
+                        {[' - ', ' + '][requirement.transactionTypeCode]}
                     </div>
-                    {/* <div className="flex-item">:</div> */}
                     <div className="value-color--txt flex-item">
                         {requirement.value}
                     </div>
@@ -60,7 +62,7 @@ const RegularRequirementItem = ({
                     {new Date(requirement.dateToExecute).getDate()}
                 </div>
             </div>
-            {!requirement.isExecuted ? (
+            {!requirement.executed ? (
                 <button
                     onClick={(e) => {
                         e.stopPropagation()

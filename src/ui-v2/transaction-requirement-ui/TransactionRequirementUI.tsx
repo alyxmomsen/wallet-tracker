@@ -22,23 +22,23 @@ const TransactionRequirementUI = ({
                 <div>{requirement.getValue()}</div>
                 <div>
                     {(() => {
-                        const date = requirement.getExecutionTimestamp()
+                        const date = requirement.getDateToExecute()
 
                         return <div>{date}</div>
                     })()}
                 </div>
                 <div>
                     <button
-                        disabled={requirement.checkIfExecuted()}
+                        disabled={
+                            requirement.isExecuted() === null ? true : false
+                        }
                         onClick={() => {
                             requirement.execute(person)
                             update()
                         }}
-                        className={requirement.checkIfExecuted() ? '' : 'btn'}
+                        className={requirement.isExecuted() ? '' : 'btn'}
                     >
-                        {!requirement.checkIfExecuted()
-                            ? 'Execute'
-                            : 'executed!'}
+                        {!requirement.isExecuted() ? 'Execute' : 'executed!'}
                     </button>
                 </div>
             </div>

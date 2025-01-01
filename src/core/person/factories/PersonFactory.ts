@@ -1,12 +1,27 @@
 import { IPerson, OrdinaryPerson } from '../Person'
 
 export interface IPersonFacory {
-    create(/* id: string,  */ name: string, walletInitValue: number): IPerson
+    create(
+        name: string,
+        walletInitValue: number,
+        createdTimeStamp: number,
+        updatedTimeStamp: number
+    ): IPerson
 }
 
 export class PersonFactory implements IPersonFacory {
-    create(/* s */ name: string, walletInitValue: number): IPerson {
-        return new OrdinaryPerson(/* id,  */ name, walletInitValue)
+    create(
+        name: string,
+        walletInitValue: number,
+        createdTimeStamp: number,
+        updatedTimeStamp: number
+    ): IPerson {
+        return new OrdinaryPerson(
+            name,
+            walletInitValue,
+            createdTimeStamp,
+            updatedTimeStamp
+        )
     }
 
     constructor() {}

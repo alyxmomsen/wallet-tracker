@@ -1,4 +1,4 @@
-import { IRequirementStats } from '../interfaces'
+import { IRequirementStats, IRrequirementsStatsType } from '../interfaces'
 import {
     DecrementMoneyRequirementCommand,
     IncrementMoneyRequirementCommand,
@@ -12,10 +12,14 @@ export interface IRequirementFactory {
         title,
         description,
         dateToExecute,
-        cashFlowDirectionCode,
-        isExecuted,
-        deleted,
-    }: Omit<IRequirementStats, 'userId'>): ITransactionRequirementCommand | null
+        transactionTypeCode,
+        executed,
+        createdTimeStamp,
+        updatedTimeStamp,
+    }: Omit<
+        IRrequirementsStatsType,
+        'userId' | 'deleted'
+    >): ITransactionRequirementCommand | null
 }
 
 export class RequirementFactory implements IRequirementFactory {
@@ -25,33 +29,38 @@ export class RequirementFactory implements IRequirementFactory {
         title,
         description,
         dateToExecute,
-        cashFlowDirectionCode,
-        deleted,
-        isExecuted,
+        transactionTypeCode,
+        executed,
+        createdTimeStamp,
+        updatedTimeStamp,
     }: Omit<
-        IRequirementStats,
-        'userId'
+        IRrequirementsStatsType,
+        'userId' | 'deleted'
     >): ITransactionRequirementCommand | null {
-        switch (cashFlowDirectionCode) {
-            case 1:
-                return new IncrementMoneyRequirementCommand(
-                    id,
-                    value,
-                    title,
-                    description,
-                    dateToExecute,
-                    isExecuted
-                )
-                break
+        switch (transactionTypeCode) {
             case 0:
-                return new DecrementMoneyRequirementCommand(
+                return new IncrementMoneyRequirementCommand({
                     id,
                     value,
                     title,
                     description,
                     dateToExecute,
-                    isExecuted
-                )
+                    executed,
+                    createdTimeStamp,
+                    updatedTimeStamp,
+                })
+                break
+            case 1:
+                return new DecrementMoneyRequirementCommand({
+                    id,
+                    value,
+                    title,
+                    description,
+                    dateToExecute,
+                    executed,
+                    createdTimeStamp,
+                    updatedTimeStamp,
+                })
                 break
 
             default:

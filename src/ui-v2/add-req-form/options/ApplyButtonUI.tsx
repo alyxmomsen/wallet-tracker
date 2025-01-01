@@ -10,8 +10,8 @@ const ApplyButtonUI = () => {
         description,
         title,
         value,
-        dateObj: dateToExecute,
-        direction: cashFlowDirectionCode,
+        dateToExecute,
+        transactionTypeCode,
         loading,
         loaded,
         setLoading,
@@ -26,11 +26,9 @@ const ApplyButtonUI = () => {
                     setLoading(true)
                     setLoaded(false)
                     const response = await app.addRequirement({
-                        cashFlowDirectionCode:
-                            cashFlowDirectionCode === 'increment' ? 0 : 1,
+                        transactionTypeCode,
                         dateToExecute,
                         description,
-                        isExecuted: false,
                         title,
                         value,
                     })

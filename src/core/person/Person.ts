@@ -1,6 +1,10 @@
 import { IWallet, Wallet } from '../Wallet'
 import { ITransactionRequirementCommand } from '../requirement-command/RequirementCommand'
-import { IRequirementStats } from '../requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../requirement-command/interfaces'
+import { IUserStats } from '../types/common'
 import { GoingSleepStatus, IPersonStatusSystem } from './PersonStatus'
 import { IPersonObserver, PersonObserver } from './observers/person-observer'
 
@@ -34,11 +38,60 @@ export interface IPerson {
     setStatus(status: IPersonStatusSystem): boolean
     onUpdate(cb: (user: IPerson) => any): any
     on(message: string, callBacks: (() => void)[]): void
-    removeTransactionsToSyncAsStats(): Omit<IRequirementStats, 'userId'>[]
+    removeTransactionsToSyncAsStats(): Omit<
+        IRrequirementsStatsType,
+        'userId' | 'deleted' | 'userId'
+    >[]
+    getCreatedTimeStamp(): number
+    getUpdatedTimeStamp(): number
+    getStats(): Omit<IUserStats, 'requirements' | 'id' | 'password'> & {
+        requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
+    }
 }
 
 export abstract class Person implements IPerson {
-    removeTransactionsToSyncAsStats(): Omit<IRequirementStats, 'userId'>[] {
+    getCreatedTimeStamp(): number {
+        return this.createdTimeStamp
+    }
+    getUpdatedTimeStamp(): number {
+        return this.updatedTimeStamp
+    }
+    getStats(): Omit<IUserStats, 'requirements' | 'id' | 'password'> & {
+        requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
+    } {
+        const userStats: Omit<
+            IUserStats,
+            'password' | 'requirements' | 'id'
+        > & {
+            requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
+        } = {
+            createdTimeStamp: this.getCreatedTimeStamp(),
+            name: this.getName(),
+            requirements: this.getAllReauirementCommands().map<
+                Omit<IRrequirementsStatsType, 'deleted' | 'userId'>
+            >((elem) => {
+                return {
+                    transactionTypeCode: elem.getTransactionTypeCode(),
+                    createdTimeStamp: elem.getCreatedTimeStamp(),
+                    dateToExecute: elem.getDateToExecute(),
+                    description: elem.getDescription(),
+                    executed: elem.isExecuted(),
+                    id: elem.getId(),
+                    title: elem.getTitle(),
+                    updatedTimeStamp: elem.getUpdatedTimeStamp(),
+                    value: elem.getValue(),
+                }
+            }),
+            updatedTimeStamp: this.getUpdatedTimeStamp(),
+            wallet: this.getWalletBalance(),
+        }
+
+        return userStats
+    }
+    removeTransactionsToSyncAsStats(): Omit<
+        IRrequirementsStatsType,
+        'userId' | 'deleted' | 'userId'
+    >[] {
         console.log('>>> remove requirements ::: started')
 
         const requirementsStatsArr = Array.from(
@@ -58,7 +111,7 @@ export abstract class Person implements IPerson {
 
                 console.log(
                     '>>> remove requirement :::: 2',
-                    poolElement.data.getTransactionTypeCode
+                    poolElement.data.getTransactionTypeCode()
                 )
 
                 poolElement.removed = true
@@ -66,15 +119,17 @@ export abstract class Person implements IPerson {
                 const requirement = poolElement.data
 
                 return {
-                    cashFlowDirectionCode: requirement.getTransactionTypeCode(),
-                    dateToExecute: requirement.getExecutionTimestamp(),
+                    createdTimeStamp: requirement.getCreatedTimeStamp(),
+                    transactionTypeCode: requirement.getDateToExecute(),
+                    updatedTimeStamp: requirement.getUpdatedTimeStamp(),
+                    dateToExecute: requirement.getDateToExecute(),
                     deleted: requirement.getDeletedTheState(),
                     description: requirement.getDescription(),
                     id: requirement.getId(),
-                    isExecuted: requirement.checkIfExecuted(),
+                    executed: requirement.isExecuted(),
                     title: requirement.getTitle(),
                     value: requirement.getValue(),
-                } as Omit<IRequirementStats, 'userId'>
+                } as Omit<IRrequirementsStatsType, 'userId'>
             })
 
         return requirementsStatsArr
@@ -121,7 +176,7 @@ export abstract class Person implements IPerson {
                 value,
                 valueBefore,
                 valueAfter,
-                executionDate: requirement.getExecutionTimestamp(),
+                executionDate: requirement.getDateToExecute(),
                 transactionTypeCode: requirement.getTransactionTypeCode(),
             }
         })
@@ -164,7 +219,7 @@ export abstract class Person implements IPerson {
 
     getActualRequirementCommands(): ITransactionRequirementCommand[] {
         return this.requirementCommandsPool.filter((requirementCommand) => {
-            if (requirementCommand.checkIfExecuted()) {
+            if (requirementCommand.isExecuted()) {
                 return false
             }
 
@@ -174,7 +229,7 @@ export abstract class Person implements IPerson {
             //     new Date(requirementCommand.getExecutionTimestamp())
             // )
 
-            if (requirementCommand.getExecutionTimestamp() >= now) {
+            if (requirementCommand.getDateToExecute() >= now) {
                 return true
             }
 
@@ -188,7 +243,7 @@ export abstract class Person implements IPerson {
 
     getExecutedRequirementCommands(): ITransactionRequirementCommand[] {
         return this.requirementCommandsPool.filter((elem) => {
-            return !elem.checkIfExecuted()
+            return !elem.isExecuted()
         })
     }
 
@@ -202,7 +257,14 @@ export abstract class Person implements IPerson {
         })
     }
 
-    constructor(/* id: string,  */ wallet: IWallet, name: string) {
+    constructor({
+        wallet,
+        name,
+        updatedTimeStamp,
+        createdTimeStamp,
+    }: Omit<IUserStats, 'wallet' | 'id' | 'password' | 'requirements'> & {
+        wallet: IWallet
+    }) {
         this.onUpdateObserver = new PersonObserver()
         this.wallet = wallet
         this.name = name
@@ -214,6 +276,8 @@ export abstract class Person implements IPerson {
             string,
             IPoolItem<ITransactionRequirementCommand>
         >()
+        this.createdTimeStamp = createdTimeStamp
+        this.updatedTimeStamp = updatedTimeStamp
     }
 
     protected name: string
@@ -233,11 +297,23 @@ export abstract class Person implements IPerson {
         message: string
         callBacksPool: (() => void)[]
     }[]
+    private createdTimeStamp: number
+    private updatedTimeStamp: number
 }
 
 export class OrdinaryPerson extends Person {
-    constructor(/* id: string,  */ name: string, walletInitValue: number) {
-        super(/* id,  */ new Wallet(walletInitValue), name)
+    constructor(
+        name: string,
+        walletInitValue: number,
+        createdTimeStamp: number,
+        updatedTimeStamp: number
+    ) {
+        super({
+            wallet: new Wallet(walletInitValue),
+            name,
+            createdTimeStamp,
+            updatedTimeStamp,
+        })
     }
 }
 

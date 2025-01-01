@@ -1,17 +1,19 @@
 import { TFetchResponse } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
-import { IPerson } from '../person/Person'
-import { IRequirementStats } from '../requirement-command/interfaces'
-import { IUserData } from '../types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../requirement-command/interfaces'
+import { IUserStats } from '../types/common'
 import { AuthUserService, IAuthService } from './auth-service'
 import { GetUserService, IGetUserService } from './get-user-service'
 import { ILocalStorageManagementService } from './local-storage-service'
 
 export interface IHTTPServerCommunicateService {
-    getUserById(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
+    getUserById(id: string): Promise<TFetchResponse<Omit<IUserStats, 'id'>>>
     getUserByAuthToken(token: string): Promise<
         TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
+            userStats: Omit<IUserStats, 'id'> & {
                 requirements: Omit<IRequirementStats, 'userId'>[]
             }
             authToken: string
@@ -22,20 +24,28 @@ export interface IHTTPServerCommunicateService {
         password: string
     ): Promise<
         TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            userStats: Omit<IUserStats, 'id'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
             authToken: string
         }>
     >
     pushUserDataStats(
-        user: Omit<IUserData, 'id'> & {
-            requirements: Omit<IRequirementStats, 'userId'>[]
+        user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+            requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
         },
         localStorageService: ILocalStorageManagementService
     ): Promise<
         TFetchResponse<
-            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+            Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
+            }
         >
     >
 }
@@ -49,13 +59,18 @@ export class HTTPServerComunicateService
     implements IHTTPServerCommunicateService
 {
     async pushUserDataStats(
-        user: Omit<IUserData, 'id'> & {
-            requirements: Omit<IRequirementStats, 'userId'>[]
+        user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+            requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
         },
         localStorageService: ILocalStorageManagementService
     ): Promise<
         TFetchResponse<
-            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+            Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
+            }
         >
     > {
         const authJWTToken = localStorageService.getAuthData()
@@ -79,7 +94,9 @@ export class HTTPServerComunicateService
         })
 
         const data = (await response.json()) as TFetchResponse<
-            Omit<IUserData, 'id'> & { requirements: IRequirementStats[] }
+            Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+                requirements: Omit<IRrequirementsStatsType, 'userId'>[]
+            }
         >
 
         console.log('>>> update user request ::  server respose: ', { data })
@@ -92,8 +109,11 @@ export class HTTPServerComunicateService
         password: string
     ): Promise<
         TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            userStats: Omit<IUserStats, 'id'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
             authToken: string
         }>
@@ -117,8 +137,11 @@ export class HTTPServerComunicateService
         )
 
         const responseData = (await response.json()) as TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            userStats: Omit<IUserStats, 'id'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
             authToken: string
         }>
@@ -127,7 +150,7 @@ export class HTTPServerComunicateService
     }
     async getUserByAuthToken(token: string): Promise<
         TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
+            userStats: Omit<IUserStats, 'id'> & {
                 requirements: Omit<IRequirementStats, 'userId'>[]
             }
             authToken: string
@@ -144,7 +167,7 @@ export class HTTPServerComunicateService
         })
 
         const responseData = (await response.json()) as TFetchResponse<{
-            userStats: Omit<IUserData, 'id'> & {
+            userStats: Omit<IUserStats, 'id'> & {
                 requirements: Omit<IRequirementStats, 'userId'>[]
             }
             authToken: string
@@ -161,7 +184,7 @@ export class HTTPServerComunicateService
 
     async getUserById(
         id: string
-    ): Promise<TFetchResponse<Omit<IUserData, 'id'>>> {
+    ): Promise<TFetchResponse<Omit<IUserStats, 'id'>>> {
         const response = await this.getUserService.byId(id)
         return response
     }
