@@ -1,12 +1,15 @@
 import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import { IRequirementStats } from '../../core/requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../core/requirement-command/interfaces'
 import PersonCardUI from '../user-card/PersonCardUI'
 
 const TransactionRequirementCard = ({
     requirement,
 }: {
-    requirement: Omit<IRequirementStats, 'userId'>
+    requirement: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>
 }) => {
     const { app, setCurentWindow } = UseAppContext()
 

@@ -1,8 +1,11 @@
 import { IPerson } from '../core/person/Person'
-import { IRequirementStats } from '../core/requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../core/requirement-command/interfaces'
 
 export function averageValueUtil(
-    requirementsAsStats: Omit<IRequirementStats, 'userId'>[]
+    requirementsAsStats: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
 ) {
     const curPerActReqs = requirementsAsStats
 

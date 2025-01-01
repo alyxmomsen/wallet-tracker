@@ -1,4 +1,5 @@
 import { IPerson } from '../person/Person'
+import { IRrequirementsStatsType } from './interfaces'
 
 export interface ITransactionRequirementCommand {
     execute(person: IPerson): boolean
@@ -7,11 +8,15 @@ export interface ITransactionRequirementCommand {
     getTitle(): string
     getValue(): number
     executeWithValue(value: number): number
-    getExecutionTimestamp(): number
-    checkIfExecuted(): boolean
+    getDateToExecute(): number
+    isExecuted(): null | {
+        executedTimeStamp: number
+    }
     getTransactionTypeCode(): number
     getDeletedTheState(): boolean
     subscribeOnUpdate(cb: (rquirementiD: string) => void): void
+    getCreatedTimeStamp(): number
+    getUpdatedTimeStamp(): number
 }
 
 abstract class TransactionRequirementCommand
@@ -20,6 +25,14 @@ abstract class TransactionRequirementCommand
     abstract executeWithValue(value: number): number
 
     abstract execute(person: IPerson): boolean
+
+    getCreatedTimeStamp(): number {
+        return this.createdTimeStamp
+    }
+
+    getUpdatedTimeStamp(): number {
+        return this.updatedTimeStamp
+    }
 
     subscribeOnUpdate(cb: (requirementId: string) => void): void {
         this.observeables.push({ cb: () => cb(this.id), executedTimeStamp: 0 })
@@ -37,12 +50,14 @@ abstract class TransactionRequirementCommand
         return this.transactionTypeCode
     }
 
-    checkIfExecuted(): boolean {
-        return this.isExecuted
+    isExecuted(): null | {
+        executedTimeStamp: number
+    } {
+        return this.executed
     }
 
-    getExecutionTimestamp(): number {
-        return this.date
+    getDateToExecute(): number {
+        return this.dateToExecute
     }
 
     getDescription(): string {
@@ -57,45 +72,55 @@ abstract class TransactionRequirementCommand
         return this.deleted
     }
 
-    constructor(
-        id: string,
-        value: number,
-        title: string,
-        description: string,
-        date: number,
-        transactionTypeCode: number,
-        executed: boolean
-    ) {
+    constructor({
+        id,
+        value,
+        title,
+        description,
+        dateToExecute,
+        transactionTypeCode,
+        executed,
+        createdTimeStamp,
+        updatedTimeStamp,
+    }: Omit<IRrequirementsStatsType, 'deleted' | 'userId'>) {
         this.id = id
         this.value = value
         this.description = description
-        this.date = date
-        this.isExecuted = executed
+        this.dateToExecute = dateToExecute
+        this.executed = executed
         this.title = title
         this.transactionTypeCode = transactionTypeCode
         this.deleted = false
         this.observeables = []
+        this.createdTimeStamp = createdTimeStamp
+        this.updatedTimeStamp = updatedTimeStamp
     }
     protected id: string
     protected title: string
     protected value: number
     protected description: string
-    protected date: number
-    protected isExecuted: boolean
+    protected dateToExecute: number
+    protected executed: null | {
+        executedTimeStamp: number
+    }
     protected transactionTypeCode: number
     protected deleted: boolean
     protected observeables: { cb: () => void; executedTimeStamp: number }[]
+    protected createdTimeStamp: number
+    protected updatedTimeStamp: number
 }
 
 export class IncrementMoneyRequirementCommand extends TransactionRequirementCommand {
     execute(person: IPerson): boolean {
-        if (this.isExecuted) {
+        if (this.executed) {
             return false
         }
 
         const balanceBefore = person.getWalletBalance()
         person.incrementWallet(this.value)
-        this.isExecuted = true
+        this.executed = {
+            executedTimeStamp: Date.now(),
+        }
 
         this.observeables.forEach((elem) => {
             elem.cb()
@@ -110,14 +135,12 @@ export class IncrementMoneyRequirementCommand extends TransactionRequirementComm
     }
 
     constructor(
-        id: string,
-        value: number,
-        title: string,
-        description: string,
-        date: number,
-        executed: boolean
+        stats: Omit<
+            IRrequirementsStatsType,
+            'transactionTypeCode' | 'deleted' | 'userId'
+        >
     ) {
-        super(id, value, title, description, date, 0, executed)
+        super({ ...stats, transactionTypeCode: 0 })
     }
 }
 
@@ -135,13 +158,15 @@ export class DecrementMoneyRequirementCommand extends TransactionRequirementComm
     }
 
     execute(person: IPerson): boolean {
-        if (this.isExecuted) {
+        if (this.executed) {
             return false
         }
 
         const balanceBefore = person.getWalletBalance()
         person.decrementWallet(this.value)
-        this.isExecuted = true
+        this.executed = {
+            executedTimeStamp: Date.now(),
+        }
 
         this.observeables.forEach((elem) => {
             elem.cb()
@@ -151,14 +176,29 @@ export class DecrementMoneyRequirementCommand extends TransactionRequirementComm
         return true
     }
 
-    constructor(
-        id: string,
-        value: number,
-        title: string,
-        description: string,
-        date: number,
-        executed: boolean
-    ) {
-        super(id, value, title, description, date, 1, executed)
+    constructor({
+        id,
+        value,
+        title,
+        description,
+        dateToExecute,
+        executed,
+        createdTimeStamp,
+        updatedTimeStamp,
+    }: Omit<
+        IRrequirementsStatsType,
+        'userId' | 'deleted' | 'transactionTypeCode'
+    >) {
+        super({
+            id,
+            value,
+            title,
+            description,
+            dateToExecute,
+            executed,
+            createdTimeStamp,
+            updatedTimeStamp,
+            transactionTypeCode: 1,
+        })
     }
 }

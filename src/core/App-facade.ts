@@ -5,7 +5,10 @@ import {
     IRequirementFactory,
     RequirementFactory,
 } from './requirement-command/factories/RequirementFactory'
-import { IRequirementStats } from './requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from './requirement-command/interfaces'
 import { ITransactionRequirementCommand } from './requirement-command/RequirementCommand'
 import { AuthUserService, IAuthService } from './services/auth-service'
 import { ICreateUserService } from './services/create-user-service'
@@ -17,21 +20,24 @@ import {
 import { IHTTPServerCommunicateService } from './services/server-connector-service-facade'
 
 import { ITask } from './Task'
-import { IUserData } from './types/common'
+import { IUserStats } from './types/common'
 
 export interface IApplicationSingletoneFacade {
     executeTransactsionById(id: string): void
     deleteRequirement(
         reqId: string
     ): Promise<Pick<IRequirementStats, 'id'> | null>
-    addRequirement({
-        cashFlowDirectionCode,
-        dateToExecute,
-        description,
-        isExecuted,
-        title,
-        value,
-    }: Omit<IRequirementStats, 'userId' | 'id' | 'deleted'>): Promise<any>
+    addRequirement(
+        stats: Omit<
+            IRrequirementsStatsType,
+            | 'id'
+            | 'userId'
+            | 'createdTimeStamp'
+            | 'updatedTimeStamp'
+            | 'deleted'
+            | 'executed'
+        >
+    ): Promise<any>
     addRequirementSchedule(
         task: ITask<ITransactionRequirementCommand, IPerson>
     ): void
@@ -42,8 +48,11 @@ export interface IApplicationSingletoneFacade {
     ): Promise<ICreateUserResponseData>
     getLocalUserStats(): IPerson | null
     getUserStats():
-        | (Omit<IUserData, 'id'> & {
-              requirements: Omit<IRequirementStats, 'userId'>[]
+        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+              requirements: Omit<
+                  IRrequirementsStatsType,
+                  'userId' | 'deleted'
+              >[]
           })
         | null
     userLogIn(userName: string, password: string): Promise<IPerson | null>
@@ -51,11 +60,14 @@ export interface IApplicationSingletoneFacade {
     onAppUpdate(cb: () => void): void
     onUserSet(
         cb: (
-            user: Omit<IUserData, 'id'> & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
         ) => void
-    ): void
+    ): any
     onUserUpdate(cb: () => any): any
     subscriberOnMessage({
         callBacks,
@@ -119,27 +131,23 @@ export class ApplicationSingletoneFacade
         console.log('>>> executeTransaction :: user has been mutated')
     }
 
-    async addRequirement({
-        cashFlowDirectionCode,
-        dateToExecute,
-        description,
-        isExecuted,
-        title,
-        value,
-    }: Omit<IRequirementStats, 'userId' | 'id'>): Promise<any> {
+    async addRequirement(
+        stats: Omit<
+            IRrequirementsStatsType,
+            | 'id'
+            | 'userId'
+            | 'createdTimeStamp'
+            | 'updatedTimeStamp'
+            | 'deleted'
+            | 'executed'
+        >
+    ): Promise<any> {
         const authToken =
             this.browserLocalStorageManagementService.getAuthData()
         if (authToken) {
             const data =
                 await this.requriementManagementService.createRequirement(
-                    {
-                        cashFlowDirectionCode,
-                        dateToExecute,
-                        description,
-                        isExecuted,
-                        title,
-                        value,
-                    },
+                    stats,
                     authToken
                 )
 
@@ -151,7 +159,9 @@ export class ApplicationSingletoneFacade
 
             const newUser = this.personFactory.create(
                 data.payload.name,
-                data.payload.wallet
+                data.payload.wallet,
+                data.payload.createdTimeStamp,
+                data.payload.updatedTimeStamp
             )
 
             if (newUser) {
@@ -227,7 +237,17 @@ export class ApplicationSingletoneFacade
 
         const { name, wallet, requirements } = logInResponse.payload.userStats
 
-        const newPerson = this.personFactory.create(name, wallet)
+        const createdTimeStamp =
+            logInResponse.payload.userStats.createdTimeStamp
+        const updatedTimeStamp =
+            logInResponse.payload.userStats.updatedTimeStamp
+
+        const newPerson = this.personFactory.create(
+            name,
+            wallet,
+            createdTimeStamp,
+            updatedTimeStamp
+        )
 
         for (const requirement of requirements) {
             const createdReauirement = this.requirementFactory.create({
@@ -265,8 +285,11 @@ export class ApplicationSingletoneFacade
 
     onUserSet(
         cb: (
-            user: Omit<IUserData, 'id'> & {
-                requirements: Omit<IRequirementStats, 'userId'>[]
+            user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+                requirements: Omit<
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
+                >[]
             }
         ) => void
     ): any {
@@ -282,30 +305,40 @@ export class ApplicationSingletoneFacade
     }
 
     getUserStats():
-        | (Omit<IUserData, 'id'> & {
-              requirements: Omit<IRequirementStats, 'userId'>[]
+        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+              requirements: Omit<
+                  IRrequirementsStatsType,
+                  'userId' | 'deleted'
+              >[]
           })
         | null {
         if (this.user === null) {
             return null
         }
 
-        const stats: Omit<IUserData, 'id'> & {
-            requirements: Omit<IRequirementStats, 'userId'>[]
+        const stats: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+            requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
         } = {
+            createdTimeStamp: this.user.getCreatedTimeStamp(),
+            updatedTimeStamp: this.user.getUpdatedTimeStamp(),
             name: this.user.getName(),
             wallet: this.user.getWalletBalance(),
             requirements: this.user
                 .getAllReauirementCommands()
-                .map((transactinRequirement) => ({
-                    cashFlowDirectionCode:
+                .map<
+                    Omit<IRrequirementsStatsType, 'deleted' | 'userId'>
+                >((transactinRequirement) => ({
+                    createdTimeStamp:
+                        transactinRequirement.getCreatedTimeStamp(),
+                    updatedTimeStamp:
+                        transactinRequirement.getUpdatedTimeStamp(),
+                    transactionTypeCode:
                         transactinRequirement.getTransactionTypeCode(),
-                    dateToExecute:
-                        transactinRequirement.getExecutionTimestamp(),
+                    dateToExecute: transactinRequirement.getDateToExecute(),
                     deleted: transactinRequirement.getDeletedTheState(),
                     description: transactinRequirement.getDescription(),
                     id: transactinRequirement.getId(),
-                    isExecuted: transactinRequirement.checkIfExecuted(),
+                    executed: transactinRequirement.isExecuted(),
                     title: transactinRequirement.getTitle(),
                     value: transactinRequirement.getValue(),
                 })),
@@ -352,6 +385,8 @@ export class ApplicationSingletoneFacade
             () => {
                 const userStats = this.getUserStats()
 
+                console.log('>>> get user stats response ::: ', userStats)
+
                 if (userStats === null) {
                     return
                 }
@@ -361,8 +396,8 @@ export class ApplicationSingletoneFacade
                 if (user === null) return
 
                 const transactionsStatsArr: Omit<
-                    IRequirementStats,
-                    'userId'
+                    IRrequirementsStatsType,
+                    'userId' | 'deleted'
                 >[] = user.removeTransactionsToSyncAsStats()
 
                 userStats.requirements = transactionsStatsArr
@@ -378,7 +413,9 @@ export class ApplicationSingletoneFacade
 
                         const newUser = this.personFactory.create(
                             response.payload.name,
-                            response.payload.wallet
+                            response.payload.wallet,
+                            response.payload.createdTimeStamp,
+                            response.payload.updatedTimeStamp
                         )
 
                         // const newRequirmentsPool:ITransactionRequirementCommand[] = []
@@ -460,8 +497,11 @@ export class ApplicationSingletoneFacade
     private HTTPServerComunicateService: IHTTPServerCommunicateService
     private callbackPull: (() => void)[]
     private userIsSetCallBackPull: ((
-        user: Omit<IUserData, 'id'> & {
-            requirements: Omit<IRequirementStats, 'userId'>[]
+        user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+            requirements: Omit<
+                IRrequirementsStatsType,
+                'userId' | 'password' | 'deleted'
+            >[]
         }
     ) => any)[]
     private userUnsetCallBackPull: (() => any)[]
@@ -533,15 +573,17 @@ export class ApplicationSingletoneFacade
 
                 const user = personFactory.create(
                     responsedPayload.userStats.name,
-                    responsedPayload.userStats.wallet
+                    responsedPayload.userStats.wallet,
+                    responsedPayload.userStats.createdTimeStamp,
+                    responsedPayload.userStats.updatedTimeStamp
                 )
 
                 console.log('>>> server-connector :: created user', user)
 
                 responsedPayload.userStats.requirements.forEach((elem) => {
                     const requirementInitData: Omit<
-                        IRequirementStats,
-                        'userId'
+                        IRrequirementsStatsType,
+                        'userId' | 'deleted'
                     > = elem
 
                     const createdRequirement =

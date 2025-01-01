@@ -1,15 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import RegularRequirementItem from './Regular-requirement-item'
-import { IRequirementStats } from '../../../../core/requirement-command/interfaces'
-import { IUserData } from '../../../../core/types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../../../core/requirement-command/interfaces'
+import { IUserStats } from '../../../../core/types/common'
 import { UseAppContext } from '../../../context/UseAppContext'
 
 const RequirementModule = ({
     requirements,
     user,
 }: {
-    requirements: Omit<IRequirementStats, 'userId'>[]
-    user: Omit<IUserData, 'id'>
+    requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
+    user: Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+        requirements: Omit<IRrequirementsStatsType, 'deleted' | 'userId'>[]
+    }
 }) => {
     const length = useMemo(() => {
         return requirements.length
@@ -54,7 +59,7 @@ const MinimalisticRequirement = ({
     user,
 }: {
     requirement: Omit<IRequirementStats, 'userId'>
-    user: Omit<IUserData, 'id'>
+    user: Omit<IUserStats, 'id'>
 }) => {
     const { app } = UseAppContext()
 
@@ -71,7 +76,7 @@ const MinimalisticRequirement = ({
             }}
             className={
                 'bdr pdg btn  hover--parent flex-box flex-dir-col' +
-                (requirement.isExecuted ? ' requirement--executed' : '')
+                (requirement.executed ? ' requirement--executed' : '')
             }
         >
             <div className="flex-box flex-dir-col flex-center">
@@ -104,7 +109,7 @@ const MinimalisticRequirement = ({
                     </div>
                 </div>
             </div>
-            {!requirement.isExecuted ? (
+            {!requirement.executed ? (
                 <button
                     onClick={(e) => {
                         e.stopPropagation()

@@ -19,8 +19,11 @@ import {
     PopUpElement,
     PopUpService,
 } from '../services/PopUpServise'
-import { IUserData } from '../../core/types/common'
-import { IRequirementStats } from '../../core/requirement-command/interfaces'
+import { IUserStats } from '../../core/types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../core/requirement-command/interfaces'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
@@ -33,13 +36,16 @@ const popUpService = new PopUpService()
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
     loginedPerson:
-        | (Omit<IUserData, 'id'> & {
-              requirements: Omit<IRequirementStats, 'userId'>[]
+        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+              requirements: Omit<
+                  IRrequirementsStatsType,
+                  'userId' | 'deleted'
+              >[]
           })
         | null
     setUser: (
         person:
-            | (Omit<IUserData, 'id'> & {
+            | (Omit<IUserStats, 'id'> & {
                   requirements: Omit<IRequirementStats, 'userId'>[]
               })
             | null
@@ -59,8 +65,11 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const [popUp, setPopUp] = useState<JSX.Element | null>(null)
     const [app] = useState<ApplicationSingletoneFacade>(cashFlowApp)
     const [loginedUser, setLoginedUser] = useState<
-        | (Omit<IUserData, 'id'> & {
-              requirements: Omit<IRequirementStats, 'userId'>[]
+        | (Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+              requirements: Omit<
+                  IRrequirementsStatsType,
+                  'userId' | 'deleted'
+              >[]
           })
         | null
     >(null)
@@ -91,15 +100,18 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
 
         app.onUserSet(
             (
-                user: Omit<IUserData, 'id'> & {
-                    requirements: Omit<IRequirementStats, 'userId'>[]
+                user: Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+                    requirements: Omit<
+                        IRrequirementsStatsType,
+                        'userId' | 'deleted'
+                    >[]
                 }
             ) => {
                 if (timeOutId) {
                     clearTimeout(timeOutId)
                 }
                 timeOutId = setTimeout(() => setPopUp(null), 3000)
-                setLoginedUser(app.getUserStats())
+                setLoginedUser(user)
                 popUpService.addNotification(
                     <PersonIsUpdatedPopUpWindow timeoutId={timeOutId} />
                 )

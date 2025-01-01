@@ -4,39 +4,42 @@ import {
     UseDateFormContext,
 } from '../../context/AddRequirementContextProvider'
 
-const DirectionOptionUI = () => {
-    const { direction, setDirection } = UseDateFormContext()
+const TransactionTypeCode = () => {
+    const { transactionTypeCode, setTransactionTypeCode } = UseDateFormContext()
 
     return (
         <div className="flex-box flex-item bdr pdg">
-            <div className="value-color--txt">{direction.toUpperCase()}</div>
+            <div className="value-color--txt">
+                {transactionTypeCode === 0 ? 'Increment' : 'Decrement'}
+            </div>
             <div>
                 <input
                     onChange={(e) => {
-                        if (direction !== e.target.value) {
-                            setDirection(e.target.value as TDirection)
-
-                            // setDirectionName(
-                            //     e.target.value as 'increment' | 'decrement'
-                            // )
+                        if (
+                            transactionTypeCode !==
+                            Number.parseInt(e.target.value)
+                        ) {
+                            setTransactionTypeCode(0)
                         }
                     }}
-                    checked={direction === 'increment'}
-                    value={'increment'}
+                    checked={transactionTypeCode === 0}
+                    value={0}
                     type="radio"
                     className="btn"
                 />
                 <input
                     onChange={(e) => {
-                        if (direction !== e.target.value) {
-                            setDirection(e.target.value as TDirection)
-                            // setDirectionName(
-                            //     e.target.value as 'increment' | 'decrement'
-                            // )
+                        if (
+                            transactionTypeCode !==
+                            Number.parseInt(e.target.value)
+                        ) {
+                            setTransactionTypeCode(
+                                Number.parseInt(e.target.value) as TDirection
+                            )
                         }
                     }}
-                    checked={direction === 'decrement'}
-                    value={'decrement'}
+                    checked={transactionTypeCode === 0}
+                    value={1}
                     type="radio"
                     className="btn"
                 />
@@ -45,4 +48,4 @@ const DirectionOptionUI = () => {
     )
 }
 
-export default DirectionOptionUI
+export default TransactionTypeCode

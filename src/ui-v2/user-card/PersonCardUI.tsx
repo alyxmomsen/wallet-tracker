@@ -8,8 +8,11 @@ import {
 } from '../../core/person/PersonStatus'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import { IRequirementStats } from '../../core/requirement-command/interfaces'
-import { IUserData } from '../../core/types/common'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from '../../core/requirement-command/interfaces'
+import { IUserStats } from '../../core/types/common'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
 
 // http://94.241.139.88:3000/
@@ -19,8 +22,8 @@ export const ServerBaseURL = 'http://127.0.0.1:3030'
 const PersonCardUI = ({
     person,
 }: {
-    person: Omit<IUserData, 'id'> & {
-        requirements: Omit<IRequirementStats, 'userId'>[]
+    person: Omit<IUserStats, 'id' | 'password' | 'requirements'> & {
+        requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
     }
 }) => {
     const {
@@ -32,8 +35,11 @@ const PersonCardUI = ({
     } = UseAppContext()
 
     const [user, setUser] = useState<
-        | (Omit<IUserData, 'id'> & {
-              requirements: Omit<IRequirementStats, 'userId'>[]
+        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+              requirements: Omit<
+                  IRrequirementsStatsType,
+                  'userId' | 'deleted'
+              >[]
           })
         | null
     >(null)
@@ -43,7 +49,7 @@ const PersonCardUI = ({
     const [statusStarted, setStatusStarted] = useState(0)
 
     const [requirements, setRequirements] = useState<
-        Omit<IRequirementStats, 'userId'>[]
+        Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
     >([])
 
     let reqanfrid = 0

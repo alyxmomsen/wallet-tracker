@@ -2,31 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const DateOptionUI = () => {
-    const { dateObj, setDateObj } = UseDateFormContext()
+    const { dateToExecute, setDateToExecute } = UseDateFormContext()
 
     const [date, setDate] = useState<string>(
-        (new Date(dateObj).getDate() < 10 ? '0' : '') +
-            new Date(dateObj).getDate().toString()
+        (new Date(dateToExecute).getDate() < 10 ? '0' : '') +
+            new Date(dateToExecute).getDate().toString()
     )
     const [month, setMonth] = useState<string>(
-        (new Date(dateObj).getMonth() + 1 < 10 ? '0' : '') +
-            (new Date(dateObj).getMonth() + 1).toString()
+        (new Date(dateToExecute).getMonth() + 1 < 10 ? '0' : '') +
+            (new Date(dateToExecute).getMonth() + 1).toString()
     )
     const [year, setYear] = useState<string>(
-        new Date(dateObj).getFullYear().toString()
+        new Date(dateToExecute).getFullYear().toString()
     )
 
     useEffect(() => {
         setDate(
-            (new Date(dateObj).getDate() < 10 ? '0' : '') +
-                new Date(dateObj).getDate().toString()
+            (new Date(dateToExecute).getDate() < 10 ? '0' : '') +
+                new Date(dateToExecute).getDate().toString()
         )
         setMonth(
-            (new Date(dateObj).getMonth() + 1 < 10 ? '0' : '') +
-                (new Date(dateObj).getMonth() + 1).toString()
+            (new Date(dateToExecute).getMonth() + 1 < 10 ? '0' : '') +
+                (new Date(dateToExecute).getMonth() + 1).toString()
         )
-        setYear(new Date(dateObj).getFullYear().toString())
-    }, [dateObj])
+        setYear(new Date(dateToExecute).getFullYear().toString())
+    }, [dateToExecute])
 
     useEffect(() => {}, [year, month, date])
 
@@ -42,7 +42,7 @@ const DateOptionUI = () => {
                         onChange={(e) => {
                             const dateString = e.target.value
 
-                            setDateObj(foo(dateString).getTime())
+                            setDateToExecute(foo(dateString).getTime())
                         }}
                     />
                 </div>
@@ -52,13 +52,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setDate(
-                                    new Date(dateObj).getDate() + 1
+                                    new Date(dateToExecute).getDate() + 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -69,13 +69,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setDate(
-                                    new Date(dateObj).getDate() - 1
+                                    new Date(dateToExecute).getDate() - 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -87,13 +87,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setDate(
-                                    new Date(dateObj).getDate() + 7
+                                    new Date(dateToExecute).getDate() + 7
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -104,13 +104,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setDate(
-                                    new Date(dateObj).getDate() - 7
+                                    new Date(dateToExecute).getDate() - 7
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -122,13 +122,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setMonth(
-                                    new Date(dateObj).getMonth() + 1
+                                    new Date(dateToExecute).getMonth() + 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -139,13 +139,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setMonth(
-                                    new Date(dateObj).getMonth() - 1
+                                    new Date(dateToExecute).getMonth() - 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -157,13 +157,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setFullYear(
-                                    new Date(dateObj).getFullYear() + 1
+                                    new Date(dateToExecute).getFullYear() + 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >
@@ -174,13 +174,13 @@ const DateOptionUI = () => {
                     <div>
                         <button
                             onClick={() => {
-                                const newDateObj = new Date(dateObj)
+                                const newDateObj = new Date(dateToExecute)
 
                                 newDateObj.setFullYear(
-                                    new Date(dateObj).getFullYear() - 1
+                                    new Date(dateToExecute).getFullYear() - 1
                                 )
 
-                                setDateObj(newDateObj.getTime())
+                                setDateToExecute(newDateObj.getTime())
                             }}
                             className="btn"
                         >

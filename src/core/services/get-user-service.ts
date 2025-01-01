@@ -3,14 +3,14 @@ import {
     TFetchUserData,
 } from '../../ui-v2/login-window/RegistrationUI'
 import { ServerBaseURL } from '../../ui-v2/user-card/PersonCardUI'
-import { IUserData } from '../types/common'
+import { IUserStats } from '../types/common'
 
 export interface IGetUserService {
-    byId(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>>
+    byId(id: string): Promise<TFetchResponse<Omit<IUserStats, 'id'>>>
 }
 
 export class GetUserService implements IGetUserService {
-    async byId(id: string): Promise<TFetchResponse<Omit<IUserData, 'id'>>> {
+    async byId(id: string): Promise<TFetchResponse<Omit<IUserStats, 'id'>>> {
         const response = await fetch(ServerBaseURL + '/get-user-protected', {
             headers: {
                 'content-type': 'application/json',
@@ -20,7 +20,7 @@ export class GetUserService implements IGetUserService {
         })
 
         const data = (await response.json()) as TFetchResponse<
-            Omit<IUserData, 'id'>
+            Omit<IUserStats, 'id'>
         >
 
         // const { payload, status } = data
