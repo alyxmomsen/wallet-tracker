@@ -120,7 +120,9 @@ export abstract class Person implements IPerson {
 
                 return {
                     createdTimeStamp: requirement.getCreatedTimeStamp(),
-                    transactionTypeCode: requirement.getDateToExecute(),
+
+                    transactionTypeCode: requirement.getTransactionTypeCode(),
+
                     updatedTimeStamp: requirement.getUpdatedTimeStamp(),
                     dateToExecute: requirement.getDateToExecute(),
                     deleted: requirement.getDeletedTheState(),

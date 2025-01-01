@@ -385,6 +385,8 @@ export class ApplicationSingletoneFacade
             () => {
                 const userStats = this.getUserStats()
 
+                console.log('>>> get user stats response ::: ', userStats)
+
                 if (userStats === null) {
                     return
                 }
