@@ -1,6 +1,3 @@
-import { maxHeaderSize } from 'http'
-import { IPerson, Person } from '../core/person/Person'
-import { Wallet } from '../core/Wallet'
 
 export interface IRegistry {}
 

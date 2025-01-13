@@ -25,7 +25,8 @@ import { IUserStats } from './types/common'
 export interface IApplicationSingletoneFacade {
     executeTransactsionById(id: string): void
     deleteRequirement(
-        reqId: string
+        reqId: string,
+        authToken:string
     ): Promise<Pick<IRequirementStats, 'id'> | null>
     addRequirement(
         stats: Omit<
@@ -36,7 +37,7 @@ export interface IApplicationSingletoneFacade {
             | 'updatedTimeStamp'
             | 'deleted'
             | 'executed'
-        >
+        > & {authToken:string}
     ): Promise<any>
     addRequirementSchedule(
         task: ITask<ITransactionRequirementCommand, IPerson>
@@ -69,6 +70,7 @@ export interface IApplicationSingletoneFacade {
         ) => void
     ): any
     onUserUpdate(cb: () => any): any
+    onUserRequireFailed(cb:() => any): void;
     subscriberOnMessage({
         callBacks,
         message,
@@ -103,11 +105,15 @@ export interface ICheckAuthTokenResponseData {
 export class ApplicationSingletoneFacade
     implements IApplicationSingletoneFacade
 {
+    onUserRequireFailed(cb: () => any): void {
+        
+    }
+
     executeTransactsionById(id: string): void {
         const user = this.user
 
         if (user === null) {
-            this.browserLocalStorageManagementService.unsetAuthData()
+            // this.browserLocalStorageManagementService.unsetAuthData() // #warning
 
             return
         }
@@ -140,10 +146,10 @@ export class ApplicationSingletoneFacade
             | 'updatedTimeStamp'
             | 'deleted'
             | 'executed'
-        >
+        > & {authToken:string}
     ): Promise<any> {
-        const authToken =
-            this.browserLocalStorageManagementService.getAuthData()
+        const authToken = stats.authToken;
+            // this.browserLocalStorageManagementService.getAuthData()
         if (authToken) {
             const data =
                 await this.requriementManagementService.createRequirement(
@@ -181,7 +187,8 @@ export class ApplicationSingletoneFacade
     }
 
     async deleteRequirement(
-        reqId: string
+        reqId: string, 
+        authToken:string ,
     ): Promise<Pick<IRequirementStats, 'id'> | null> {
         const log = loggerCreator(
             true
@@ -190,10 +197,11 @@ export class ApplicationSingletoneFacade
 
         log('try delete the requirement')
         log('req id: ' + reqId)
-        const authData = this.browserLocalStorageManagementService.getAuthData()
+        const authData = authToken;
+            // this.browserLocalStorageManagementService.getAuthData()
 
         if (authData === null) {
-            log('localstorage failed')
+            log('auth token was not provided')
             return null
         }
 
@@ -263,7 +271,7 @@ export class ApplicationSingletoneFacade
 
         const token = logInResponse.payload.authToken
 
-        this.browserLocalStorageManagementService.setAuthData(token)
+        // this.browserLocalStorageManagementService.setAuthData(token) // #warning // #todo // implement onusersat()
 
         return newPerson
     }

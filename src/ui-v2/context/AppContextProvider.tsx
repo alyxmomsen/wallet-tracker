@@ -1,10 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
-
-import { IPerson, OrdinaryPerson } from '../../core/person/Person'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
-import { LocalStorageManagementService } from '../../core/services/local-storage-service'
 import {
     ApplicationSingletoneFacade,
     IApplicationSingletoneFacade,
@@ -16,7 +13,6 @@ import { UseAppContext } from './UseAppContext'
 import PopUpFrame from '../pop-up-windows/PopUpFrame'
 import {
     IPopUpService,
-    PopUpElement,
     PopUpService,
 } from '../services/PopUpServise'
 import { IUserStats } from '../../core/types/common'
@@ -24,6 +20,7 @@ import {
     IRequirementStats,
     IRrequirementsStatsType,
 } from '../../core/requirement-command/interfaces'
+import { LocalStorageManagementService } from '../services/local-storage-service'
 
 const cashFlowApp = new ApplicationSingletoneFacade(
     new LocalStorageManagementService(),
@@ -32,6 +29,8 @@ const cashFlowApp = new ApplicationSingletoneFacade(
 )
 
 const popUpService = new PopUpService()
+
+const localstorageManagementService = new LocalStorageManagementService();
 
 export type TAppCtx = {
     app: IApplicationSingletoneFacade

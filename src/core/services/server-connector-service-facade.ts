@@ -7,7 +7,6 @@ import {
 import { IUserStats } from '../types/common'
 import { AuthUserService, IAuthService } from './auth-service'
 import { GetUserService, IGetUserService } from './get-user-service'
-import { ILocalStorageManagementService } from './local-storage-service'
 
 export interface IHTTPServerCommunicateService {
     getUserById(id: string): Promise<TFetchResponse<Omit<IUserStats, 'id'>>>
@@ -37,7 +36,7 @@ export interface IHTTPServerCommunicateService {
         user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
             requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
         },
-        localStorageService: ILocalStorageManagementService
+        authToken:string,
     ): Promise<
         TFetchResponse<
             Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
@@ -62,7 +61,7 @@ export class HTTPServerComunicateService
         user: Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
             requirements: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]
         },
-        localStorageService: ILocalStorageManagementService
+        authToken:string ,
     ): Promise<
         TFetchResponse<
             Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
@@ -73,7 +72,8 @@ export class HTTPServerComunicateService
             }
         >
     > {
-        const authJWTToken = localStorageService.getAuthData()
+        const authJWTToken = authToken;
+            // localStorageService.getAuthData()
 
         if (authJWTToken === null)
             return {

@@ -29,3 +29,7 @@
 issue:
 
 person factory dont use persons registry
+
+# hash tags
+
+#todo #warning #hardcode
