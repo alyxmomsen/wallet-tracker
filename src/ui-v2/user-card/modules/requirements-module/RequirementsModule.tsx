@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import RegularRequirementItem from './Regular-requirement-item'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../../../core/requirement-command/interfaces'
-import { IUserStats } from '../../../../core/types/common'
+
 import { UseAppContext } from '../../../context/UseAppContext'
+import { IRequirementStats, IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+import { IUserStats } from 'cash-flow/dist/core/types/common'
 
 const RequirementModule = ({
     requirements,

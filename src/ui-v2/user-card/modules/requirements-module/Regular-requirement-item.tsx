@@ -1,11 +1,8 @@
 import React from 'react'
 import { UseAppContext } from '../../../context/UseAppContext'
 import TransactionRequirementCard from '../../../requirement-card/TransactionRequirementCard'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../../../core/requirement-command/interfaces'
-import { IUserStats } from '../../../../core/types/common'
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+import { IUserStats } from 'cash-flow/dist/core/types/common'
 
 const RegularRequirementItem = ({
     requirement,

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { ServerBaseURL } from '../user-card/PersonCardUI'
+import { useEffect, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-import { CreateUserService } from '../../core/services/create-user-service'
+/* #warning */
+import { CreateUserService } from 'cash-flow/dist/core/services/create-user-service'
+import { getServerBaseUrl } from 'cash-flow/dist/core-utils/core-utils'
 
 const RegistrationUI = () => {
     const { app } = UseAppContext()
@@ -106,7 +107,7 @@ async function registrationRequest(
     username: string,
     password: string
 ): Promise<TFetchResponse<TFetchAuthResponseData>> {
-    const response = await fetch(ServerBaseURL + '/registration', {
+    const response = await fetch(getServerBaseUrl() + '/registration', {
         method: 'post',
         body: JSON.stringify({
             username,
@@ -120,36 +121,4 @@ async function registrationRequest(
     const jsonData = await response.json()
 
     return jsonData
-}
-
-function UseRegistration(username: string, password: string) {
-    const [statusCode, setStatusCode] = useState<number | undefined>(undefined)
-    const [isRequesting, setIsRequesting] = useState(true)
-    const [endPoint, setEndponit] = useState<'registration' | 'auth'>(
-        'registration'
-    )
-
-    fetch(ServerBaseURL + `/${endPoint}`, {
-        method: 'post',
-        headers: {
-            'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password,
-        }),
-    })
-        .then((response) => response.json() as Promise<TFetchResponse<null>>)
-        .then((data) => {
-            setStatusCode(data.status.code)
-            setIsRequesting(false)
-        })
-        .catch((e) => {
-            alert('E-rrrrrrooooooooaaaarrrrrr')
-        })
-
-    return {
-        statusCode,
-        isRequesting,
-    }
 }

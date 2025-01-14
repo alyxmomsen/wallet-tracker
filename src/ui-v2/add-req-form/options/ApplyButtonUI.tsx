@@ -12,8 +12,6 @@ const ApplyButtonUI = () => {
         value,
         dateToExecute,
         transactionTypeCode,
-        loading,
-        loaded,
         setLoading,
         setLoaded,
     } = UseDateFormContext()
@@ -25,7 +23,7 @@ const ApplyButtonUI = () => {
                 onClick={async () => {
                     setLoading(true)
                     setLoaded(false)
-                    const response = await app.addRequirement({
+                    app.addRequirement({
                         transactionTypeCode,
                         dateToExecute,
                         description,

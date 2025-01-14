@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
-import {
-    AwakenStatusFactory,
-    PersonStatusFactory,
-    SlepStatusFactory,
-} from '../../core/person/PersonStatus'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../core/requirement-command/interfaces'
-import { IUserStats } from '../../core/types/common'
 import RequirementModule from './modules/requirements-module/RequirementsModule'
-
-// http://94.241.139.88:3000/
-// export const ServerBaseURL = 'http://94.241.139.88:3030'
-export const ServerBaseURL = 'http://127.0.0.1:3030'
+/* #warning */
+import { IUserStats } from 'cash-flow/dist/core/types/common'
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+import { AwakenStatusFactory, PersonStatusFactory, SlepStatusFactory } from 'cash-flow/dist/core/person/PersonStatus'
 
 const PersonCardUI = ({
     person,

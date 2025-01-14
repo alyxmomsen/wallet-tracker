@@ -1,7 +1,8 @@
-import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import PersonCardUI from '../user-card/PersonCardUI'
-import { loggerCreator } from '../../core/App-facade'
+/* #warning */
+import { loggerCreator } from "cash-flow/dist/core-utils/core-utils"
+
 
 const PersonIsUpdatedPopUpWindow = ({
     timeoutId,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import TransactionTypeCode from './options/DirectionOptionUI'
 import ValueOptionUI from './options/ValueOptionUI'
 import TitleOptionUI from './options/TitleOptionUI'
@@ -9,10 +9,8 @@ import { UseDateFormContext } from '../context/AddRequirementContextProvider'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
 import TrackComponentUI from '../track-component-ui/TrackComponentUI'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../core/requirement-command/interfaces'
+/* #warning */
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
 
 const AddRequirementFormComponent = () => {
     const {
@@ -82,7 +80,7 @@ export default AddRequirementFormComponent
 
 const ThankYouMessageUI = () => {
     const { setIsNewRequirementBeingWritten } = UseDateFormContext()
-    const { loginedPerson: loginedPerson, setCurentWindow } = UseAppContext()
+    const { loginedPerson, setCurentWindow } = UseAppContext()
 
     const [logPersActReqCommands, setThat] = useState<
         Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]

@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { UseAppContext } from './context/UseAppContext'
 
 const AppComponent = () => {

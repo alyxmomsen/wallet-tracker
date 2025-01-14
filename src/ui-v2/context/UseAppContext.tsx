@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { useContext } from 'react'
 import { AppContext, TAppCtx } from './AppContextProvider'
 
 export const UseAppContext = (): TAppCtx => {

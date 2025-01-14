@@ -1,8 +1,8 @@
-import React from 'react'
-import { ITransactionRequirementCommand } from '../../core/requirement-command/RequirementCommand'
-import { IPerson } from '../../core/person/Person'
 import { UseAppContext } from '../context/UseAppContext'
 import GoPersonButton from '../shared/GoPersonButtonUI'
+/* #warning */
+import { IPerson } from 'cash-flow/dist/core/person/Person'
+import { ITransactionRequirementCommand } from 'cash-flow/dist/core/requirement-command/RequirementCommand'
 
 const TransactionRequirementUI = ({
     requirement,

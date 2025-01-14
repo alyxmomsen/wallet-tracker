@@ -2,7 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { UseAppContext } from './UseAppContext'
 import { averageValueUtil } from '../../utils/averageValueUtil'
 import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
-import { IRrequirementsStatsType } from '../../core/requirement-command/interfaces'
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+/* warning , type importing is not ordinary */
+
 
 export type TDirection = 0 | 1
 

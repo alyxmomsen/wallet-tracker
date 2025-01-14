@@ -1,8 +1,4 @@
-import { IPerson } from '../core/person/Person'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../core/requirement-command/interfaces'
+import { IRrequirementsStatsType } from "cash-flow/dist/core/requirement-command/interfaces"
 
 export function averageValueUtil(
     requirementsAsStats: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>[]

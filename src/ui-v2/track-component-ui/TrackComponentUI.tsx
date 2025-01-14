@@ -1,12 +1,9 @@
-import React from 'react'
 import { UseAppContext } from '../context/UseAppContext'
 import AddRequirementForm from '../add-req-form/AddRequirementFormWindow'
 import GoPersonButton from '../shared/GoPersonButtonUI'
-import { IUserStats } from '../../core/types/common'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../core/requirement-command/interfaces'
+/* #warning */
+import { IUserStats } from 'cash-flow/dist/core/types/common'
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
 
 const TrackComponentUI = ({
     person,

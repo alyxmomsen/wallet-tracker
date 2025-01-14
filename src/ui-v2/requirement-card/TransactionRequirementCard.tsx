@@ -1,10 +1,7 @@
-import React from 'react'
+import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
 import { UseAppContext } from '../context/UseAppContext'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../core/requirement-command/interfaces'
 import PersonCardUI from '../user-card/PersonCardUI'
+/* #warning */
 
 const TransactionRequirementCard = ({
     requirement,
@@ -45,7 +42,8 @@ const TransactionRequirementCard = ({
                 <div>
                     <button
                         onClick={() => {
-                            app.deleteRequirement(requirement.id)
+                            /* #warning token is not provided */
+                            app.deleteRequirement(requirement.id , '')
                         }}
                         className="btn"
                     >

@@ -1,6 +1,6 @@
-import React, { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import LoginWindowUI from '../login-window/LoginWindowUI'
-import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
+import PersonCardUI from '../user-card/PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import { UseAppContext } from './UseAppContext'
@@ -12,8 +12,12 @@ import {
 import { LocalStorageManagementService } from '../services/local-storage-service'
 
 import { cashFlowApp } from 'cash-flow';
-import { IApplicationSingletoneFacade } from 'cash-flow/dist/core/App-facade'
-
+/* --- */
+import { ApplicationSingletoneFacade, IApplicationSingletoneFacade } from 'cash-flow/dist/core/App-facade' // #warning that type export is not right and is not like in other projects
+import { IUserStats } from 'cash-flow/dist/core/types/common'
+import { IRequirementStats, IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+import { getServerBaseUrl } from 'cash-flow/dist/core-utils/core-utils'
+/* --- */
 const popUpService = new PopUpService()
 
 const localstorageManagementService = new LocalStorageManagementService();
@@ -21,7 +25,7 @@ const localstorageManagementService = new LocalStorageManagementService();
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
     loginedPerson:
-        | (Omit<IUserSta, 'id' | 'requirements' | 'password'> & {
+        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
               requirements: Omit<
                   IRrequirementsStatsType,
                   'userId' | 'deleted'
@@ -164,7 +168,7 @@ export async function requestUserData(
     userId: string
 ): Promise<TFetchResponse<TFetchUserData>> {
     try {
-        const response = await fetch(ServerBaseURL + '/get-user-protected', {
+        const response = await fetch(getServerBaseUrl() + '/get-user-protected', {
             headers: {
                 'x-auth': userId,
                 'Content-Type': 'Application/json',
@@ -184,16 +188,6 @@ export async function requestUserData(
             },
         }
     }
-}
-
-type TUseCheckUserTokenResponseData = {
-    status: {
-        code: number
-        details: 'token updated'
-    }
-    payload: {
-        token: string
-    } | null
 }
 
 export function StartWindow(): JSX.Element {
