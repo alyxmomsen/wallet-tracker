@@ -2,12 +2,6 @@ import React, { createContext, useEffect, useState } from 'react'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI, { ServerBaseURL } from '../user-card/PersonCardUI'
 import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
-import {
-    ApplicationSingletoneFacade,
-    IApplicationSingletoneFacade,
-} from '../../core/App-facade'
-import { HTTPServerComunicateService } from '../../core/services/server-connector-service-facade'
-import { EventService } from '../../core/events/App-event'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import { UseAppContext } from './UseAppContext'
 import PopUpFrame from '../pop-up-windows/PopUpFrame'
@@ -15,18 +9,10 @@ import {
     IPopUpService,
     PopUpService,
 } from '../services/PopUpServise'
-import { IUserStats } from '../../core/types/common'
-import {
-    IRequirementStats,
-    IRrequirementsStatsType,
-} from '../../core/requirement-command/interfaces'
 import { LocalStorageManagementService } from '../services/local-storage-service'
 
-const cashFlowApp = new ApplicationSingletoneFacade(
-    new LocalStorageManagementService(),
-    new HTTPServerComunicateService(),
-    new EventService()
-)
+import { cashFlowApp } from 'cash-flow';
+import { IApplicationSingletoneFacade } from 'cash-flow/dist/core/App-facade'
 
 const popUpService = new PopUpService()
 
@@ -35,7 +21,7 @@ const localstorageManagementService = new LocalStorageManagementService();
 export type TAppCtx = {
     app: IApplicationSingletoneFacade
     loginedPerson:
-        | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
+        | (Omit<IUserSta, 'id' | 'requirements' | 'password'> & {
               requirements: Omit<
                   IRrequirementsStatsType,
                   'userId' | 'deleted'
