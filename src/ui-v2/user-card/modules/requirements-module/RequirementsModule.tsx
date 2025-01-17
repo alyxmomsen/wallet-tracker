@@ -2,7 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react'
 import RegularRequirementItem from './Regular-requirement-item'
 
 import { UseAppContext } from '../../../context/UseAppContext'
-import { IRequirementStats, IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from 'cash-flow/dist/core/requirement-command/interfaces'
 import { IUserStats } from 'cash-flow/dist/core/types/common'
 
 const RequirementModule = ({
@@ -80,9 +83,9 @@ const MinimalisticRequirement = ({
             <div className="flex-box flex-dir-col flex-center">
                 <div> == {requirement.title} == </div>
                 {/* <div>
-                                                = {requirement.getDescription()}{' '}
-                                                =
-                                            </div> */}
+                    = {requirement.getDescription()}{' '}
+                    =
+                </div> */}
                 <div className="flex-box">
                     <div className="value-color--txt flex-item">
                         {[' - ', ' + '][requirement.cashFlowDirectionCode]}
@@ -111,7 +114,9 @@ const MinimalisticRequirement = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
-                        app.executeTransactsionById(requirement.id)
+                        app.executeTransactsionById(requirement.id, () => {
+                            alert('jo people')
+                        })
                     }}
                     className="hover--child btn"
                 >

@@ -8,7 +8,7 @@ const TransactionRequirementCard = ({
 }: {
     requirement: Omit<IRrequirementsStatsType, 'userId' | 'deleted'>
 }) => {
-    const { app, setCurentWindow } = UseAppContext()
+    const { app, setCurentWindow, localStorageService } = UseAppContext()
 
     return (
         <div>
@@ -43,7 +43,12 @@ const TransactionRequirementCard = ({
                     <button
                         onClick={() => {
                             /* #warning token is not provided */
-                            app.deleteRequirement(requirement.id , '')
+
+                            const authdata = localStorageService.getAuthData()
+
+                            if (authdata === null) return
+
+                            app.deleteRequirement(requirement.id, authdata)
                         }}
                         className="btn"
                     >

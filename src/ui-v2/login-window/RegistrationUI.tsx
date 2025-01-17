@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { UseAppContext } from '../context/UseAppContext'
-/* #warning */
 import { CreateUserService } from 'cash-flow/dist/core/services/create-user-service'
-import { getServerBaseUrl } from 'cash-flow/dist/core-utils/core-utils'
+/* #warning */
 
 const RegistrationUI = () => {
     const { app } = UseAppContext()
@@ -101,24 +100,4 @@ export type TFetchResponse<T> = {
         details: string
     }
     payload: T | null
-}
-
-async function registrationRequest(
-    username: string,
-    password: string
-): Promise<TFetchResponse<TFetchAuthResponseData>> {
-    const response = await fetch(getServerBaseUrl() + '/registration', {
-        method: 'post',
-        body: JSON.stringify({
-            username,
-            password,
-        }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-
-    const jsonData = await response.json()
-
-    return jsonData
 }

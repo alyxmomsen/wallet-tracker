@@ -7,7 +7,11 @@ import RequirementModule from './modules/requirements-module/RequirementsModule'
 /* #warning */
 import { IUserStats } from 'cash-flow/dist/core/types/common'
 import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
-import { AwakenStatusFactory, PersonStatusFactory, SlepStatusFactory } from 'cash-flow/dist/core/person/PersonStatus'
+import {
+    AwakenStatusFactory,
+    PersonStatusFactory,
+    SlepStatusFactory,
+} from 'cash-flow/dist/core/person/PersonStatus'
 
 const PersonCardUI = ({
     person,

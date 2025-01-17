@@ -1,28 +1,33 @@
 import { createContext, useEffect, useState } from 'react'
 import LoginWindowUI from '../login-window/LoginWindowUI'
 import PersonCardUI from '../user-card/PersonCardUI'
-import { TFetchResponse, TFetchUserData } from '../login-window/RegistrationUI'
 import PersonIsUpdatedPopUpWindow from '../pop-up-windows/Modal-window'
 import { UseAppContext } from './UseAppContext'
 import PopUpFrame from '../pop-up-windows/PopUpFrame'
+import { IPopUpService, PopUpService } from '../services/PopUpServise'
 import {
-    IPopUpService,
-    PopUpService,
-} from '../services/PopUpServise'
-import { LocalStorageManagementService } from '../services/local-storage-service'
-
-import { cashFlowApp } from 'cash-flow';
+    ILocalStorageManagementService,
+    LocalStorageManagementService,
+} from '../services/local-storage-service'
 /* --- */
-import { ApplicationSingletoneFacade, IApplicationSingletoneFacade } from 'cash-flow/dist/core/App-facade' // #warning that type export is not right and is not like in other projects
+import {
+    ApplicationSingletoneFacade,
+    IApplicationSingletoneFacade,
+} from 'cash-flow/dist/core/App-facade'
 import { IUserStats } from 'cash-flow/dist/core/types/common'
-import { IRequirementStats, IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
-import { getServerBaseUrl } from 'cash-flow/dist/core-utils/core-utils'
+import {
+    IRequirementStats,
+    IRrequirementsStatsType,
+} from 'cash-flow/dist/core/requirement-command/interfaces'
+
 /* --- */
 const popUpService = new PopUpService()
-
-const localstorageManagementService = new LocalStorageManagementService();
+const localstorageManagementService = new LocalStorageManagementService()
+const authToken = localstorageManagementService.getAuthData()
+const cashFlowApp = new ApplicationSingletoneFacade(authToken || '')
 
 export type TAppCtx = {
+    localStorageService: ILocalStorageManagementService
     app: IApplicationSingletoneFacade
     loginedPerson:
         | (Omit<IUserStats, 'id' | 'requirements' | 'password'> & {
@@ -109,7 +114,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
         )
 
         app.onUserIsUnset(() => {
-            // setPopUp(<div>hello world</div>)
+            localstorageManagementService.unsetAuthData()
         })
 
         popUpService.onUpdated(() => setPopUpPool(popUpService.getElems()))
@@ -124,6 +129,7 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     return (
         <AppContext.Provider
             value={{
+                localStorageService: localstorageManagementService,
                 app,
                 loginedPerson: loginedUser,
                 setUser: setLoginedUser,
@@ -163,32 +169,6 @@ const AppContextProvider = ({ children }: { children: JSX.Element }) => {
 }
 
 export default AppContextProvider
-
-export async function requestUserData(
-    userId: string
-): Promise<TFetchResponse<TFetchUserData>> {
-    try {
-        const response = await fetch(getServerBaseUrl() + '/get-user-protected', {
-            headers: {
-                'x-auth': userId,
-                'Content-Type': 'Application/json',
-            },
-            method: 'post',
-        })
-
-        const data = (await response.json()) as TFetchResponse<TFetchUserData>
-
-        return data
-    } catch (e) {
-        return {
-            payload: null,
-            status: {
-                code: 1,
-                details: 'fetch error',
-            },
-        }
-    }
-}
 
 export function StartWindow(): JSX.Element {
     const { setCurentWindow, loginedPerson } = UseAppContext()

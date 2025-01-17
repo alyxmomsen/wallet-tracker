@@ -3,7 +3,7 @@ import { UseAppContext } from '../context/UseAppContext'
 import Button from './shared/Button'
 
 const AuthorizationUI = () => {
-    const { app } = UseAppContext()
+    const { app, localStorageService } = UseAppContext()
 
     const [userName, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -53,19 +53,21 @@ const AuthorizationUI = () => {
                 />
             </div>
             <Button
-                title="hello"
+                title="auth"
                 onClickHandler={async () => {
                     setInProcess(true)
                     setMessageColor('grey')
                     setResponseMessage('in process...')
-                    const user = await app.userLogIn(userName, password)
 
-                    if (user === null) {
+                    const token = await app.userLogIn(userName, password)
+                    if (token === null) {
                         setMessageColor('red')
                         setResponseMessage('fail')
 
                         return
                     }
+
+                    localStorageService.setAuthData(token)
 
                     setResponseMessage('user authorized')
                     setMessageColor('green')

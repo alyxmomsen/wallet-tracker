@@ -5,7 +5,6 @@ import DescriptionOptionUI from '../add-req-form/options/DescriptionOption'
 import { IRrequirementsStatsType } from 'cash-flow/dist/core/requirement-command/interfaces'
 /* warning , type importing is not ordinary */
 
-
 export type TDirection = 0 | 1
 
 export type TAddRequirementContext = {

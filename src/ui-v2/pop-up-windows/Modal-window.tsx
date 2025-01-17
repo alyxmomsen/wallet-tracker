@@ -1,8 +1,6 @@
+import { loggerCreator } from '../../utils/logger'
 import { UseAppContext } from '../context/UseAppContext'
 import PersonCardUI from '../user-card/PersonCardUI'
-/* #warning */
-import { loggerCreator } from "cash-flow/dist/core-utils/core-utils"
-
 
 const PersonIsUpdatedPopUpWindow = ({
     timeoutId,

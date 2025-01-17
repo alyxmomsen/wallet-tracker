@@ -1,10 +1,9 @@
-import React from 'react'
 import { UseAppContext } from '../../context/UseAppContext'
 
 import { UseDateFormContext } from '../../context/AddRequirementContextProvider'
 
 const ApplyButtonUI = () => {
-    const { app } = UseAppContext()
+    const { app, localStorageService } = UseAppContext()
 
     const {
         description,
@@ -21,14 +20,19 @@ const ApplyButtonUI = () => {
             <button
                 className="btn"
                 onClick={async () => {
+                    const authToken = localStorageService.getAuthData()
+
                     setLoading(true)
                     setLoaded(false)
+
+                    if (authToken === null) return
                     app.addRequirement({
                         transactionTypeCode,
                         dateToExecute,
                         description,
                         title,
                         value,
+                        authToken,
                     })
 
                     setLoading(false)

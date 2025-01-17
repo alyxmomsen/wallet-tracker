@@ -63,7 +63,9 @@ const RegularRequirementItem = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
-                        app.executeTransactsionById(requirement.id)
+                        app.executeTransactsionById(requirement.id, () => {
+                            alert('sorry')
+                        })
                     }}
                     className="hover--child btn"
                 >
