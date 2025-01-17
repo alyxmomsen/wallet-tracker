@@ -114,9 +114,11 @@ const MinimalisticRequirement = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
+
+                        
                         app.executeTransactsionById(requirement.id, () => {
                             alert('jo people')
-                        })
+                        } , null)
                     }}
                     className="hover--child btn"
                 >

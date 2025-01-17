@@ -13,7 +13,7 @@ const RegularRequirementItem = ({
         requirements: Omit<IRrequirementsStatsType, 'deleted' | 'userId'>[]
     }
 }) => {
-    const { app, setCurentWindow } = UseAppContext()
+    const { app, setCurentWindow ,localStorageService } = UseAppContext()
 
     return (
         <div
@@ -63,9 +63,14 @@ const RegularRequirementItem = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation()
+
+                        const authToken = localStorageService.getAuthData();
+
+                        if(authToken === null) return
+
                         app.executeTransactsionById(requirement.id, () => {
                             alert('sorry')
-                        })
+                        } , {value:authToken})
                     }}
                     className="hover--child btn"
                 >

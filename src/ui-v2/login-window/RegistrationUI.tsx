@@ -52,15 +52,14 @@ const RegistrationUI = () => {
                         const response = await app.createUserRemote(
                             userName,
                             password,
-                            new CreateUserService()
                         )
 
-                        const { payload, status } = response
-                        const responseStatusCode = status.code
+                        // const { payload, status } = response
+                        // const responseStatusCode = status.code
 
-                        const userId = payload ? payload.userId : undefined
+                        // const userId = payload ? payload.userId : undefined
 
-                        setResponseMessage(status.details)
+                        setResponseMessage(response ? 'SUCCESS' : 'FAIL')
                     }}
                 >
                     registration
